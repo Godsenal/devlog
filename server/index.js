@@ -1,5 +1,7 @@
 const express = require('express');
 const chalk = require('chalk');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
 const isDev = process.env.NODE_ENV !== 'production';
 const host = (process.env.HOST || 'localhost');
@@ -7,6 +9,7 @@ const port = (process.env.PORT || 3000);
 
 
 const setup = isDev ? require('./setup/setupDev') : require('./setup/setupProd');
+const routes = require('./routes');
 
 /** configuration
  * 1. mongoose connection
@@ -15,8 +18,18 @@ const setup = isDev ? require('./setup/setupDev') : require('./setup/setupProd')
  * 4. setup for dev or prod enviroment
  * Finally Open
 */
+mongoose.connect('mongodb://localhost/devlogDB'); // should change
 
 const app = express();
+
+// body parser setting
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true,
+}));
+
+// api setting
+app.use('/api', routes);
 
 // Your api or static setting like app.use('/static', express.static(outputPath));
 

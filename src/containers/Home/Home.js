@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { Component } from 'react';
+import styled from 'styled-components';
 
-import styles from './Home.scss';
+import Header from '../../components/Header';
 
-const Home = () => (
-  <div className={styles.container}>
-    <h1 className={styles.header}>WELCOME!</h1>
-    <h2 className={styles.paragraph}>welcome to simple boilerplate.</h2>
-  </div>
-);
+const Container = styled.div`
+  margin: 1rem;
+`;
+
+class Home extends Component {
+  render() {
+    return (
+      <Container>
+        <Header />
+      </Container>
+    );
+  }
+}
 
 export default Home;
