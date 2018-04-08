@@ -18,7 +18,7 @@ const routes = require('./routes');
  * 4. setup for dev or prod enviroment
  * Finally Open
 */
-mongoose.connect('mongodb://localhost/devlogDB'); // should change
+mongoose.connect('mongodb://localhost:27017/devlogDB'); // should change
 
 const app = express();
 

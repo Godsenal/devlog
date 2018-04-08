@@ -3,9 +3,9 @@ const auth_controller = require('./controller');
 
 const router = express.Router();
 
-router.post('/signin', auth_controller.signin_post);
+router.post('/login', auth_controller.login_post);
 router.post('/signup', auth_controller.signup_post);
-router.post('/verify', auth_controller.verify_post);
+router.get('/verify', auth_controller.verify_get);
 
 router.put('/pins/:postid', auth_controller.pins_put);
 router.put('/followings/:userid', auth_controller.followings_put);

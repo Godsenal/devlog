@@ -1,15 +1,22 @@
 import { createStore, compose, applyMiddleware } from 'redux';
+import createSagaMiddleware from 'redux-saga';
 import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
+
 import rootReducer from '../reducers';
+import rootSaga from '../sagas';
+
+const sagaMiddleware = createSagaMiddleware();
 
 function configureStoreProd(initialState) {
   const middlewares = [
-    /* Redux middlewares like thunks */
+    sagaMiddleware,
   ];
 
-  return createStore(rootReducer, initialState, compose(
+  const store = createStore(rootReducer, initialState, compose(
     applyMiddleware(...middlewares)
   ));
+  sagaMiddleware.run(rootSaga);
+  return store;
 }
 
 /* Use redux-immutable-state-invariant
@@ -18,6 +25,7 @@ function configureStoreProd(initialState) {
 function configureStoreDev(initialState) {
   const middlewares = [
     reduxImmutableStateInvariant(),
+    sagaMiddleware,
     /* Redux middlewares like thunks */
   ];
 
@@ -32,7 +40,7 @@ function configureStoreDev(initialState) {
       store.replaceReducer(nextReducer);
     });
   }
-
+  sagaMiddleware.run(rootSaga);
   return store;
 }
 
