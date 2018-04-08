@@ -4,33 +4,59 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import Header from '../../components/Header';
-import { login, signup } from '../../actions/user';
+import * as userActions from '../../actions/user';
 
+/*
+  Visible when verfication ended.
+*/
 const Container = styled.div`
   margin: 1rem;
+  display: ${props => (props.visible ? 'block' : 'none')};
 `;
 
 class Home extends Component {
   static propTypes = {
-    handleLogin: PropTypes.func.isRequired,
-    handleSignup: PropTypes.func.isRequired,
+    login: PropTypes.func.isRequired,
+    loginState: PropTypes.object.isRequired,
+    logout: PropTypes.func.isRequired,
+    signup: PropTypes.func.isRequired,
+    verify: PropTypes.func.isRequired,
+    verifyStatus: PropTypes.string.isRequired,
+  }
+  componentDidMount() {
+    this.props.verify();
   }
   render() {
+    const {
+      loginState,
+      login,
+      logout,
+      signup,
+      verifyStatus,
+    } = this.props;
     return (
-      <Container>
-        <Header handleLogin={this.props.handleLogin} handleSignup={this.props.handleSignup} />
+      <Container visible={verifyStatus !== 'INIT'}>
+        <Header
+          loginState={loginState}
+          login={login}
+          logout={logout}
+          signup={signup}
+        />
       </Container>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  login: state.user.login,
+  loginState: state.user.login,
+  verifyStatus: state.user.verify.status,
 });
 
 const mapDispatchToProps = dispatch => ({
-  handleLogin: (username, password) => dispatch(login(username, password)),
-  handleSignup: (username, password, nickname) => dispatch(signup(username, password, nickname)),
+  login: (username, password) => dispatch(userActions.login(username, password)),
+  logout: () => dispatch(userActions.logout()),
+  signup: (username, password, nickname) => dispatch(userActions.signup(username, password, nickname)),
+  verify: () => dispatch(userActions.verify()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

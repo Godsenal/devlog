@@ -13,12 +13,22 @@ exports.login_post = (req, res) => {
       throw new Error('Incorrect ID or Password.');
     }
     else if (userdata.comparePassword(password)) {
-      return authutil.jwtlogin(userdata._id, userdata.username);
+      return authutil.jwtlogin(userdata);
     }
     throw new Error('Incorrect ID or Password.');
   };
-  // response created token
-  const success = (decoded) => res.json({ token: decoded, isValid: true });
+  /*
+    response created token.
+    Use object destructing for multiple argument of resolve.
+  */
+  const success = ({ userdata, token }) => (
+    res.json({
+      token,
+      _id: userdata._id,
+      username: userdata.username,
+      nickname: userdata.nickname,
+    })
+  );
   // send error message
   const error = (err) => res.json({ err });
   // promise chainning.
@@ -44,13 +54,23 @@ exports.signup_post = (req, res) => {
 };
 
 exports.verify_get = (req, res) => {
-  const token = req.headers['x-access-token'] || req.query.token;
-  if (!token) {
-    return res.status(403).json({
-      // handle error
+  if (!req.headers.authorization || req.headers.authorization.split(' ')[0] !== 'Bearer') {
+    return res.status(401).json({
+      error: 'INVALID STATUS',
     });
   }
-  const success = (decoded) => res.json({ token: decoded });
+  const token = req.headers.authorization.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({
+      error: 'INVALID STATUS',
+    });
+  }
+  const success = (decoded) => res.json({
+    token: decoded,
+    _id: decoded._id,
+    username: decoded.username,
+    nickname: decoded.nickname,
+  });
   const error = (err) => res.status(403).json({ error: err });
   return authutil.jwtverify(token)
     .then(success)
