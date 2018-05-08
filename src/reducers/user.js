@@ -8,7 +8,7 @@ const initialState = {
     _id: '',
     username: '',
     nickname: '',
-    isValid: false,
+    isAuthenticated: false,
     error: 'Error',
   },
   signup: {
@@ -21,10 +21,22 @@ const initialState = {
     status: 'INIT',
     error: 'Error',
   },
+  validate: {
+    status: 'INIT',
+    isValid: false,
+    message: '',
+    error: 'Error',
+  },
 };
 
 export default function user(state = initialState, action) {
   switch (action.type) {
+    case actionTypes.USER_LOGIN_REQUEST:
+      return update(state, {
+        login: {
+          status: { $set: 'WAITING' },
+        },
+      });
     case actionTypes.USER_LOGIN_SUCCESS:
       return update(state, {
         login: {
@@ -32,7 +44,7 @@ export default function user(state = initialState, action) {
           _id: { $set: action._id },
           username: { $set: action.username },
           nickname: { $set: action.nickname },
-          isValid: { $set: true },
+          isAuthenticated: { $set: true },
         },
       });
     case actionTypes.USER_LOGIN_FAILURE:
@@ -41,13 +53,21 @@ export default function user(state = initialState, action) {
           status: { $set: 'FAILURE' },
           username: { $set: '' },
           nickname: { $set: '' },
-          isValid: { $set: false },
+          isAuthenticated: { $set: false },
           error: { $set: action.error },
         },
       });
     case actionTypes.USER_LOGOUT_SUCCESS:
       return update(state, {
         login: { $set: initialState.login },
+      });
+    case actionTypes.USER_SIGNUP_REQUEST:
+      return update(state, {
+        signup: {
+          status: { $set: 'WAITING' },
+          username: { $set: action.username },
+          nickname: { $set: action.nickname },
+        },
       });
     case actionTypes.USER_SIGNUP_SUCCESS:
       return update(state, {
@@ -72,7 +92,7 @@ export default function user(state = initialState, action) {
           _id: { $set: action._id },
           username: { $set: action.username },
           nickname: { $set: action.nickname },
-          isValid: { $set: true },
+          isAuthenticated: { $set: true },
         },
         verify: {
           status: { $set: 'SUCCESS' },
@@ -84,6 +104,33 @@ export default function user(state = initialState, action) {
         verify: {
           status: { $set: 'FAILURE' },
         },
+      });
+    case actionTypes.USER_VALIDATE_REQUEST:
+      return update(state, {
+        validate: {
+          status: { $set: 'WAITING' },
+          message: { $set: '' },
+        },
+      });
+    case actionTypes.USER_VALIDATE_SUCCESS:
+      return update(state, {
+        validate: {
+          status: { $set: 'SUCCESS' },
+          isValid: { $set: true },
+          message: { $set: action.message },
+        },
+      });
+    case actionTypes.USER_VALIDATE_FAILURE:
+      return update(state, {
+        validate: {
+          status: { $set: 'FAILURE' },
+          isValid: { $set: false },
+          message: { $set: action.message },
+        },
+      });
+    case actionTypes.USER_VALIDATE_INITIALIZE:
+      return update(state, {
+        validate: { $set: initialState.validate },
       });
     default:
       return state;

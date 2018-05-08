@@ -10,12 +10,13 @@ exports.login_post = (req, res) => {
   // check password and create token
   const check = (userdata) => {
     if (!userdata) {
-      throw new Error('Incorrect ID or Password.');
+      // throw new Error will return { name: Error, message: 'Incorrect ...'}
+      throw new Error('Incorrect Username or Password.');
     }
     else if (userdata.comparePassword(password)) {
       return authutil.jwtlogin(userdata);
     }
-    throw new Error('Incorrect ID or Password.');
+    throw new Error('Incorrect Username or Password.');
   };
   /*
     response created token.
@@ -29,8 +30,8 @@ exports.login_post = (req, res) => {
       nickname: userdata.nickname,
     })
   );
-  // send error message
-  const error = (err) => res.json({ err });
+  // send error message.
+  const error = (err) => res.status(401).json({ error: err.message });
   // promise chainning.
   User.findOne({ username }).exec()
     .then(check)
@@ -47,9 +48,14 @@ exports.signup_post = (req, res) => {
   });
   user.save((err, userdata) => {
     if (err) {
-      // handle error
+      res.status(401).json({
+        error: err,
+      });
     }
-    res.json(userdata);
+    return res.json({
+      username: userdata.username,
+      nickname: userdata.nickname,
+    });
   });
 };
 
@@ -73,6 +79,18 @@ exports.verify_get = (req, res) => {
   });
   const error = (err) => res.status(403).json({ error: err });
   return authutil.jwtverify(token)
+    .then(success)
+    .catch(error);
+};
+
+exports.validate_post = (req, res) => {
+  const { username } = req.body;
+
+  const success = (message) => res.json({
+    message,
+  });
+  const error = (message) => res.status(403).json({ message });
+  User.validateUsername(username)
     .then(success)
     .catch(error);
 };

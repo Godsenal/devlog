@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const secret = 'MYSECRETKEY';
+const SECRET = 'MYSECRETKEY';
 
 function jwtlogin(userdata) {
   return new Promise((resolve, reject) => {
@@ -10,7 +10,7 @@ function jwtlogin(userdata) {
         username: userdata.username,
         nickname: userdata.nickname,
       },
-      secret,
+      SECRET,
       {
         expiresIn: '7d',
       }, (err, token) => {
@@ -23,7 +23,7 @@ function jwtverify(token) {
   return new Promise((resolve, reject) => {
     jwt.verify(
       token,
-      secret,
+      SECRET,
       (err, decoded) => {
         if (err) reject(err);
         resolve(decoded);

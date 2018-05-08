@@ -3,6 +3,7 @@ import {
   USER_SIGNUP_REQUEST,
   USER_LOGOUT_REQUEST,
   USER_VERIFY_REQUEST,
+  USER_VALIDATE_REQUEST,
 } from '../constants/actionTypes';
 
 export function login(username, password) {
@@ -30,5 +31,11 @@ export function signup(username, password, nickname) {
     username,
     password,
     nickname,
+  };
+}
+export function validate(username) {
+  return {
+    type: USER_VALIDATE_REQUEST,
+    username,
   };
 }

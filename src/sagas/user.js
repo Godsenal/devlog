@@ -1,3 +1,4 @@
+import { delay } from 'redux-saga';
 import { all, call, put, fork, cancel, cancelled, takeLatest, take } from 'redux-saga/effects';
 import * as authApi from '../api/auth';
 
@@ -8,17 +9,26 @@ import * as actions from '../constants/actionTypes';
  */
 function* login(id, pw) {
   try {
-    const { _id, username, nickname, token } = yield call(authApi.login, id, pw);
+    const response = yield call(authApi.login, id, pw);
+    const { _id, username, nickname, token } = response.data;
     localStorage.setItem('token', token);
+    yield put({
+      type: actions.MODAL_CLOSE,
+    });
     yield put({
       type: actions.USER_LOGIN_SUCCESS,
       _id,
       username,
       nickname,
     });
+    yield put({
+      type: actions.TOAST_ADD,
+      message: `Welcome ${nickname}!`,
+    });
   }
-  catch (error) {
+  catch (err) {
     /* istanbul ignore next */
+    const { error } = err.response.data;
     yield put({
       type: actions.USER_LOGIN_FAILURE,
       error,
@@ -48,16 +58,26 @@ function* logout() {
 function* signup(action) {
   const { username, password, nickname } = action;
   try {
-    yield call(authApi.signup, username, password, nickname);
+    const response = yield call(authApi.signup, username, password, nickname);
+    const userdata = response.data;
+    yield put({
+      type: actions.MODAL_CLOSE,
+    });
     yield put({
       type: actions.USER_SIGNUP_SUCCESS,
+      ...userdata,
+    });
+    yield put({
+      type: actions.TOAST_ADD,
+      message: 'Welcome!',
     });
   }
   catch (err) {
     /* istanbul ignore next */
+    const { error } = err.response.data;
     yield put({
       type: actions.USER_SIGNUP_FAILURE,
-      payload: err,
+      error,
     });
   }
 }
@@ -71,7 +91,8 @@ function* verify() {
   }
   else {
     try {
-      const { _id, username, nickname, token } = yield call(authApi.verify, currentToken);
+      const response = yield call(authApi.verify, currentToken);
+      const { _id, username, nickname, token } = response.data;
       localStorage.setItem('token', token);
       yield put({
         type: actions.USER_VERIFY_SUCCESS,
@@ -80,7 +101,8 @@ function* verify() {
         nickname,
       });
     }
-    catch (error) {
+    catch (err) {
+      const { error } = err.response.data;
       localStorage.removeItem('token');
       yield put({
         type: actions.USER_VERIFY_FAILURE,
@@ -96,6 +118,25 @@ function* verify() {
         });
       }
     }
+  }
+}
+function* validate(action) {
+  yield call(delay, 300);
+  try {
+    const { username } = action;
+    const response = yield call(authApi.validate, username);
+    const { message } = response.data;
+    yield put({
+      type: actions.USER_VALIDATE_SUCCESS,
+      message,
+    });
+  }
+  catch (error) {
+    const { message } = error.response.data;
+    yield put({
+      type: actions.USER_VALIDATE_FAILURE,
+      message,
+    });
   }
 }
 /*
@@ -118,12 +159,15 @@ function* watchLogin() {
     const logoutAction = yield take([actions.USER_LOGOUT_REQUEST, actions.USER_LOGIN_FAILURE, actions.USER_VERIFY_FAILURE]);
     if (logoutAction.type === actions.USER_LOGOUT_REQUEST) {
       yield cancel(task);
+      yield call(logout);
     }
-    yield call(logout);
   }
 }
 function* watchSignup() {
   yield takeLatest(actions.USER_SIGNUP_REQUEST, signup);
+}
+function* watchValidate() {
+  yield takeLatest(actions.USER_VALIDATE_REQUEST, validate);
 }
 /**
  * User Sagas
@@ -132,5 +176,6 @@ export default function* root() {
   yield all([
     fork(watchLogin),
     fork(watchSignup),
+    fork(watchValidate),
   ]);
 }
