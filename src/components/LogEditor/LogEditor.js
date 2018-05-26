@@ -1,74 +1,192 @@
+import { EditorState } from 'draft-js';
 import React, { Component } from 'react';
-import Remarkable from 'remarkable';
-import hljs from 'highlight.js';
 import styled from 'styled-components';
-import './index.css';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-/* Markdown default setting */
-const md = new Remarkable({
-  langPrefix: 'language-',
-  highlight: (str, lang) => {
-    /*
-      Need to try/catch.
-      See this example https://codesandbox.io/s/mm73lwmnv9
-    */
-    if (lang && hljs.getLanguage(lang)) {
-      return hljs.highlight(lang, str).value;
-    }
+import 'draft-js-emoji-plugin/lib/plugin.css';
 
-    return hljs.highlightAuto(str).value;
-  },
-});
-/* Editor Wrapper */
+import EditorCodeBlock from './EditorCodeBlock';
+import EditorDraftBlock from './EditorDraftBlock';
+import EditorToolBox from './EditorToolBox';
+
+import { showModal, closeModal } from '../../actions/modal';
+// Creates an Instance. At this step, a configuration object can be passed in
+// as an argument.
+
 const Container = styled.div`
-  width: 90%;
-
-  margin: auto;
-`;
-/* Editor text area component */
-const Editor = styled.textarea`
   width: 100%;
+  padding: 10px 10px;
 
-  min-height: 200px;
-  
-  padding: 1rem;
-  
-  background: white;
-  
-  outline: none;
+  border-radius: 10px;
 
-  border-radius: 8px;
-  border: 0;
+  background-color: rgba(0, 0, 0, 0.7);
 `;
 
-export default class LogEditor extends Component {
-  state = {
-    text: '',
-  };
-  handleChange = e => {
-    this.setState({
-      text: e.target.value,
-    });
-  };
+const Profile = styled.div`
+  float: left;
+  max-width: 50px; 
+`;
 
+const EditorBlock = styled.div`
+  margin-left: 50px;
+`;
+class LogEditor extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      code: '',
+      language: '',
+      frameSrc: '',
+      frameType: '',
+      codeBlockType: 'editor',
+      isFocused: false,
+      hasCodeBlock: false,
+      editorState: EditorState.createEmpty(),
+    };
+  }
+  static propTypes = {
+    nickname: PropTypes.string.isRequired,
+    showCodeModal: PropTypes.func.isRequired,
+  }
+  onChange = editorState => {
+    this.setState({
+      editorState,
+    });
+  }
+  onFocus = () => {
+    this.setState({
+      isFocused: true,
+    });
+  }
+  onBlur = () => {
+    this.setState({
+      isFocused: false,
+    });
+  }
+  showCodeModal = () => {
+    const { codeBlockType, code, language, frameSrc, frameType } = this.state;
+    const modalProps = {
+      codeBlockType,
+      code,
+      language,
+      frameSrc,
+      frameType,
+      handleCodeBlockChange: this.handleCodeBlockChange,
+    };
+    this.props.showCodeModal('CODE_MODAL', modalProps);
+  }
+  setContainerRef = (ref) => {
+    this.container = ref;
+  }
+  handleCodeBlockChange = ({ codeBlockType, code, language, frameSrc, frameType }) => {
+    let changedState = {
+      codeBlockType: 'editor',
+      code: '',
+      language: '',
+      frameSrc: '',
+      frameType: '',
+      hasCodeBlock: true,
+    };
+    if (codeBlockType === 'editor') {
+      changedState = {
+        ...changedState,
+        codeBlockType,
+        code,
+        language,
+      };
+    }
+    else {
+      changedState = {
+        ...changedState,
+        codeBlockType,
+        frameSrc,
+        frameType,
+      };
+    }
+    this.setState({
+      ...changedState,
+    });
+  }
+  toggleCodeBlock = () => {
+    this.setState(state => ({
+      showCodeBlock: !state.showCodeBlock,
+    }));
+  }
+  editCodeBlock = (e) => {
+    e.stopPropagation();
+    this.showCodeModal();
+  }
+  deleteCodeBlock = (e) => {
+    e.stopPropagation();
+    this.setState({
+      code: '',
+      language: '',
+      frameSrc: '',
+      frameType: '',
+      codeBlockType: 'editor',
+      hasCodeBlock: false,
+    });
+  }
   render() {
     const {
-      text,
+      editorState,
+      isFocused,
+      hasCodeBlock,
+      codeBlockType,
+      code,
+      language,
+      frameSrc,
+      frameType,
     } = this.state;
+    const {
+      nickname,
+    } = this.props;
     return (
-      <Container>
-        <div>
-          <Editor
-            placeholder="Write your today logs!"
-            onChange={this.handleChange}
-            value={text}
+      <Container innerRef={this.setContainerRef}>
+        { /* TODO: LOGIN PROFILE */}
+        <Profile>
+          {
+            nickname
+            /* TODO: CHANGE TO PROFILE IMAGE */
+          }
+        </Profile>
+        <EditorBlock>
+          <EditorDraftBlock
+            onFocus={this.onFocus}
+            isFocused={isFocused}
+            editorState={editorState}
+            onChange={this.onChange}
           />
-        </div>
-        <h2>Preview</h2>
-        <div
-          dangerouslySetInnerHTML={{ __html: md.render(text) }}
-        />
+          {
+            isFocused &&
+              <div>
+                {
+                  hasCodeBlock &&
+                    <EditorCodeBlock
+                      editCodeBlock={this.editCodeBlock}
+                      deleteCodeBlock={this.deleteCodeBlock}
+                      codeBlockType={codeBlockType}
+                      code={code}
+                      language={language}
+                      frameSrc={frameSrc}
+                      frameType={frameType}
+                    />
+                }
+                <EditorToolBox onCodeButtonClick={this.showCodeModal} hasCodeBlock={hasCodeBlock} />
+              </div>
+          }
+        </EditorBlock>
       </Container>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  nickname: state.user.login.nickname,
+});
+const mapDispatchToProps = dispatch => ({
+  showCodeModal: (type, modalProps) => dispatch(showModal(type, modalProps)),
+  closeCodeModal: () => dispatch(closeModal),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(LogEditor);

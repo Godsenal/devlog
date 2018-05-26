@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-
 import { Icon } from 'semantic-ui-react';
-import { LoginModal, SignupModal } from './SpecificModal';
+
+import { LoginModal, SignupModal, CodeModal } from './SpecificModal';
+import { media } from '../../styles/util';
 
 const Container = styled.div`
   width: ${props => (props.isMobile ? '90%' : '600px')};
+  min-height: 300px;
   max-height: 80%;
 
-  overflow: auto;
+  overflow-y: auto;
 
   margin: auto;
 
@@ -27,7 +29,8 @@ const Header = styled.div`
   text-align: right;
 `;
 const Body = styled.div`
-  margin: 30px;
+  margin: 5px 30px;
+  ${media.tablet`margin: 10px;`}
 `;
 const Link = styled.a`
   color: black;
@@ -36,6 +39,7 @@ const Link = styled.a`
 const MODAL_COMPONENTS = {
   LOGIN_MODAL: LoginModal,
   SIGNUP_MODAL: SignupModal,
+  CODE_MODAL: CodeModal,
 };
 export default class Modal extends Component {
   state = {
@@ -83,7 +87,7 @@ export default class Modal extends Component {
           </Link>
         </Header>
         <Body>
-          <SpecificModal {...modalProps} />
+          <SpecificModal {...modalProps} handleClose={handleClose} />
         </Body>
       </Container>
     );

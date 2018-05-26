@@ -6,7 +6,10 @@ import { LogListItem, LogEditor } from '../';
 const Container = styled.div`
   flex: 1 1 auto;
 
+  width: 90%;
   max-width: 800px;
+
+  margin: 10px auto;
 `;
 /* Message array for testing */
 const messages = Array(100).fill('message');

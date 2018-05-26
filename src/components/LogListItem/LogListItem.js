@@ -3,17 +3,14 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Item = styled.div`
-  width: 90%;
   height: 300px;
 
-  margin: 10px auto;
+  margin: 10px 0;
   padding: 10px;
   
   background-color: white;
 
   border-radius: 5px;
-
-
 `;
 
 export default class LogListItem extends Component {

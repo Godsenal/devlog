@@ -18,6 +18,7 @@ const Container = styled.div`
   bottom: 0;
   width: 100%;
   height: 100%;
+  z-index: 100;
   
   background-color: rgba(255,255,255,.65);
 `;
