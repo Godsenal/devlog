@@ -21,6 +21,8 @@ const Container = styled.div`
   
   box-shadow: 0 3px 9px rgba(0,0,0,.5);
   background-color: white;
+
+  border-radius: 10px;
 `;
 const Header = styled.div`
   width: 100%;

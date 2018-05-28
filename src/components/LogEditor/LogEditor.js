@@ -13,23 +13,33 @@ import EditorToolBox from './EditorToolBox';
 import { showModal, closeModal } from '../../actions/modal';
 // Creates an Instance. At this step, a configuration object can be passed in
 // as an argument.
+import default_profile from '../../images/default_profile.png';
 
 const Container = styled.div`
+  position: relative;
+
   width: 100%;
-  padding: 10px 10px;
+  padding: 10px 20px;
 
   border-radius: 10px;
 
   background-color: rgba(0, 0, 0, 0.7);
 `;
 
-const Profile = styled.div`
-  float: left;
-  max-width: 50px; 
-`;
-
 const EditorBlock = styled.div`
   margin-left: 50px;
+`;
+
+const ProfileImage = styled.img`
+  width: 32px;
+  height: 32px;
+
+  border-radius: 50%;
+
+  position: absolute;
+
+  top: 15px;
+  left: 20px;
 `;
 class LogEditor extends Component {
   constructor(props) {
@@ -46,7 +56,7 @@ class LogEditor extends Component {
     };
   }
   static propTypes = {
-    nickname: PropTypes.string.isRequired,
+    // nickname: PropTypes.string.isRequired,
     showCodeModal: PropTypes.func.isRequired,
   }
   onChange = editorState => {
@@ -139,18 +149,10 @@ class LogEditor extends Component {
       frameSrc,
       frameType,
     } = this.state;
-    const {
-      nickname,
-    } = this.props;
     return (
       <Container innerRef={this.setContainerRef}>
         { /* TODO: LOGIN PROFILE */}
-        <Profile>
-          {
-            nickname
-            /* TODO: CHANGE TO PROFILE IMAGE */
-          }
-        </Profile>
+        <ProfileImage src={default_profile} alt="default profile" />
         <EditorBlock>
           <EditorDraftBlock
             onFocus={this.onFocus}
@@ -173,7 +175,7 @@ class LogEditor extends Component {
                       frameType={frameType}
                     />
                 }
-                <EditorToolBox onCodeButtonClick={this.showCodeModal} hasCodeBlock={hasCodeBlock} />
+                <EditorToolBox onCodeButtonClick={this.showCodeModal} hasCodeBlock={hasCodeBlock} handleLog={this.handleLog} />
               </div>
           }
         </EditorBlock>

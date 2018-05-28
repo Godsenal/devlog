@@ -9,14 +9,14 @@ const ButtonBox = styled.div`
   width: 100%;
   margin: 5px auto;
 
-  font-size: 24px;
+  font-size: 20px;
 
   display: flex;
   align-items: center;
 `;
 const IconButton = styled.button`
   color: white;
-  opacity: 0.6;
+  opacity: ${props => (props.active ? 1 : 0.6)};
 
   padding: 4px;
 
@@ -46,35 +46,38 @@ const RightBox = styled.div`
   align-items: center;
 `;
 const DoneButton = styled.button`
-  background: white;
-  color: black;
-
+  background-color: white;
   border: none;
+
   outline: none;
-  border-radius: 100px;
+  border-radius: 10px;
+ 
+  padding: 6px 16px;
 
-  width: 100px;
-  padding: 5px 10px;
+  font-size: 16px;
 
-  font-size: 0.7em;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-5px);
+    transition: transform 0.1s ease-in-out;
+  }
 `;
-const EditorToolBox = ({ onCodeButtonClick }) => (
+const EditorToolBox = ({ onCodeButtonClick, hasCodeBlock }) => (
   <ButtonBox>
     <LeftBox>
-      <IconButton onClick={onCodeButtonClick}>
+      <IconButton onClick={onCodeButtonClick} active={hasCodeBlock} >
         <Icon name="code" />
       </IconButton>
-      <IconButton>
-        <Icon name="image" />
-      </IconButton>
     </LeftBox>
-    <RightBox>{/*TODO: Done Button */}
-      <DoneButton>DONE</DoneButton>
+    <RightBox>
+      <DoneButton>LOG</DoneButton>
     </RightBox>
   </ButtonBox>
 );
 
 EditorToolBox.propTypes = {
+  hasCodeBlock: PropTypes.bool.isRequired,
   onCodeButtonClick: PropTypes.func.isRequired,
 };
 
