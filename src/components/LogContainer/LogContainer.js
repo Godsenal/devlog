@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { media } from '../../styles/util';
 
 import { LogList } from '../';
+import { listLog } from '../../actions/log';
 
 const Background = styled.div`
   width: 100%;
@@ -16,7 +18,7 @@ const Container = styled.div`
   display: flex;
   
   width: 80%;
-  ${media.tablet`width: 90%`}
+  ${media.tablet`width: 90%;`}
   max-width: 1200px;
   margin: 0 auto;
   padding: 1rem 0;
@@ -32,18 +34,24 @@ const Sidebar = styled.div`
   max-width: 400px;
 `;
 
-export default class LogContainer extends Component {
+class LogContainer extends Component {
   static propTypes = {
     isMobile: PropTypes.bool.isRequired,
+    listLog: PropTypes.func.isRequired,
+    logList: PropTypes.object.isRequired,
+  }
+  componentDidMount = () => {
+    this.props.listLog();
   }
   render() {
     const {
       isMobile,
+      logList,
     } = this.props;
     return (
       <Background>
         <Container>
-          <LogList />
+          <LogList logs={logList.logs} />
           {
             isMobile ?
               null :
@@ -56,3 +64,12 @@ export default class LogContainer extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  logList: state.log.list,
+});
+const mapDispatchToProps = dispatch => ({
+  listLog: (lastLogId, limit) => dispatch(listLog({ lastLogId, limit })),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(LogContainer);

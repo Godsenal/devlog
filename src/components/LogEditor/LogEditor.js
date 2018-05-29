@@ -11,6 +11,7 @@ import EditorDraftBlock from './EditorDraftBlock';
 import EditorToolBox from './EditorToolBox';
 
 import { showModal, closeModal } from '../../actions/modal';
+import { postLog } from '../../actions/log';
 // Creates an Instance. At this step, a configuration object can be passed in
 // as an argument.
 import default_profile from '../../images/default_profile.png';
@@ -56,14 +57,18 @@ class LogEditor extends Component {
     };
   }
   static propTypes = {
-    // nickname: PropTypes.string.isRequired,
+    nickname: PropTypes.string.isRequired,
+    postNewLog: PropTypes.func.isRequired,
     showCodeModal: PropTypes.func.isRequired,
+    user_id: PropTypes.string.isRequired,
   }
+  /* Change Draftjs state */
   onChange = editorState => {
     this.setState({
       editorState,
     });
   }
+  /* Focus handler */
   onFocus = () => {
     this.setState({
       isFocused: true,
@@ -74,6 +79,7 @@ class LogEditor extends Component {
       isFocused: false,
     });
   }
+  /* Show code modal when user clicked code button */
   showCodeModal = () => {
     const { codeBlockType, code, language, frameSrc, frameType } = this.state;
     const modalProps = {
@@ -123,6 +129,7 @@ class LogEditor extends Component {
       showCodeBlock: !state.showCodeBlock,
     }));
   }
+  /* edit/delete button inside code block */
   editCodeBlock = (e) => {
     e.stopPropagation();
     this.showCodeModal();
@@ -138,6 +145,40 @@ class LogEditor extends Component {
       hasCodeBlock: false,
     });
   }
+  handleLog = () => {
+    const {
+      code,
+      language,
+      frameSrc,
+      frameType,
+      codeBlockType,
+      hasCodeBlock,
+      editorState,
+    } = this.state;
+    /* TODO: Validate USER & editorState */
+    const { user_id, nickname } = this.props;
+    let logContent = {
+      author_id: user_id,
+      author_nickname: nickname,
+    };
+    if (hasCodeBlock) {
+      logContent = {
+        ...logContent,
+        has_code: true,
+        code_type: codeBlockType,
+        code,
+        code_language: language,
+        frame_src: frameSrc,
+        frame_type: frameType,
+      };
+    }
+    logContent = {
+      ...logContent,
+      text: editorState.getCurrentContent().getPlainText(),
+      content: editorState.getCurrentContent(),
+    };
+    this.props.postNewLog(logContent);
+  }
   render() {
     const {
       editorState,
@@ -151,7 +192,6 @@ class LogEditor extends Component {
     } = this.state;
     return (
       <Container innerRef={this.setContainerRef}>
-        { /* TODO: LOGIN PROFILE */}
         <ProfileImage src={default_profile} alt="default profile" />
         <EditorBlock>
           <EditorDraftBlock
@@ -185,10 +225,12 @@ class LogEditor extends Component {
 }
 
 const mapStateToProps = state => ({
+  user_id: state.user.login._id,
   nickname: state.user.login.nickname,
 });
 const mapDispatchToProps = dispatch => ({
   showCodeModal: (type, modalProps) => dispatch(showModal(type, modalProps)),
   closeCodeModal: () => dispatch(closeModal),
+  postNewLog: (log) => dispatch(postLog(log)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(LogEditor);

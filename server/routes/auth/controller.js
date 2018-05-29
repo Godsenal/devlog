@@ -30,7 +30,7 @@ exports.login_post = (req, res) => {
       nickname: userdata.nickname,
     })
   );
-  // send error message.
+  // send error message. Anauthorized
   const error = (err) => res.status(401).json({ error: err.message });
   // promise chainning.
   User.findOne({ username }).exec()
@@ -48,7 +48,7 @@ exports.signup_post = (req, res) => {
   });
   user.save((err, userdata) => {
     if (err) {
-      res.status(401).json({
+      return res.status(401).json({
         error: err,
       });
     }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { LogListItem, LogEditor } from '../';
@@ -11,16 +12,18 @@ const Container = styled.div`
 
   margin: 10px auto;
 `;
-/* Message array for testing */
-const messages = Array(100).fill('message');
-export default class LogContent extends Component {
+export default class LogList extends Component {
+  static propTypes = {
+    logs: PropTypes.array.isRequired,
+  }
   render() {
+    const { logs } = this.props;
     return (
       <Container>
         <LogEditor />
         {
-          messages.map(((message, i) => (
-            <LogListItem key={i} message={`${message}${i}`} />
+          logs.map(((log) => (
+            <LogListItem key={log._id} message={log.text} />
           )))
         }
       </Container>

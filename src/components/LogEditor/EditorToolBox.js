@@ -63,7 +63,7 @@ const DoneButton = styled.button`
     transition: transform 0.1s ease-in-out;
   }
 `;
-const EditorToolBox = ({ onCodeButtonClick, hasCodeBlock }) => (
+const EditorToolBox = ({ onCodeButtonClick, hasCodeBlock, handleLog }) => (
   <ButtonBox>
     <LeftBox>
       <IconButton onClick={onCodeButtonClick} active={hasCodeBlock} >
@@ -71,12 +71,13 @@ const EditorToolBox = ({ onCodeButtonClick, hasCodeBlock }) => (
       </IconButton>
     </LeftBox>
     <RightBox>
-      <DoneButton>LOG</DoneButton>
+      <DoneButton onClick={handleLog} >LOG</DoneButton>
     </RightBox>
   </ButtonBox>
 );
 
 EditorToolBox.propTypes = {
+  handleLog: PropTypes.func.isRequired,
   hasCodeBlock: PropTypes.bool.isRequired,
   onCodeButtonClick: PropTypes.func.isRequired,
 };
