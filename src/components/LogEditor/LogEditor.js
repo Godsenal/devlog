@@ -45,16 +45,7 @@ const ProfileImage = styled.img`
 class LogEditor extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      code: '',
-      language: '',
-      frameSrc: '',
-      frameType: '',
-      codeBlockType: 'editor',
-      isFocused: false,
-      hasCodeBlock: false,
-      editorState: EditorState.createEmpty(),
-    };
+    this.state = { ...this.getInitialState() };
   }
   static propTypes = {
     nickname: PropTypes.string.isRequired,
@@ -62,6 +53,16 @@ class LogEditor extends Component {
     showCodeModal: PropTypes.func.isRequired,
     user_id: PropTypes.string.isRequired,
   }
+  getInitialState = () => ({
+    code: '',
+    language: '',
+    frameSrc: '',
+    frameType: '',
+    codeBlockType: 'editor',
+    isFocused: false,
+    hasCodeBlock: false,
+    editorState: EditorState.createEmpty(),
+  })
   /* Change Draftjs state */
   onChange = editorState => {
     this.setState({
@@ -164,7 +165,6 @@ class LogEditor extends Component {
     if (hasCodeBlock) {
       logContent = {
         ...logContent,
-        has_code: true,
         code_type: codeBlockType,
         code,
         code_language: language,
@@ -174,10 +174,14 @@ class LogEditor extends Component {
     }
     logContent = {
       ...logContent,
+      has_code: hasCodeBlock,
       text: editorState.getCurrentContent().getPlainText(),
       content: editorState.getCurrentContent(),
     };
     this.props.postNewLog(logContent);
+    this.setState({
+      ...this.getInitialState(),
+    });
   }
   render() {
     const {
@@ -215,7 +219,11 @@ class LogEditor extends Component {
                       frameType={frameType}
                     />
                 }
-                <EditorToolBox onCodeButtonClick={this.showCodeModal} hasCodeBlock={hasCodeBlock} handleLog={this.handleLog} />
+                <EditorToolBox
+                  onCodeButtonClick={this.showCodeModal}
+                  hasCodeBlock={hasCodeBlock}
+                  handleLog={this.handleLog}
+                />
               </div>
           }
         </EditorBlock>
@@ -225,6 +233,7 @@ class LogEditor extends Component {
 }
 
 const mapStateToProps = state => ({
+  postLog: state.log.post,
   user_id: state.user.login._id,
   nickname: state.user.login.nickname,
 });

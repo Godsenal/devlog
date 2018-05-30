@@ -19,7 +19,6 @@ const initialState = {
     status: 'INIT',
     logs: [],
     error: 'Error',
-    lastLogId: null,
     limit: 10,
     isLast: false,
   },
@@ -39,6 +38,9 @@ export default function log(state = initialState, action) {
           status: { $set: 'SUCCESS' },
           log: { $set: action.log },
         },
+        list: {
+          logs: { $unshift: [action.log] },
+        },
       });
     case LOG_POST_FAILURE:
       return update(state, {
@@ -54,13 +56,12 @@ export default function log(state = initialState, action) {
         },
       });
     case LOG_LIST_SUCCESS: {
-      const { logs, lastLogId, limit, isLast } = action;
+      const { logs, limit, isInit, isLast } = action;
       return update(state, {
         list: {
           status: { $set: 'SUCCESS' },
-          logs: { $push: logs },
+          logs: isInit ? { $set: logs } : { $push: logs },
           isLast: { $set: isLast },
-          lastLogId: { $set: lastLogId },
           limit: { $set: limit },
         },
       });

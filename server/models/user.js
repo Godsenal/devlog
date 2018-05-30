@@ -6,7 +6,7 @@ const SALT_ROUND = 10; // hashing round
 const VALID_REG = {
   username: '^[a-z0-9_]{6,15}$',
   password: '^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
-  nickname: '^[a-z0-9_]{6,15}$',
+  nickname: '^[a-zA-Z0-9_]{6,15}$',
 };
 /**
  * following: oid of another users

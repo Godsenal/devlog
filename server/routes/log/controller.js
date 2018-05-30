@@ -3,15 +3,21 @@ const Log = require('../../models/log');
 exports.log_post = function log_post(req, res) {
   const { log } = req.body;
   const newLog = new Log(log);
-  const check = (err, logData) => {
+  const check = (savedLog, err) => {
     if (err) {
       return 'Database Error';
     }
-    return logData;
+    return savedLog;
   };
-  const success = (logData) => (
+  const success = (savedLog) => (
     res.json({
-      log: logData,
+      log: {
+        _id: savedLog._id,
+        text: savedLog.text,
+        has_code: savedLog.has_code,
+        author_nickname: savedLog.author_nickname,
+        created: savedLog.created,
+      },
     })
   );
   const error = (err) => (
@@ -26,8 +32,8 @@ exports.log_post = function log_post(req, res) {
 };
 
 exports.list_get = function list_get(req, res) {
-  const { logId } = req.query;
-  let { limit } = req.query;
+  const { min_id } = req.query;
+  let { skip, limit } = req.query;
   const query = {};
   const projection = {
     _id: 1,
@@ -39,17 +45,12 @@ exports.list_get = function list_get(req, res) {
   const sort = {
     _id: -1,
   };
-  // if last log ID query exist, get list after logId
-  if (logId) {
-    query._id = { $gte: logId };
+  // get list below min_id( when log added )
+  if (min_id) {
+    query._id = { $lte: min_id };
   }
-  // if limit query doesn't exist, set limit as default value '10'
-  if (!limit) {
-    limit = 10;
-  }
-  else {
-    limit = parseInt(limit, 10);
-  }
+  skip = skip ? parseInt(skip, 10) : 0;
+  limit = limit ? parseInt(limit, 10) : 10;
   // NOTE: Empty result is NOT Error
   const check = (logs, err) => {
     if (err) {
@@ -69,8 +70,9 @@ exports.list_get = function list_get(req, res) {
   );
 
   Log.find(query, projection)
-    .limit(limit)
     .sort(sort)
+    .skip(skip)
+    .limit(limit)
     .exec()
     .then(check)
     .then(success)

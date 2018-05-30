@@ -6,14 +6,14 @@ import { Transition } from '../../components';
 
 const Item = styled.div`
   position: relative;
-  width: 200px;
-  height: 100px;
 
   border-radius: 5px;
   margin: 1rem auto;
+  padding: 1rem 1.5rem;
 
-  color: white;
-  background-color: pink;
+  color: black;
+  background-color: white;
+  box-shadow: 3px 6px 16px rgba(0,0,0,.3);
 
   font-size: 1em;
   font-weight: bold;

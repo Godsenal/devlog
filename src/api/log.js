@@ -6,10 +6,7 @@ export function post(log) {
   return axios.post(`${path}/post`, { log });
 }
 
-export function list({ lastLogId, limit = 10 }) {
-  let listPath = `${path}/list?limit=${limit}`;
-  if (lastLogId) {
-    listPath = `${listPath}&logId=${lastLogId}`;
-  }
-  return axios.get(listPath);
+export function list({ skip, limit }) {
+  const list_path = `${path}/list?limit=${limit}&skip=${skip}`;
+  return axios.get(list_path);
 }

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Icon } from 'semantic-ui-react';
 import { CodeFrameBox } from '../../../../components';
 
-const JSFIDDLE_REG = RegExp(/(?:https?:)?\/\/jsfiddle.net\/\w+(\/\w+)?\/embedded\/?([,(js|html|css|result)+])*\/?(?:dark)?\/?\??((|&)(?:fontColor|accentcolor|menucolor|bodycolor)=#?\w+){0,4}\/?/, 'i');
+const JSFIDDLE_REG = RegExp(/(?:https?:)?\/\/jsfiddle.net\/\w+(\/\w+)?(\/\w+)?\/embedded\/?([,(js|html|css|result)+])*\/?(?:dark)?\/?\??((|&)(?:fontColor|accentcolor|menucolor|bodycolor)=#?\w+){0,4}\/?/, 'i');
 // const GIST_REG = RegExp(/(?:https?:)?\/\/gist.github.com\/\w+\/\w+\.\w+?/, 'gi');
 const IconBox = styled.div`
   display: flex;

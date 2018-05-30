@@ -19,6 +19,8 @@ const Container = styled.div`
   
   width: 80%;
   ${media.tablet`width: 90%;`}
+  min-height: 800px;
+  
   max-width: 1200px;
   margin: 0 auto;
   padding: 1rem 0;
@@ -36,22 +38,20 @@ const Sidebar = styled.div`
 
 class LogContainer extends Component {
   static propTypes = {
+    handleListLog: PropTypes.func.isRequired,
     isMobile: PropTypes.bool.isRequired,
-    listLog: PropTypes.func.isRequired,
     logList: PropTypes.object.isRequired,
-  }
-  componentDidMount = () => {
-    this.props.listLog();
   }
   render() {
     const {
       isMobile,
       logList,
+      handleListLog,
     } = this.props;
     return (
-      <Background>
+      <Background onScroll={this.handleScroll} >
         <Container>
-          <LogList logs={logList.logs} />
+          <LogList logs={logList.logs} handleListLog={handleListLog} />
           {
             isMobile ?
               null :
@@ -69,7 +69,7 @@ const mapStateToProps = state => ({
   logList: state.log.list,
 });
 const mapDispatchToProps = dispatch => ({
-  listLog: (lastLogId, limit) => dispatch(listLog({ lastLogId, limit })),
+  handleListLog: (skip, limit, min_id) => dispatch(listLog({ skip, limit, min_id })),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LogContainer);

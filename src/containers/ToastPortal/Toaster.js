@@ -7,10 +7,14 @@ import Toast from './Toast';
 
 const List = styled.div`
   position: fixed;
-  top: 20%;
-  left: calc(50% - 100px);
+  
+  max-width: 300px;
+  
+  top: 15%;
+  left: 0;
+  right: 0;
 
-  max-width: 200px;
+  margin: auto;
 `;
 
 export default class Toaster extends Component {

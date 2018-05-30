@@ -11,7 +11,7 @@ import { DimmedLoader } from '../../../components';
 
 const VALID_REG = {
   password: '^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
-  nickname: '^[a-z0-9_]{6,15}$',
+  nickname: '^[a-zA-Z0-9_]{6,15}$',
 };
 const FAILURE_MESSAGE = {
   password: 'Must contain at least 8 characters, at least one number and special characters',

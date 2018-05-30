@@ -29,12 +29,12 @@ function* post(action) {
 }
 function* list(action) {
   try {
-    const { lastLogId, limit } = action;
-    const { data } = yield call(logApi.list, { lastLogId, limit });
+    const { skip, limit } = action;
+    const { data } = yield call(logApi.list, { skip, limit });
     const { logs } = data;
     const payload = {
       ...data,
-      lastLogId: logs.length > 0 ? logs[logs.length - 1]._id : null,
+      isInit: skip === 0,
       isLast: logs.length < limit,
       limit,
     };
