@@ -86,6 +86,12 @@ export default function user(state = initialState, action) {
           error: { $set: action.error },
         },
       });
+    case actionTypes.USER_VERIFY_REQUEST:
+      return update(state, {
+        verify: {
+          status: { $set: 'WAITING' },
+        },
+      });
     case actionTypes.USER_VERIFY_SUCCESS:
       return update(state, {
         login: {

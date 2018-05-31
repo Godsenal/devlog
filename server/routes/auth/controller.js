@@ -71,14 +71,22 @@ exports.verify_get = (req, res) => {
       error: 'INVALID STATUS',
     });
   }
-  const success = (decoded) => res.json({
-    token: decoded,
-    _id: decoded._id,
-    username: decoded.username,
-    nickname: decoded.nickname,
+  const checkUser = (decoded) => User.findOne({ username: decoded.username }).exec();
+  const check = (user, err) => {
+    if (err) {
+      throw new Error('Cannot find user');
+    }
+    return user;
+  };
+  const success = (user) => res.json({
+    _id: user._id,
+    username: user.username,
+    nickname: user.nickname,
   });
   const error = (err) => res.status(403).json({ error: err });
   return authutil.jwtverify(token)
+    .then(checkUser)
+    .then(check)
     .then(success)
     .catch(error);
 };

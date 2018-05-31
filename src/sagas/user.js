@@ -92,8 +92,7 @@ function* verify() {
   else {
     try {
       const response = yield call(authApi.verify, currentToken);
-      const { _id, username, nickname, token } = response.data;
-      localStorage.setItem('token', token);
+      const { _id, username, nickname } = response.data;
       yield put({
         type: actions.USER_VERIFY_SUCCESS,
         _id,
@@ -102,6 +101,7 @@ function* verify() {
       });
     }
     catch (err) {
+      console.log(err);
       const { error } = err.response.data;
       localStorage.removeItem('token');
       yield put({

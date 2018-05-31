@@ -54,7 +54,7 @@ exports.list_get = function list_get(req, res) {
   // NOTE: Empty result is NOT Error
   const check = (logs, err) => {
     if (err) {
-      return 'Database Error';
+      throw new Error('Database Error');
     }
     return logs;
   };
