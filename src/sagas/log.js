@@ -7,6 +7,9 @@ import {
   LOG_LIST_REQUEST,
   LOG_LIST_SUCCESS,
   LOG_LIST_FAILURE,
+  LOG_GET_REQUEST,
+  LOG_GET_SUCCESS,
+  LOG_GET_FAILURE,
 } from '../constants/actionTypes';
 import * as logApi from '../api/log';
 
@@ -51,11 +54,32 @@ function* list(action) {
     });
   }
 }
+function* get(action) {
+  try {
+    const { logId } = action;
+    const { data } = yield call(logApi.get, logId);
+    const { log } = data;
+    yield put({
+      type: LOG_GET_SUCCESS,
+      log,
+    });
+  }
+  catch (err) {
+    const { error } = err.response.data;
+    yield put({
+      type: LOG_GET_FAILURE,
+      error,
+    });
+  }
+}
 function* watchPost() {
   yield takeLatest(LOG_POST_REQUEST, post);
 }
 function* watchList() {
   yield takeLatest(LOG_LIST_REQUEST, list);
+}
+function* watchGet() {
+  yield takeLatest(LOG_GET_REQUEST, get);
 }
 /**
  * Log Sagas
@@ -64,5 +88,6 @@ export default function* root() {
   yield all([
     fork(watchPost),
     fork(watchList),
+    fork(watchGet),
   ]);
 }

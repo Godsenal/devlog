@@ -101,7 +101,6 @@ function* verify() {
       });
     }
     catch (err) {
-      console.log(err);
       const { error } = err.response.data;
       localStorage.removeItem('token');
       yield put({

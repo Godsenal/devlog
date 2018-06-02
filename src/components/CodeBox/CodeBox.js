@@ -27,11 +27,18 @@ const CodeBox = ({ codeBlockType, code, language, frameSrc, frameType }) => (
 );
 
 CodeBox.propTypes = {
-  code: PropTypes.string.isRequired,
+  code: PropTypes.string,
   codeBlockType: PropTypes.string.isRequired,
-  frameSrc: PropTypes.string.isRequired,
-  frameType: PropTypes.string.isRequired,
-  language: PropTypes.string.isRequired,
+  frameSrc: PropTypes.string,
+  frameType: PropTypes.string,
+  language: PropTypes.string,
+};
+
+CodeBox.defaultProps = {
+  code: '',
+  frameSrc: '',
+  frameType: '',
+  language: '',
 };
 
 export default CodeBox;

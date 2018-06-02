@@ -10,3 +10,7 @@ export function list({ skip, limit }) {
   const list_path = `${path}/list?limit=${limit}&skip=${skip}`;
   return axios.get(list_path);
 }
+
+export function get(logId) {
+  return axios.get(`${path}/log/${logId}`);
+}

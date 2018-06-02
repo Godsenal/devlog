@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const SECRET = 'MYSECRETKEY';
+const config = require('../config');
 
 function jwtlogin(userdata) {
   return new Promise((resolve, reject) => {
@@ -10,7 +10,7 @@ function jwtlogin(userdata) {
         username: userdata.username,
         nickname: userdata.nickname,
       },
-      SECRET,
+      config.jwtSecret,
       {
         expiresIn: '7d',
       }, (err, token) => {
@@ -19,19 +19,7 @@ function jwtlogin(userdata) {
       });
   });
 }
-function jwtverify(token) {
-  return new Promise((resolve, reject) => {
-    jwt.verify(
-      token,
-      SECRET,
-      (err, decoded) => {
-        if (err) reject(err);
-        resolve(decoded);
-      });
-  });
-}
 
 module.exports = {
   jwtlogin,
-  jwtverify,
 };

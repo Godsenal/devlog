@@ -1,67 +1,90 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
-
-import { Header, LogContainer } from '../../components';
-import * as userActions from '../../actions/user';
-import * as modalActions from '../../actions/modal';
-
+import { Switch } from 'react-router-dom';
+import { PropsRoute, PrivateRoute } from '../../routes/RouterUtil';
+import { history } from '../../utils';
+import { Timeline } from '../';
+import { Header, LogView } from '../../components';
 /*
   Visible when verfication ended.
 */
-const Container = styled.div`
-  display: ${props => (props.visible ? 'block' : 'none')};
-`;
-
 class Home extends Component {
+  state = {
+    lastLocation: {},
+  }
   static propTypes = {
     closeModal: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired,
     isMobile: PropTypes.bool.isRequired,
+    location: PropTypes.object.isRequired,
     loginState: PropTypes.object.isRequired,
     logout: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
-    verify: PropTypes.func.isRequired,
-    verifyStatus: PropTypes.string.isRequired,
   }
-  componentDidMount() {
-    this.props.verify();
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { lastLocation } = prevState;
+    // set previousLocation if props.location is not modal
+    if (
+      nextProps.history.action !== 'POP' &&
+      (!lastLocation.state || !lastLocation.state.modal)
+    ) {
+      return null;
+    }
+    return {
+      lastLocation: history.location,
+    };
   }
   render() {
+    const { lastLocation } = this.state;
     const {
+      location,
       isMobile,
       loginState,
       logout,
-      verifyStatus,
       showModal,
       closeModal,
+      isAuthenticated,
     } = this.props;
+    if (location.pathname === '/' && !isAuthenticated) {
+      return (
+        <div>
+          <h1>Welcome!</h1>
+          <button onClick={() => this.props.showModal('LOGIN_MODAL')}> login </button>
+        </div>
+      );
+    }
+    const isModal = !!(
+      location.state &&
+      location.state.modal &&
+      lastLocation !== location
+    );
     return (
-      <Container visible={verifyStatus !== 'INIT'}>
+      <div>
         <Header
           loginState={loginState}
           logout={logout}
           showModal={showModal}
           closeModal={closeModal}
         />
-        {/* Tag List Container */}
-        <LogContainer isMobile={isMobile} />
-      </Container>
+        <Switch location={isModal ? lastLocation : location}>
+          <PropsRoute
+            exact path="/"
+            component={Timeline}
+            isMobile={isMobile}
+            showModal={showModal}
+            closeModal={closeModal}
+          />
+          <PrivateRoute
+            path="/profile"
+            isAuthenticated={isAuthenticated}
+            redirectTo="/login"
+            component={() => <h1>Profile</h1>}
+          />
+        </Switch>
+        { isModal && <PropsRoute path="/log/:logId" component={LogView} showModal={showModal} closeModal={closeModal} /> }
+      </div>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  isMobile: state.environment.isMobile,
-  loginState: state.user.login,
-  verifyStatus: state.user.verify.status,
-});
-
-const mapDispatchToProps = dispatch => ({
-  logout: () => dispatch(userActions.logout()),
-  verify: () => dispatch(userActions.verify()),
-  showModal: (modalType, modalProps) => dispatch(modalActions.showModal(modalType, modalProps)),
-  closeModal: () => dispatch(modalActions.closeModal()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

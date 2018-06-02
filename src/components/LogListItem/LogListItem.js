@@ -2,15 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Icon } from 'semantic-ui-react';
-import moment from 'moment';
-import default_profile from '../../images/default_profile.png';
+import { Link } from 'react-router-dom';
+import { LogMainContent } from '../';
 
-const Item = styled.div`
+const Item = styled(Link)`
+  display: block;
   position: relative;
 
   margin: 10px 0;
   padding: 10px;
   
+  color: black;
   background-color: white;
 
   border-radius: 5px;
@@ -18,45 +20,10 @@ const Item = styled.div`
   cursor: pointer;
 
   &:hover {
+    color: black;
     box-shadow: 3px 6px 16px rgba(0,0,0,.3);
     transition: box-shadow 0.1s ease-in;
   }
-`;
-const ProfileImage = styled.img`
-  width: 36px;
-  height: 36px;
-
-  border-radius: 50%;
-
-  position: absolute;
-
-  float: left;
-`;
-const Content = styled.div`
-  margin-left: 50px;
-`;
-const Header = styled.div`
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-
-  span {
-    margin-right: 5px;
-  }
-`;
-const Author = styled.span`
-  font-weight: 600;
-`;
-const Date = styled.span`
-  color: #ccc;
-  &::before {
-    content: "\00b7";
-  }
-`;
-const Text = styled.div`
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  line-height: 20px;
 `;
 const CodePreview = styled.div`
   margin-top: 10px;
@@ -78,26 +45,25 @@ export default class LogListItem extends Component {
   }
   render() {
     const {
+      _id,
       text,
       author_nickname,
       has_code,
       created,
     } = this.props;
     return (
-      <Item>
-        <ProfileImage src={default_profile} />
-        <Content>
-          <Header>
-            <Author>{author_nickname}</Author>
-            <Date>{moment(created).startOf('hour').fromNow()}</Date>
-          </Header>
-          <Text>{text}</Text>
+      <Item to={{ pathname: `/log/${_id}`, state: { modal: true } }}>
+        <LogMainContent
+          author_nickname={author_nickname}
+          text={text}
+          created={created}
+        >
           { has_code && (
             <CodePreview>
               <Icon name="code" /> Click To See Code
             </CodePreview>
           )}
-        </Content>
+        </LogMainContent>
       </Item>
     );
   }

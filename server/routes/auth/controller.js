@@ -60,18 +60,7 @@ exports.signup_post = (req, res) => {
 };
 
 exports.verify_get = (req, res) => {
-  if (!req.headers.authorization || req.headers.authorization.split(' ')[0] !== 'Bearer') {
-    return res.status(401).json({
-      error: 'INVALID STATUS',
-    });
-  }
-  const token = req.headers.authorization.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({
-      error: 'INVALID STATUS',
-    });
-  }
-  const checkUser = (decoded) => User.findOne({ username: decoded.username }).exec();
+  const { decoded } = req;
   const check = (user, err) => {
     if (err) {
       throw new Error('Cannot find user');
@@ -84,8 +73,7 @@ exports.verify_get = (req, res) => {
     nickname: user.nickname,
   });
   const error = (err) => res.status(403).json({ error: err });
-  return authutil.jwtverify(token)
-    .then(checkUser)
+  return User.findOne({ username: decoded.username }).exec()
     .then(check)
     .then(success)
     .catch(error);

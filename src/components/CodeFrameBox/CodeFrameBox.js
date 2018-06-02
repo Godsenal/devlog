@@ -41,7 +41,7 @@ CodeFrameBox.propTypes = {
   width: PropTypes.any,
 };
 CodeFrameBox.defaultProps = {
-  height: 200,
+  height: 300,
   width: '100%',
 };
 

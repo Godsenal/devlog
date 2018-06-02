@@ -3,12 +3,10 @@ const chalk = require('chalk');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-const isDev = process.env.NODE_ENV !== 'production';
-const host = (process.env.HOST || 'localhost');
-const port = (process.env.PORT || 3000);
+const config = require('./config');
 
 
-const setup = isDev ? require('./setup/setupDev') : require('./setup/setupProd');
+const setup = config.isDev ? require('./setup/setupDev') : require('./setup/setupProd');
 const routes = require('./routes');
 
 /** configuration
@@ -36,11 +34,11 @@ app.use('/api', routes);
 setup(app);
 // get the intended host and port number, use localhost and port 3000 if not provided
 
-app.listen(port, host, (err) => {
+app.listen(config.port, config.host, (err) => {
   if (err) {
     console.error(chalk.red(err));
   }
-  if (isDev) {
+  if (config.isDev) {
     console.log(`Server started in Development! ${chalk.green('✓')}`);
   }
   else {
@@ -49,7 +47,7 @@ app.listen(port, host, (err) => {
 
   console.log(`
       ${chalk.bold('Server is Running on:')}
-      ${chalk.magenta(`http://${host}:${port}`)}
+      ${chalk.magenta(`http://${config.host}:${config.port}`)}
       ${chalk.blue(`Press ${chalk.italic('CTRL-C')} to stop`)}
     `);
 });

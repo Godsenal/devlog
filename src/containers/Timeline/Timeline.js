@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { media } from '../../styles/util';
 
-import { LogList } from '../';
+import { LogList } from '../../components';
 import { listLog } from '../../actions/log';
 
 const Background = styled.div`
@@ -44,29 +44,13 @@ const Sidebar = styled.div`
   max-width: 400px;
 `;
 
-class LogContainer extends Component {
+class Timeline extends Component {
   state = {}
   static propTypes = {
     handleListLog: PropTypes.func.isRequired,
     isMobile: PropTypes.bool.isRequired,
     logList: PropTypes.object.isRequired,
   }
-  /*
-  static getDerivedStateFromProps(nextProps) {
-    const { match, showModal, closeModal } = nextProps;
-    if (match.params && match.params.id) {
-      const modalProps = {
-        id: match.params.id,
-        onClose: history.action === 'PUSH' ? () => history.goBack() : () => history.push('/'),
-      };
-      showModal('LOGIN_MODAL', modalProps);
-    }
-    else {
-      closeModal();
-    }
-    return null;
-  }
-  */
   render() {
     const {
       isMobile,
@@ -102,4 +86,4 @@ const mapDispatchToProps = dispatch => ({
   handleListLog: (skip, limit, min_id) => dispatch(listLog({ skip, limit, min_id })),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(LogContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(Timeline);

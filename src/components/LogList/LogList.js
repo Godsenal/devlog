@@ -4,19 +4,18 @@ import styled from 'styled-components';
 import throttle from 'lodash/throttle';
 import { LogListItem, LogEditor } from '../';
 
-const Container = styled.div`
-  flex: 1 1 auto;
+const Loading = styled.div`
+  width: 100%;
 
-  width: 90%;
-  max-width: 800px;
-
-  margin: 10px auto;
+  text-align: center;
 `;
 const DEFAULT_OFFSET = 50;
 export default class LogList extends Component {
   static propTypes = {
     handleListLog: PropTypes.func.isRequired,
+    isLast: PropTypes.bool.isRequired,
     logs: PropTypes.array.isRequired,
+    status: PropTypes.string.isRequired,
   }
   componentDidMount() {
     this.props.handleListLog();
@@ -26,6 +25,9 @@ export default class LogList extends Component {
     document.removeEventListener('scroll', this.handleScroll);
   }
   handleScroll = () => {
+    if (this.props.isLast) {
+      return;
+    }
     const { documentElement } = document;
     const { scrollTop, clientHeight, scrollHeight } = documentElement;
     if (scrollTop + clientHeight + DEFAULT_OFFSET >= scrollHeight) {
@@ -36,16 +38,21 @@ export default class LogList extends Component {
     this.props.handleListLog(skip);
   }, 3000);
   render() {
-    const { logs } = this.props;
+    const { logs, status } = this.props;
     return (
-      <Container>
+      <div>
         <LogEditor />
         {
           logs.map(((log) => (
             <LogListItem key={log._id} {...log} />
           )))
         }
-      </Container>
+        { status === 'WAITING' && (
+          <Loading>
+            Loading...
+          </Loading>
+        )}
+      </div>
     );
   }
 }

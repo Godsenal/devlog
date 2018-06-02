@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Icon } from 'semantic-ui-react';
 
-import { LoginModal, SignupModal, CodeModal } from './SpecificModal';
+import { LoginModal, SignupModal, CodeModal, LogModal } from './SpecificModal';
 import { media } from '../../styles/util';
 
 const Container = styled.div`
@@ -42,6 +42,7 @@ const MODAL_COMPONENTS = {
   LOGIN_MODAL: LoginModal,
   SIGNUP_MODAL: SignupModal,
   CODE_MODAL: CodeModal,
+  LOG_MODAL: LogModal,
 };
 export default class Modal extends Component {
   state = {
@@ -69,13 +70,19 @@ export default class Modal extends Component {
   }
   handleClickOutside = (event) => {
     if (this.container && !this.container.contains(event.target)) {
-      this.props.handleClose();
+      this.handleClose();
     }
+  }
+  handleClose = () => {
+    const { modalProps, handleClose } = this.props;
+    if (modalProps.onClose && typeof modalProps.onClose === 'function') {
+      modalProps.onClose();
+    }
+    handleClose();
   }
   render() {
     const { mounted } = this.state;
     const {
-      handleClose,
       modalType,
       modalProps,
       isMobile,
@@ -84,12 +91,12 @@ export default class Modal extends Component {
     return (
       <Container innerRef={ref => { this.container = ref; }} mounted={mounted} isMobile={isMobile}>
         <Header>
-          <Link onClick={handleClose}>
+          <Link onClick={this.handleClose}>
             <Icon name="close" />
           </Link>
         </Header>
         <Body>
-          <SpecificModal {...modalProps} handleClose={handleClose} />
+          <SpecificModal {...modalProps} handleClose={this.handleClose} />
         </Body>
       </Container>
     );

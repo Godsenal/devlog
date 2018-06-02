@@ -21,7 +21,7 @@ const logSchema = new Schema({
   has_code: { type: Boolean, defalut: false },
   code_type: String,
   code: String,
-  language: String,
+  code_language: String,
   frame_src: String,
   frame_type: String,
   author_id: { type: Schema.Types.ObjectId, ref: 'User' },

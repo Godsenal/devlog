@@ -10,6 +10,7 @@
     "build": "cross-env NODE_ENV=production webpack --config config/webpack.config.prod.js --color -p --progress --hide-modules --display-optimization-bailout",
     "build:clean": "rm -rf ./dist",
     "start": "cross-env NODE_ENV=development node server",
+    "start:nodemon":  "cross-env NODE_ENV=development nodemon server",
     "start:production": "npm run build && npm run start:prod",
     "start:prod": "cross-env NODE_ENV=production node server",
     "clean:all": "npm run test:clean && npm run build:clean"
@@ -47,6 +48,7 @@
     "mongoose": "^5.0.12",
     "node": "^9.5.0",
     "node-sass": "^4.7.2",
+    "nodemon": "^1.17.5",
     "postcss-loader": "^2.1.1",
     "prop-types": "^15.6.0",
     "react-hot-loader": "^3.1.3",

@@ -80,8 +80,16 @@ exports.list_get = function list_get(req, res) {
 };
 
 exports.log_get = function log_get(req, res) {
-  res.json({
-
+  const { logId } = req.params;
+  Log.findById(logId, (err, log) => {
+    if (err) {
+      return res.status(503).json({
+        error: 'Database Error',
+      });
+    }
+    return res.json({
+      log,
+    });
   });
 };
 

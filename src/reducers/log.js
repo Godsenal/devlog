@@ -7,6 +7,9 @@ import {
   LOG_LIST_REQUEST,
   LOG_LIST_SUCCESS,
   LOG_LIST_FAILURE,
+  LOG_GET_REQUEST,
+  LOG_GET_SUCCESS,
+  LOG_GET_FAILURE,
 } from '../constants/actionTypes';
 
 const initialState = {
@@ -21,6 +24,11 @@ const initialState = {
     error: 'Error',
     limit: 10,
     isLast: false,
+  },
+  get: {
+    status: 'INIT',
+    log: {},
+    error: 'Error',
   },
 };
 
@@ -71,6 +79,27 @@ export default function log(state = initialState, action) {
         list: {
           status: { $set: 'FAILURE' },
           error: { $set: action.error },
+        },
+      });
+    case LOG_GET_REQUEST:
+      return update(state, {
+        get: {
+          status: { $set: 'WAITING' },
+        },
+      });
+    case LOG_GET_SUCCESS: {
+      return update(state, {
+        get: {
+          status: { $set: 'SUCCESS' },
+          log: { $set: action.log },
+        },
+      });
+    }
+    case LOG_GET_FAILURE:
+      return update(state, {
+        get: {
+          status: { $set: 'FAILURE' },
+          log: { $set: {} },
         },
       });
     default:
