@@ -11,8 +11,6 @@ const Container = styled.div`
   min-height: 300px;
   max-height: 80%;
 
-  overflow-y: auto;
-
   margin: auto;
 
   opacity: ${props => (props.mounted ? '1' : '0')};

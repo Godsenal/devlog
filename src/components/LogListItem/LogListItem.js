@@ -52,7 +52,7 @@ export default class LogListItem extends Component {
       created,
     } = this.props;
     return (
-      <Item to={{ pathname: `/log/${_id}`, state: { modal: true } }}>
+      <Item to={{ pathname: `${author_nickname}/log/${_id}`, state: { modal: true } }}>
         <LogMainContent
           author_nickname={author_nickname}
           text={text}

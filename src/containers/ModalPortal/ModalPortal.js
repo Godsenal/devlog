@@ -19,6 +19,8 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   z-index: 100;
+
+  overflow-y: auto;
   
   background-color: rgba(255,255,255,.65);
 `;

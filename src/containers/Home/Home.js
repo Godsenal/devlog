@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Switch } from 'react-router-dom';
 import { PropsRoute, PrivateRoute } from '../../routes/RouterUtil';
 import { history } from '../../utils';
-import { Timeline } from '../';
+import { Timeline, Profile } from '../';
 import { Header, LogView } from '../../components';
 /*
   Visible when verfication ended.
@@ -31,7 +31,7 @@ class Home extends Component {
       return null;
     }
     return {
-      lastLocation: history.location,
+      lastLocation: nextProps.history.location,
     };
   }
   render() {
@@ -74,14 +74,19 @@ class Home extends Component {
             showModal={showModal}
             closeModal={closeModal}
           />
-          <PrivateRoute
-            path="/profile"
+          <PropsRoute
+            path="/:nickname"
             isAuthenticated={isAuthenticated}
             redirectTo="/login"
-            component={() => <h1>Profile</h1>}
+            component={Profile}
           />
         </Switch>
-        { isModal && <PropsRoute path="/log/:logId" component={LogView} showModal={showModal} closeModal={closeModal} /> }
+        <PropsRoute
+          path="/:nickname/log/:logId"
+          component={LogView}
+          showModal={showModal}
+          closeModal={closeModal}
+        />
       </div>
     );
   }
