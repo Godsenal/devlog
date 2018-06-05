@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Switch } from 'react-router-dom';
-import { PropsRoute, PrivateRoute } from '../../routes/RouterUtil';
-import { history } from '../../utils';
+import { PropsRoute } from '../../routes/RouterUtil';
 import { Timeline, Profile } from '../';
 import { Header, LogView } from '../../components';
 /*

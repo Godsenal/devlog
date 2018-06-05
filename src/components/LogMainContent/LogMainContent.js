@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import moment from 'moment';
+import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 import default_profile from '../../images/default_profile.png';
 
 const ProfileImage = styled.img`
@@ -59,7 +59,7 @@ export default class LogContent extends Component {
         <Content>
           <Header>
             <Author>{author_nickname}</Author>
-            <Date>{moment(created).startOf('hour').fromNow()}</Date>
+            <Date>{`${distanceInWordsToNow(created)} ago`}</Date>
           </Header>
           <Text>{text}</Text>
           { children }

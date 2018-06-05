@@ -9,7 +9,6 @@ import { media } from '../../styles/util';
 const Container = styled.div`
   width: ${props => (props.isMobile ? '90%' : '600px')};
   min-height: 300px;
-  max-height: 80%;
 
   margin: auto;
 

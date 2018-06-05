@@ -5,12 +5,11 @@ export default class LogView extends PureComponent {
   static propTypes = {
     closeModal: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
     match: PropTypes.object.isRequired,
     showModal: PropTypes.func.isRequired,
   }
   componentDidMount() {
-    const { location, match, showModal, history } = this.props;
+    const { match, showModal, history } = this.props;
     const { nickname, logId } = match.params;
     const modalProps = {
       logId,
