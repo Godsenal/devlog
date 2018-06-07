@@ -48,6 +48,10 @@ export const LOG_GET_REQUEST = 'LOG_GET_REQUEST';
 export const LOG_GET_SUCCESS = 'LOG_GET_SUCCESS';
 export const LOG_GET_FAILURE = 'LOG_GET_FAILURE';
 
+export const LOG_STAR_REQUEST = 'LOG_STAR_REQUEST';
+export const LOG_STAR_SUCCESS = 'LOG_STAR_SUCCESS';
+export const LOG_STAR_FAILURE = 'LOG_STAR_FAILURE';
+
 /* Search ActionTypes */
 export const SEARCH_TAG_REQUEST = 'SEARCH_TAG_REQUEST';
 export const SEARCH_TAG_SUCCESS = 'SEARCH_TAG_SUCCESS';

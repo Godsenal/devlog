@@ -10,6 +10,9 @@ import {
   LOG_GET_REQUEST,
   LOG_GET_SUCCESS,
   LOG_GET_FAILURE,
+  LOG_STAR_REQUEST,
+  LOG_STAR_SUCCESS,
+  LOG_STAR_FAILURE,
 } from '../constants/actionTypes';
 
 const initialState = {
@@ -28,6 +31,12 @@ const initialState = {
   get: {
     status: 'INIT',
     log: {},
+    error: 'Error',
+  },
+  star: {
+    status: 'INIT',
+    stars: [],
+    count: 0,
     error: 'Error',
   },
 };
@@ -100,6 +109,28 @@ export default function log(state = initialState, action) {
         get: {
           status: { $set: 'FAILURE' },
           log: { $set: {} },
+        },
+      });
+    case LOG_STAR_REQUEST:
+      return update(state, {
+        star: {
+          status: { $set: 'WAITING' },
+        },
+      });
+    case LOG_STAR_SUCCESS: {
+      return update(state, {
+        star: {
+          status: { $set: 'SUCCESS' },
+          stars: { $set: action.stars },
+          count: { $set: action.stars.length },
+        },
+      });
+    }
+    case LOG_STAR_FAILURE:
+      return update(state, {
+        star: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.error },
         },
       });
     default:

@@ -14,3 +14,7 @@ export function list({ skip, limit }) {
 export function get(logId) {
   return axios.get(`${path}/log/${logId}`);
 }
+
+export function star({ logId, userId, isStared }) {
+  return axios.put(`${path}/star`, { logId, userId, isStared });
+}

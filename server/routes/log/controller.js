@@ -100,7 +100,28 @@ exports.log_put = function log_put(req, res) {
 };
 
 exports.star_put = function star_put(req, res) {
-  res.json({
-
+  const { logId, userId, isStared } = req.body;
+  // if starred, unstar. otherwise, star.
+  let update = {
+    $addToSet: { star: userId },
+  };
+  if (isStared) {
+    update = {
+      $pull: { star: userId },
+    };
+  }
+  const option = {
+    new: true,
+    select: 'star',
+  };
+  Log.findByIdAndUpdate(logId, update, option, (err, log) => {
+    if (err) {
+      return res.status(503).json({
+        error: err,
+      });
+    }
+    res.json({
+      stars: log.star,
+    });
   });
 };

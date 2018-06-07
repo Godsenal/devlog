@@ -27,8 +27,8 @@ const logSchema = new Schema({
   author_id: { type: Schema.Types.ObjectId, ref: 'User' },
   author_nickname: String,
   created: { type: Date, default: Date.now },
-  tags: [String],
-  star: Number,
+  tags: { type: Array, default: [] },
+  star: { type: Array, default: [] },
 });
 
 module.exports = mongoose.model('Log', logSchema);

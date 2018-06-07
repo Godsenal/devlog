@@ -1,4 +1,4 @@
-import { all, call, put, fork, takeLatest } from 'redux-saga/effects';
+import { all, call, put, fork, take, takeLatest, cancel } from 'redux-saga/effects';
 
 import {
   LOG_POST_REQUEST,
@@ -10,6 +10,9 @@ import {
   LOG_GET_REQUEST,
   LOG_GET_SUCCESS,
   LOG_GET_FAILURE,
+  LOG_STAR_REQUEST,
+  LOG_STAR_SUCCESS,
+  LOG_STAR_FAILURE,
 } from '../constants/actionTypes';
 import * as logApi from '../api/log';
 
@@ -63,11 +66,39 @@ function* get(action) {
       type: LOG_GET_SUCCESS,
       log,
     });
+    // set default log star when log is loaded.
+    yield put({
+      type: LOG_STAR_SUCCESS,
+      stars: log.star,
+    });
   }
   catch (err) {
     const { error } = err.response.data;
     yield put({
       type: LOG_GET_FAILURE,
+      error,
+    });
+  }
+}
+function* star(action) {
+  try {
+    const { logId, userId, isStared } = action;
+    const body = {
+      logId,
+      userId,
+      isStared,
+    };
+    const { data } = yield call(logApi.star, body);
+    const { stars } = data;
+    yield put({
+      type: LOG_STAR_SUCCESS,
+      stars,
+    });
+  }
+  catch (err) {
+    const { error } = err.response.data;
+    yield put({
+      type: LOG_STAR_FAILURE,
       error,
     });
   }
@@ -81,6 +112,16 @@ function* watchList() {
 function* watchGet() {
   yield takeLatest(LOG_GET_REQUEST, get);
 }
+function* watchStar() {
+  let task;
+  while (true) {
+    const action = yield take(LOG_STAR_REQUEST);
+    if (task) {
+      yield cancel(task);
+    }
+    task = yield fork(star, action);
+  }
+}
 /**
  * Log Sagas
  */
@@ -89,5 +130,6 @@ export default function* root() {
     fork(watchPost),
     fork(watchList),
     fork(watchGet),
+    fork(watchStar),
   ]);
 }

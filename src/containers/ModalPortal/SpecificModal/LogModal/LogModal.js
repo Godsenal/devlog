@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import LogModalToolBox from './LogModalToolBox';
 import { LogMainContent, CodeBox } from '../../../../components';
-import { getLog } from '../../../../actions/log';
+import { getLog, starLog } from '../../../../actions/log';
 import { clipboard } from '../../../../utils';
 
 const CodeContent = styled.div`
@@ -23,13 +24,16 @@ const Clipboard = styled.a`
 `;
 class LogModal extends Component {
   static propTypes = {
-    dispatch: PropTypes.func.isRequired,
+    handleGetLog: PropTypes.func.isRequired,
+    handleStarLog: PropTypes.func.isRequired,
     logGetState: PropTypes.object.isRequired,
     logId: PropTypes.string.isRequired,
+    logStarState: PropTypes.object.isRequired,
+    userState: PropTypes.object.isRequired,
   }
   componentDidMount() {
-    const { dispatch, logId } = this.props;
-    dispatch(getLog(logId));
+    const { logId, handleGetLog } = this.props;
+    handleGetLog(logId);
   }
   handleClipboard = () => {
     const { code } = this.props.logGetState.log;
@@ -37,11 +41,18 @@ class LogModal extends Component {
     clipboard(code); // TODO: Error handling with toast?
   }
   render() {
-    const { logGetState } = this.props;
+    const {
+      logGetState,
+      logStarState,
+      userState,
+      handleStarLog,
+    } = this.props;
     if (logGetState.status !== 'SUCCESS') {
       return <div>Loading...</div>;
     }
-    const { log } = logGetState;
+    const {
+      log,
+    } = logGetState;
     return (
       <div>
         <LogMainContent {...log}>
@@ -59,6 +70,12 @@ class LogModal extends Component {
               <Clipboard onClick={this.handleClipboard}>Clip it</Clipboard>
             )}
           </CodeContent>
+          <LogModalToolBox
+            logId={log._id}
+            userId={userState._id}
+            handleStarLog={handleStarLog}
+            {...logStarState}
+          />
         </LogMainContent>
       </div>
     );
@@ -66,7 +83,13 @@ class LogModal extends Component {
 }
 
 const mapStateToProps = state => ({
+  userState: state.user.login,
   logGetState: state.log.get,
+  logStarState: state.log.star,
+});
+const mapDispatchToProps = dispatch => ({
+  handleGetLog: (logId) => dispatch(getLog(logId)),
+  handleStarLog: (starData) => dispatch(starLog({ ...starData })),
 });
 
-export default connect(mapStateToProps)(LogModal);
+export default connect(mapStateToProps, mapDispatchToProps)(LogModal);
