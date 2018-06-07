@@ -1,10 +1,9 @@
 import { TOAST_ADD, TOAST_DELETE } from '../constants/actionTypes';
 
-export function addToast(timeout, message) {
+export function addToast(toastProps = {}) {
   return {
     type: TOAST_ADD,
-    timeout,
-    message,
+    toastProps,
   };
 }
 

@@ -33,7 +33,7 @@ export default class Toast extends Component {
   }
   static defaultProps = {
     animation: 'boom',
-    timeout: 3000,
+    timeout: 3000, // don't be confused with transition timout.
   }
   componentDidMount() {
     const { timeout, deleteToast } = this.props;
@@ -41,9 +41,9 @@ export default class Toast extends Component {
   }
 
   render() {
-    const { message, deleteToast, timeout, animation, in: inProps } = this.props;
+    const { message, deleteToast, in: inProps, animation } = this.props;
     return (
-      <Transition in={inProps} timeout={timeout} animation={animation}>
+      <Transition in={inProps} animation={animation} >
         <Item onClick={deleteToast}>
           {message}
         </Item>

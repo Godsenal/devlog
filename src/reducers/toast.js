@@ -17,9 +17,7 @@ export default function toast(state = initialState, action) {
       return update(state, {
         toasts: { $push: [{
           id: toastId,
-          timeout: action.timeout,
-          animation: action.animation,
-          message: action.message,
+          ...action.toastProps,
         }] },
         toastId: { $set: toastId },
       });

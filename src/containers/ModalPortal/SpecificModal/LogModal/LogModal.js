@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import LogModalToolBox from './LogModalToolBox';
 import { LogMainContent, CodeBox } from '../../../../components';
 import { getLog, starLog } from '../../../../actions/log';
+import { addToast } from '../../../../actions/toast';
 import { clipboard } from '../../../../utils';
 
 const CodeContent = styled.div`
@@ -24,6 +25,7 @@ const Clipboard = styled.a`
 `;
 class LogModal extends Component {
   static propTypes = {
+    handleAddToast: PropTypes.func.isRequired,
     handleGetLog: PropTypes.func.isRequired,
     handleStarLog: PropTypes.func.isRequired,
     logGetState: PropTypes.object.isRequired,
@@ -36,9 +38,19 @@ class LogModal extends Component {
     handleGetLog(logId);
   }
   handleClipboard = () => {
+    const { handleAddToast } = this.props;
     const { code } = this.props.logGetState.log;
-    // clipboard util function - return promise.
-    clipboard(code); // TODO: Error handling with toast?
+    clipboard(code)
+      .then(() => {
+        handleAddToast({
+          message: 'Copied!',
+        });
+      })
+      .catch(() => {
+        handleAddToast({
+          message: 'Fail to copy...',
+        });
+      });
   }
   render() {
     const {
@@ -88,6 +100,7 @@ const mapStateToProps = state => ({
   logStarState: state.log.star,
 });
 const mapDispatchToProps = dispatch => ({
+  handleAddToast: (toastProps) => dispatch(addToast(toastProps)),
   handleGetLog: (logId) => dispatch(getLog(logId)),
   handleStarLog: (starData) => dispatch(starLog({ ...starData })),
 });

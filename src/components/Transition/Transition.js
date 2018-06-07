@@ -9,16 +9,17 @@ export default class Transition extends Component {
     animation: PropTypes.string,
     children: PropTypes.node.isRequired,
     in: PropTypes.bool.isRequired,
-    timeout: PropTypes.number.isRequired,
+    timeout: PropTypes.number,
   }
   static defaultProps = {
     animation: 'boom',
+    timeout: 300,
   }
   render() {
-    const { in: inProps, timeout, animation } = this.props;
+    const { animation, children } = this.props;
     return (
-      <CSSTransition in={inProps} classNames={animation} timeout={timeout} unmountOnExit>
-        {this.props.children}
+      <CSSTransition classNames={animation} {...this.props} unmountOnExit>
+        {React.cloneElement(children)}
       </CSSTransition>
     );
   }

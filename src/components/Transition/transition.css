@@ -17,7 +17,7 @@
   opacity: 0;
   transform: scale(0);
 }
-.boom-enter.boom-enter-active {
+.boom-enter-active {
   opacity: 1;
   transform: scale(1.05);
 
@@ -27,7 +27,7 @@
   opacity: 1;
   transform: translateY(0);
 }
-.boom-exit.boom-exit-active {
+.boom-exit-active {
   opacity: 0;
   transform: translateY(-100px);
   transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;

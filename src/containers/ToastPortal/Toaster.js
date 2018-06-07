@@ -10,9 +10,10 @@ const List = styled.div`
   
   max-width: 300px;
   
-  top: 15%;
+  top: 0;
   left: 0;
   right: 0;
+  z-index: 101;
 
   margin: auto;
 `;

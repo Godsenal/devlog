@@ -22,7 +22,9 @@ function* login(id, pw) {
     });
     yield put({
       type: actions.TOAST_ADD,
-      message: `Welcome ${nickname}!`,
+      toastProps: {
+        message: `Welcome ${nickname}!`,
+      },
     });
   }
   catch (err) {
@@ -68,7 +70,9 @@ function* signup(action) {
     });
     yield put({
       type: actions.TOAST_ADD,
-      message: 'Welcome!',
+      toastProps: {
+        message: 'Welcome!',
+      },
     });
   }
   catch (err) {
