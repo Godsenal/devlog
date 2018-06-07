@@ -1,6 +1,7 @@
 import { delay } from 'redux-saga';
 import { all, call, put, fork, cancel, cancelled, takeLatest, take } from 'redux-saga/effects';
 import * as authApi from '../api/auth';
+import * as userApi from '../api/user';
 import * as actions from '../constants/actionTypes';
 import { jwt } from '../utils';
 /**
@@ -9,21 +10,19 @@ import { jwt } from '../utils';
 function* login(id, pw) {
   try {
     const response = yield call(authApi.login, id, pw);
-    const { _id, username, nickname, token } = response.data;
-    jwt.setToken(token);
+    const userdata = response.data;
+    jwt.setToken(userdata.token);
     yield put({
       type: actions.MODAL_CLOSE,
     });
     yield put({
       type: actions.USER_LOGIN_SUCCESS,
-      _id,
-      username,
-      nickname,
+      ...userdata,
     });
     yield put({
       type: actions.TOAST_ADD,
       toastProps: {
-        message: `Welcome ${nickname}!`,
+        message: `Welcome ${userdata.nickname}!`,
       },
     });
   }
@@ -96,12 +95,10 @@ function* verify() {
     try {
       jwt.setToken(currentToken);
       const response = yield call(authApi.verify, currentToken);
-      const { _id, username, nickname } = response.data;
+      const userdata = response.data;
       yield put({
         type: actions.USER_VERIFY_SUCCESS,
-        _id,
-        username,
-        nickname,
+        ...userdata,
       });
     }
     catch (err) {
@@ -166,11 +163,34 @@ function* watchLogin() {
     }
   }
 }
+function* bookmark(action) {
+  try {
+    const { logId, userId, isBookmarked } = action;
+    const { data } = yield call(userApi.bookmark, { logId, userId, isBookmarked });
+    const { bookmarks } = data;
+
+    yield put({
+      type: actions.USER_BOOKMARK_SUCCESS,
+      bookmarks,
+      bookmark: logId,
+    });
+  }
+  catch (err) {
+    const { error } = err.response.data;
+    yield put({
+      type: actions.USER_BOOKMARK_FAILURE,
+      error,
+    });
+  }
+}
 function* watchSignup() {
   yield takeLatest(actions.USER_SIGNUP_REQUEST, signup);
 }
 function* watchValidate() {
   yield takeLatest(actions.USER_VALIDATE_REQUEST, validate);
+}
+function* watchBookmark() {
+  yield takeLatest(actions.USER_BOOKMARK_REQUEST, bookmark);
 }
 /**
  * User Sagas
@@ -180,5 +200,6 @@ export default function* root() {
     fork(watchLogin),
     fork(watchSignup),
     fork(watchValidate),
+    fork(watchBookmark),
   ]);
 }

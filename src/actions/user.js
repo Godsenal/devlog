@@ -4,6 +4,7 @@ import {
   USER_LOGOUT_REQUEST,
   USER_VERIFY_REQUEST,
   USER_VALIDATE_REQUEST,
+  USER_BOOKMARK_REQUEST,
 } from '../constants/actionTypes';
 
 export function login(username, password) {
@@ -37,5 +38,13 @@ export function validate(username) {
   return {
     type: USER_VALIDATE_REQUEST,
     username,
+  };
+}
+export function bookmark({ userId, logId, isBookmarked = false }) {
+  return {
+    type: USER_BOOKMARK_REQUEST,
+    userId,
+    logId,
+    isBookmarked,
   };
 }

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import LogModalToolBox from './LogModalToolBox';
 import { LogMainContent, CodeBox } from '../../../../components';
+import { bookmark } from '../../../../actions/user';
 import { getLog, starLog } from '../../../../actions/log';
 import { addToast } from '../../../../actions/toast';
 import { clipboard } from '../../../../utils';
@@ -26,11 +27,13 @@ const Clipboard = styled.a`
 class LogModal extends Component {
   static propTypes = {
     handleAddToast: PropTypes.func.isRequired,
+    handleBookmark: PropTypes.func.isRequired,
     handleGetLog: PropTypes.func.isRequired,
     handleStarLog: PropTypes.func.isRequired,
     logGetState: PropTypes.object.isRequired,
     logId: PropTypes.string.isRequired,
     logStarState: PropTypes.object.isRequired,
+    userBookmarkState: PropTypes.object.isRequired,
     userState: PropTypes.object.isRequired,
   }
   componentDidMount() {
@@ -57,7 +60,9 @@ class LogModal extends Component {
       logGetState,
       logStarState,
       userState,
+      userBookmarkState,
       handleStarLog,
+      handleBookmark,
     } = this.props;
     if (logGetState.status !== 'SUCCESS') {
       return <div>Loading...</div>;
@@ -85,8 +90,11 @@ class LogModal extends Component {
           <LogModalToolBox
             logId={log._id}
             userId={userState._id}
+            bookmarks={userState.bookmarks}
             handleStarLog={handleStarLog}
+            handleBookmark={handleBookmark}
             {...logStarState}
+            {...userBookmarkState}
           />
         </LogMainContent>
       </div>
@@ -96,10 +104,12 @@ class LogModal extends Component {
 
 const mapStateToProps = state => ({
   userState: state.user.login,
+  userBookmarkState: state.user.bookmark,
   logGetState: state.log.get,
   logStarState: state.log.star,
 });
 const mapDispatchToProps = dispatch => ({
+  handleBookmark: (bookmarkData) => dispatch(bookmark({ ...bookmarkData })),
   handleAddToast: (toastProps) => dispatch(addToast(toastProps)),
   handleGetLog: (logId) => dispatch(getLog(logId)),
   handleStarLog: (starData) => dispatch(starLog({ ...starData })),

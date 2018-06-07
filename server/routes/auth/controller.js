@@ -28,6 +28,9 @@ exports.login_post = (req, res) => {
       _id: userdata._id,
       username: userdata.username,
       nickname: userdata.nickname,
+      tags: userdata.tags,
+      followings: userdata.followings,
+      bookmarks: userdata.bookmarks,
     })
   );
   // send error message. Anauthorized
@@ -71,6 +74,9 @@ exports.verify_get = (req, res) => {
     _id: user._id,
     username: user.username,
     nickname: user.nickname,
+    tags: user.tags,
+    followings: user.followings,
+    bookmarks: user.bookmarks,
   });
   const error = (err) => res.status(403).json({ error: err });
   return User.findOne({ username: decoded.username }).exec()

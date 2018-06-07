@@ -8,6 +8,9 @@ const initialState = {
     _id: '',
     username: '',
     nickname: '',
+    tags: [],
+    bookmarks: [],
+    followings: [],
     isAuthenticated: false,
     error: 'Error',
   },
@@ -27,6 +30,11 @@ const initialState = {
     message: '',
     error: 'Error',
   },
+  bookmark: {
+    status: 'INIT',
+    bookmark: '',
+    error: 'Error',
+  },
 };
 
 export default function user(state = initialState, action) {
@@ -44,6 +52,9 @@ export default function user(state = initialState, action) {
           _id: { $set: action._id },
           username: { $set: action.username },
           nickname: { $set: action.nickname },
+          tags: { $set: action.tags },
+          followings: { $set: action.followings },
+          bookmarks: { $set: action.bookmarks },
           isAuthenticated: { $set: true },
         },
       });
@@ -53,6 +64,9 @@ export default function user(state = initialState, action) {
           status: { $set: 'FAILURE' },
           username: { $set: '' },
           nickname: { $set: '' },
+          tags: { $set: [] },
+          followings: { $set: [] },
+          bookmarks: { $set: [] },
           isAuthenticated: { $set: false },
           error: { $set: action.error },
         },
@@ -98,6 +112,9 @@ export default function user(state = initialState, action) {
           _id: { $set: action._id },
           username: { $set: action.username },
           nickname: { $set: action.nickname },
+          tags: { $set: action.tags },
+          followings: { $set: action.followings },
+          bookmarks: { $set: action.bookmarks },
           isAuthenticated: { $set: true },
         },
         verify: {
@@ -137,6 +154,30 @@ export default function user(state = initialState, action) {
     case actionTypes.USER_VALIDATE_INITIALIZE:
       return update(state, {
         validate: { $set: initialState.validate },
+      });
+    case actionTypes.USER_BOOKMARK_REQUEST:
+      return update(state, {
+        bookmark: {
+          status: { $set: 'WAITING' },
+        },
+      });
+    case actionTypes.USER_BOOKMARK_SUCCESS:
+      return update(state, {
+        bookmark: {
+          status: { $set: 'SUCCESS' },
+          bookmark: { $set: action.bookmark },
+        },
+        login: {
+          bookmarks: { $set: action.bookmarks }, // add only chagned one?
+        },
+      });
+    case actionTypes.USER_BOOKMARK_FAILURE:
+      return update(state, {
+        bookmark: {
+          status: { $set: 'FAILURE' },
+          bookmark: { $set: '' },
+          error: { $set: action.error },
+        },
       });
     default:
       return state;

@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import IconButton from '@material-ui/core/IconButton';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
-import TurnInNot from '@material-ui/icons/TurnedInNot';
+import TurnInNotIcon from '@material-ui/icons/TurnedInNot';
+import TurnedInIcon from '@material-ui/icons/TurnedIn';
 
 const Container = styled.div`
   display: flex;
@@ -19,7 +20,9 @@ const Container = styled.div`
 `;
 export default class LogModalToolBox extends Component {
   static propTypes = {
+    bookmarks: PropTypes.array.isRequired,
     count: PropTypes.number.isRequired,
+    handleBookmark: PropTypes.func.isRequired,
     handleStarLog: PropTypes.func.isRequired,
     logId: PropTypes.string.isRequired,
     stars: PropTypes.array.isRequired,
@@ -28,6 +31,10 @@ export default class LogModalToolBox extends Component {
   checkUserStared = () => {
     const { stars, userId } = this.props;
     return stars.indexOf(userId) !== -1;
+  }
+  checkUserBookmarked = () => {
+    const { bookmarks, logId } = this.props;
+    return bookmarks.indexOf(logId) !== -1;
   }
   handleStarLog = () => {
     const { logId, userId, handleStarLog } = this.props;
@@ -39,18 +46,28 @@ export default class LogModalToolBox extends Component {
     };
     handleStarLog(starData);
   }
+  handleBookmark = () => {
+    const { logId, userId, handleBookmark } = this.props;
+    const isBookmarked = this.checkUserBookmarked();
+    const bookmarkData = {
+      logId,
+      userId,
+      isBookmarked,
+    };
+    handleBookmark(bookmarkData);
+  }
   render() {
     const {
       count,
     } = this.props;
     return (
       <Container>
-        <IconButton size="small" onClick={this.handleStarLog} >
+        <IconButton onClick={this.handleStarLog} >
           { this.checkUserStared() ? <StarIcon /> : <StarBorderIcon /> }
         </IconButton>
         {count}
-        <IconButton size="small">
-          <TurnInNot />
+        <IconButton onClick={this.handleBookmark}>
+          { this.checkUserBookmarked() ? <TurnedInIcon /> : <TurnInNotIcon /> }
         </IconButton>
       </Container>
     );
