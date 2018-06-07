@@ -61,6 +61,8 @@
     "webpack-hot-middleware": "^2.21.0"
   },
   "dependencies": {
+    "@material-ui/core": "^1.2.0",
+    "@material-ui/icons": "^1.1.0",
     "axios": "^0.18.0",
     "bcrypt": "^2.0.0",
     "brace": "^0.11.1",

@@ -1,9 +1,8 @@
 import { delay } from 'redux-saga';
 import { all, call, put, fork, cancel, cancelled, takeLatest, take } from 'redux-saga/effects';
 import * as authApi from '../api/auth';
-
 import * as actions from '../constants/actionTypes';
-
+import { jwt } from '../utils';
 /**
  * Login
  */
@@ -11,7 +10,7 @@ function* login(id, pw) {
   try {
     const response = yield call(authApi.login, id, pw);
     const { _id, username, nickname, token } = response.data;
-    localStorage.setItem('token', token);
+    jwt.setToken(token);
     yield put({
       type: actions.MODAL_CLOSE,
     });
@@ -36,7 +35,7 @@ function* login(id, pw) {
   }
   finally {
     if (yield cancelled()) {
-      localStorage.removeItem('token');
+      jwt.removeToken();
       yield put({
         type: actions.USER_LOGIN_FAILURE,
         error: 'Logout before login',
@@ -49,7 +48,7 @@ function* login(id, pw) {
  * Logout
  */
 function* logout() {
-  localStorage.removeItem('token');
+  jwt.removeToken();
   yield put({
     type: actions.USER_LOGOUT_SUCCESS,
   });
@@ -83,7 +82,7 @@ function* signup(action) {
 }
 
 function* verify() {
-  const currentToken = localStorage.getItem('token');
+  const currentToken = jwt.getToken();
   if (!currentToken) {
     yield put({
       type: actions.USER_VERIFY_FAILURE,
@@ -91,6 +90,7 @@ function* verify() {
   }
   else {
     try {
+      jwt.setToken(currentToken);
       const response = yield call(authApi.verify, currentToken);
       const { _id, username, nickname } = response.data;
       yield put({
@@ -102,7 +102,7 @@ function* verify() {
     }
     catch (err) {
       const { error } = err.response.data;
-      localStorage.removeItem('token');
+      jwt.removeToken();
       yield put({
         type: actions.USER_VERIFY_FAILURE,
         error,
@@ -110,7 +110,7 @@ function* verify() {
     }
     finally {
       if (yield cancelled()) {
-        localStorage.removeItem('token');
+        jwt.removeToken();
         yield put({
           type: actions.USER_VERIFY_FAILURE,
           error: 'Logout before verify',

@@ -26,7 +26,7 @@ const userSchema = new Schema({
   },
   followings: [{ type: Schema.Types.ObjectId, ref: 'users' }], // mongoose populate api
   tags: [{ type: Schema.Types.ObjectId, ref: 'tags' }],
-  pins: [{ type: Schema.Types.ObjectId, ref: 'posts' }],
+  bookmarks: [{ type: Schema.Types.ObjectId, ref: 'posts' }],
 });
 /*
   hashing password before save.
