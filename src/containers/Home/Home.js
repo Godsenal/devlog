@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Switch } from 'react-router-dom';
 import { PropsRoute } from '../../routes/RouterUtil';
-import { Timeline, Profile } from '../';
-import { Header, LogView } from '../../components';
+import { Timeline, LogPage } from '../';
+import { Header } from '../../components';
 /*
   Visible when verfication ended.
 */
@@ -73,16 +73,11 @@ class Home extends Component {
             showModal={showModal}
             closeModal={closeModal}
           />
-          <PropsRoute
-            path="/:nickname"
-            isAuthenticated={isAuthenticated}
-            redirectTo="/login"
-            component={Profile}
-          />
         </Switch>
         <PropsRoute
           path="/:nickname/log/:logId"
-          component={LogView}
+          component={LogPage}
+          isModal={isModal}
           showModal={showModal}
           closeModal={closeModal}
         />

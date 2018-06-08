@@ -1,26 +1,117 @@
-import { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import styled from 'styled-components';
+import { LogViewToolBox, LogMainContent, CodeBox } from '../';
+import { bookmark } from '../../actions/user';
+import { getLog, starLog } from '../../actions/log';
+import { addToast } from '../../actions/toast';
+import { clipboard } from '../../utils';
 
-export default class LogView extends PureComponent {
+const CodeContent = styled.div`
+  position: relative;
+`;
+const Clipboard = styled.a`
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  
+  padding: 5px 10px;
+
+  border-top-left-radius: 5px;
+  background-color: rgba(0,0,0,0.3);
+  color: white;
+  cursor: pointer;
+`;
+class LogView extends Component {
   static propTypes = {
-    closeModal: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired,
-    match: PropTypes.object.isRequired,
-    showModal: PropTypes.func.isRequired,
+    handleAddToast: PropTypes.func.isRequired,
+    handleBookmark: PropTypes.func.isRequired,
+    handleGetLog: PropTypes.func.isRequired,
+    handleStarLog: PropTypes.func.isRequired,
+    logGetState: PropTypes.object.isRequired,
+    logId: PropTypes.string.isRequired,
+    logStarState: PropTypes.object.isRequired,
+    userBookmarkState: PropTypes.object.isRequired,
+    userState: PropTypes.object.isRequired,
   }
   componentDidMount() {
-    const { match, showModal, history } = this.props;
-    const { nickname, logId } = match.params;
-    const modalProps = {
-      logId,
-      onClose: history.action === 'PUSH' ? () => history.goBack() : () => history.push(`/${nickname}`),
-    };
-    showModal('LOG_MODAL', modalProps);
+    const { logId, handleGetLog } = this.props;
+    handleGetLog(logId);
   }
-  componentWillUnmount() {
-    this.props.closeModal();
+  handleClipboard = () => {
+    const { handleAddToast } = this.props;
+    const { code } = this.props.logGetState.log;
+    clipboard(code)
+      .then(() => {
+        handleAddToast({
+          message: 'Copied!',
+        });
+      })
+      .catch(() => {
+        handleAddToast({
+          message: 'Fail to copy...',
+        });
+      });
   }
   render() {
-    return null;
+    const {
+      logGetState,
+      logStarState,
+      userState,
+      userBookmarkState,
+      handleStarLog,
+      handleBookmark,
+    } = this.props;
+    if (logGetState.status !== 'SUCCESS') {
+      return <div>Loading...</div>;
+    }
+    const {
+      log,
+    } = logGetState;
+    return (
+      <div>
+        <LogMainContent {...log}>
+          <CodeContent>
+            { log.has_code && (
+              <CodeBox
+                codeBlockType={log.code_type}
+                code={log.code}
+                language={log.code_language}
+                frameSrc={log.frame_src}
+                frameType={log.frame_type}
+              />
+            )}
+            { log.code_type === 'editor' && (
+              <Clipboard onClick={this.handleClipboard}>Clip it</Clipboard>
+            )}
+          </CodeContent>
+          <LogViewToolBox
+            logId={log._id}
+            userId={userState._id}
+            bookmarks={userState.bookmarks}
+            handleStarLog={handleStarLog}
+            handleBookmark={handleBookmark}
+            {...logStarState}
+            {...userBookmarkState}
+          />
+        </LogMainContent>
+      </div>
+    );
   }
 }
+
+const mapStateToProps = state => ({
+  userState: state.user.login,
+  userBookmarkState: state.user.bookmark,
+  logGetState: state.log.get,
+  logStarState: state.log.star,
+});
+const mapDispatchToProps = dispatch => ({
+  handleBookmark: (bookmarkData) => dispatch(bookmark({ ...bookmarkData })),
+  handleAddToast: (toastProps) => dispatch(addToast(toastProps)),
+  handleGetLog: (logId) => dispatch(getLog(logId)),
+  handleStarLog: (starData) => dispatch(starLog({ ...starData })),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(LogView);

@@ -5,6 +5,7 @@ import CodeFrameBox from './CodeFrameBox';
 import CodeBox from './CodeBox';
 import Transition from './Transition';
 import LogView from './LogView';
+import LogViewToolBox from './LogViewToolBox';
 import LogContainer from './LogContainer';
 import LogMainContent from './LogMainContent';
 import LogList from './LogList';
@@ -19,6 +20,7 @@ export {
   CodeBox,
   Transition,
   LogView,
+  LogViewToolBox,
   LogContainer,
   LogMainContent,
   LogList,

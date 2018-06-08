@@ -18,7 +18,7 @@ const Container = styled.div`
   justify-content: flex-end;
   align-items: center;
 `;
-export default class LogModalToolBox extends Component {
+export default class LogViewToolBox extends Component {
   static propTypes = {
     bookmarks: PropTypes.array.isRequired,
     count: PropTypes.number.isRequired,

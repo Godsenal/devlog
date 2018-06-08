@@ -1,118 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
-import LogModalToolBox from './LogModalToolBox';
-import { LogMainContent, CodeBox } from '../../../../components';
-import { bookmark } from '../../../../actions/user';
-import { getLog, starLog } from '../../../../actions/log';
-import { addToast } from '../../../../actions/toast';
-import { clipboard } from '../../../../utils';
+import { LogView } from '../../../../components';
 
-const CodeContent = styled.div`
-  position: relative;
-`;
-const Clipboard = styled.a`
-  position: absolute;
-  bottom: 0px;
-  right: 0px;
-  
-  padding: 5px 10px;
+const LogModal = ({ logId }) => (
+  <LogView logId={logId} />
+);
+LogModal.propTypes = {
+  logId: PropTypes.string.isRequired,
+};
 
-  border-top-left-radius: 5px;
-  background-color: rgba(0,0,0,0.3);
-  color: white;
-  cursor: pointer;
-`;
-class LogModal extends Component {
-  static propTypes = {
-    handleAddToast: PropTypes.func.isRequired,
-    handleBookmark: PropTypes.func.isRequired,
-    handleGetLog: PropTypes.func.isRequired,
-    handleStarLog: PropTypes.func.isRequired,
-    logGetState: PropTypes.object.isRequired,
-    logId: PropTypes.string.isRequired,
-    logStarState: PropTypes.object.isRequired,
-    userBookmarkState: PropTypes.object.isRequired,
-    userState: PropTypes.object.isRequired,
-  }
-  componentDidMount() {
-    const { logId, handleGetLog } = this.props;
-    handleGetLog(logId);
-  }
-  handleClipboard = () => {
-    const { handleAddToast } = this.props;
-    const { code } = this.props.logGetState.log;
-    clipboard(code)
-      .then(() => {
-        handleAddToast({
-          message: 'Copied!',
-        });
-      })
-      .catch(() => {
-        handleAddToast({
-          message: 'Fail to copy...',
-        });
-      });
-  }
-  render() {
-    const {
-      logGetState,
-      logStarState,
-      userState,
-      userBookmarkState,
-      handleStarLog,
-      handleBookmark,
-    } = this.props;
-    if (logGetState.status !== 'SUCCESS') {
-      return <div>Loading...</div>;
-    }
-    const {
-      log,
-    } = logGetState;
-    return (
-      <div>
-        <LogMainContent {...log}>
-          <CodeContent>
-            { log.has_code && (
-              <CodeBox
-                codeBlockType={log.code_type}
-                code={log.code}
-                language={log.code_language}
-                frameSrc={log.frame_src}
-                frameType={log.frame_type}
-              />
-            )}
-            { log.code_type === 'editor' && (
-              <Clipboard onClick={this.handleClipboard}>Clip it</Clipboard>
-            )}
-          </CodeContent>
-          <LogModalToolBox
-            logId={log._id}
-            userId={userState._id}
-            bookmarks={userState.bookmarks}
-            handleStarLog={handleStarLog}
-            handleBookmark={handleBookmark}
-            {...logStarState}
-            {...userBookmarkState}
-          />
-        </LogMainContent>
-      </div>
-    );
-  }
-}
-
-const mapStateToProps = state => ({
-  userState: state.user.login,
-  userBookmarkState: state.user.bookmark,
-  logGetState: state.log.get,
-  logStarState: state.log.star,
-});
-const mapDispatchToProps = dispatch => ({
-  handleBookmark: (bookmarkData) => dispatch(bookmark({ ...bookmarkData })),
-  handleAddToast: (toastProps) => dispatch(addToast(toastProps)),
-  handleGetLog: (logId) => dispatch(getLog(logId)),
-  handleStarLog: (starData) => dispatch(starLog({ ...starData })),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(LogModal);
+export default LogModal;
