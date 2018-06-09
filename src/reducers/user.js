@@ -35,6 +35,11 @@ const initialState = {
     bookmark: '',
     error: 'Error',
   },
+  follow: {
+    status: 'INIT',
+    followingId: '',
+    error: 'Error',
+  },
 };
 
 export default function user(state = initialState, action) {
@@ -176,6 +181,30 @@ export default function user(state = initialState, action) {
         bookmark: {
           status: { $set: 'FAILURE' },
           bookmark: { $set: '' },
+          error: { $set: action.error },
+        },
+      });
+    case actionTypes.USER_FOLLOW_REQUEST:
+      return update(state, {
+        follow: {
+          status: { $set: 'WAITING' },
+        },
+      });
+    case actionTypes.USER_FOLLOW_SUCCESS:
+      return update(state, {
+        follow: {
+          status: { $set: 'SUCCESS' },
+          followingId: { $set: action.followingId },
+        },
+        login: {
+          followings: { $set: action.followings }, // add only chagned one?
+        },
+      });
+    case actionTypes.USER_FOLLOW_FAILURE:
+      return update(state, {
+        follow: {
+          status: { $set: 'FAILURE' },
+          followingId: { $set: '' },
           error: { $set: action.error },
         },
       });

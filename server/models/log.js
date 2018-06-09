@@ -24,11 +24,11 @@ const logSchema = new Schema({
   code_language: String,
   frame_src: String,
   frame_type: String,
-  author_id: { type: Schema.Types.ObjectId, ref: 'User' },
+  author_id: { type: Schema.Types.ObjectId, ref: 'users' },
   author_nickname: String,
   created: { type: Date, default: Date.now },
   tags: { type: Array, default: [] },
-  star: { type: Array, default: [] },
+  stars: { type: Array, default: [] },
 });
 
 module.exports = mongoose.model('Log', logSchema);

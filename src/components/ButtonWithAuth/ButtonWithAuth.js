@@ -6,12 +6,13 @@ import { history } from '../../utils';
 
 class ButtonWithAuth extends PureComponent {
   static propTypes = {
-    children: PropTypes.number.isRequired,
+    children: PropTypes.node.isRequired,
     dispatch: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
     onClick: PropTypes.func.isRequired,
   }
-  handleClick = () => {
+  handleClick = (e) => {
+    e.preventDefault();
     const { isAuthenticated, dispatch, onClick } = this.props;
     if (!isAuthenticated) {
       const prevLocation = history.location;

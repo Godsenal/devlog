@@ -66,11 +66,6 @@ function* get(action) {
       type: LOG_GET_SUCCESS,
       log,
     });
-    // set default log star when log is loaded.
-    yield put({
-      type: LOG_STAR_SUCCESS,
-      stars: log.star,
-    });
   }
   catch (err) {
     const { error } = err.response.data;
@@ -93,6 +88,7 @@ function* star(action) {
     yield put({
       type: LOG_STAR_SUCCESS,
       stars,
+      logId,
     });
   }
   catch (err) {

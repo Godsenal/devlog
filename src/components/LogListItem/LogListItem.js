@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Icon } from 'semantic-ui-react';
+import CodeIcon from '@material-ui/icons/Code';
 import { Link } from 'react-router-dom';
-import { LogMainContent } from '../';
+import { LogMainContent, LogViewToolBox } from '../';
 
 const Item = styled(Link)`
   display: block;
@@ -33,37 +33,46 @@ const CodePreview = styled.div`
   background-color: #272822;
   
   border-radius: 5px;
-  text-align: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 export default class LogListItem extends Component {
   static propTypes = {
     _id: PropTypes.string.isRequired,
+    author_id: PropTypes.string.isRequired,
     author_nickname: PropTypes.string.isRequired,
     created: PropTypes.string.isRequired,
     has_code: PropTypes.bool.isRequired,
+    stars: PropTypes.array.isRequired,
     text: PropTypes.string.isRequired,
   }
   render() {
     const {
       _id,
       text,
+      author_id,
       author_nickname,
       has_code,
       created,
+      stars,
     } = this.props;
     return (
       <Item to={{ pathname: `${author_nickname}/log/${_id}`, state: { modal: true } }}>
         <LogMainContent
+          author_id={author_id}
           author_nickname={author_nickname}
           text={text}
           created={created}
         >
           { has_code && (
             <CodePreview>
-              <Icon name="code" /> Click To See Code
+              <CodeIcon /> <span>Click to see code</span>
             </CodePreview>
           )}
         </LogMainContent>
+        <LogViewToolBox logId={_id} stars={stars} />
       </Item>
     );
   }

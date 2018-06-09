@@ -183,6 +183,25 @@ function* bookmark(action) {
     });
   }
 }
+function* follow(action) {
+  try {
+    const { userId, followingId, isFollowed } = action;
+    const { data } = yield call(userApi.follow, { userId, followingId, isFollowed });
+    const { followings } = data;
+    yield put({
+      type: actions.USER_FOLLOW_SUCCESS,
+      followings,
+      followingId,
+    });
+  }
+  catch (err) {
+    const { error } = err.response.data;
+    yield put({
+      type: actions.USER_FOLLOW_FAILURE,
+      error,
+    });
+  }
+}
 function* watchSignup() {
   yield takeLatest(actions.USER_SIGNUP_REQUEST, signup);
 }
@@ -191,6 +210,9 @@ function* watchValidate() {
 }
 function* watchBookmark() {
   yield takeLatest(actions.USER_BOOKMARK_REQUEST, bookmark);
+}
+function* watchFollow() {
+  yield takeLatest(actions.USER_FOLLOW_REQUEST, follow);
 }
 /**
  * User Sagas
@@ -201,5 +223,6 @@ export default function* root() {
     fork(watchSignup),
     fork(watchValidate),
     fork(watchBookmark),
+    fork(watchFollow),
   ]);
 }

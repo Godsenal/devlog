@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { LogViewToolBox, LogMainContent, CodeBox } from '../';
-import { bookmark } from '../../actions/user';
-import { getLog, starLog } from '../../actions/log';
+import { getLog } from '../../actions/log';
 import { addToast } from '../../actions/toast';
 import { clipboard } from '../../utils';
 
@@ -26,13 +25,9 @@ const Clipboard = styled.a`
 class LogView extends Component {
   static propTypes = {
     handleAddToast: PropTypes.func.isRequired,
-    handleBookmark: PropTypes.func.isRequired,
     handleGetLog: PropTypes.func.isRequired,
-    handleStarLog: PropTypes.func.isRequired,
     logGetState: PropTypes.object.isRequired,
     logId: PropTypes.string.isRequired,
-    logStarState: PropTypes.object.isRequired,
-    userBookmarkState: PropTypes.object.isRequired,
     userState: PropTypes.object.isRequired,
   }
   componentDidMount() {
@@ -57,11 +52,7 @@ class LogView extends Component {
   render() {
     const {
       logGetState,
-      logStarState,
       userState,
-      userBookmarkState,
-      handleStarLog,
-      handleBookmark,
     } = this.props;
     if (logGetState.status !== 'SUCCESS') {
       return <div>Loading...</div>;
@@ -71,7 +62,7 @@ class LogView extends Component {
     } = logGetState;
     return (
       <div>
-        <LogMainContent {...log}>
+        <LogMainContent {...log} isModal>
           <CodeContent>
             { log.has_code && (
               <CodeBox
@@ -88,12 +79,8 @@ class LogView extends Component {
           </CodeContent>
           <LogViewToolBox
             logId={log._id}
-            userId={userState._id}
             bookmarks={userState.bookmarks}
-            handleStarLog={handleStarLog}
-            handleBookmark={handleBookmark}
-            {...logStarState}
-            {...userBookmarkState}
+            stars={log.stars}
           />
         </LogMainContent>
       </div>
@@ -103,15 +90,11 @@ class LogView extends Component {
 
 const mapStateToProps = state => ({
   userState: state.user.login,
-  userBookmarkState: state.user.bookmark,
   logGetState: state.log.get,
-  logStarState: state.log.star,
 });
 const mapDispatchToProps = dispatch => ({
-  handleBookmark: (bookmarkData) => dispatch(bookmark({ ...bookmarkData })),
   handleAddToast: (toastProps) => dispatch(addToast(toastProps)),
   handleGetLog: (logId) => dispatch(getLog(logId)),
-  handleStarLog: (starData) => dispatch(starLog({ ...starData })),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LogView);

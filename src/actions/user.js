@@ -5,6 +5,7 @@ import {
   USER_VERIFY_REQUEST,
   USER_VALIDATE_REQUEST,
   USER_BOOKMARK_REQUEST,
+  USER_FOLLOW_REQUEST,
 } from '../constants/actionTypes';
 
 export function login(username, password) {
@@ -46,5 +47,13 @@ export function bookmark({ userId, logId, isBookmarked = false }) {
     userId,
     logId,
     isBookmarked,
+  };
+}
+export function follow({ userId, followingId, isFollowed = false }) {
+  return {
+    type: USER_FOLLOW_REQUEST,
+    userId,
+    followingId,
+    isFollowed,
   };
 }

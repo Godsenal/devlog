@@ -1,4 +1,5 @@
 import update from 'immutability-helper';
+import findIndex from 'lodash/findIndex';
 
 import {
   LOG_POST_REQUEST,
@@ -118,13 +119,33 @@ export default function log(state = initialState, action) {
         },
       });
     case LOG_STAR_SUCCESS: {
-      return update(state, {
+      const starUpdate = {
         star: {
           status: { $set: 'SUCCESS' },
           stars: { $set: action.stars },
           count: { $set: action.stars.length },
         },
-      });
+      };
+      const listIndex = findIndex(state.list.logs, item => item._id === action.logId);
+      const isCurrent = state.get.log._id === action.logId;
+
+      if (listIndex >= 0) { // star update when log is in list.
+        starUpdate.list = {
+          logs: {
+            [listIndex]: {
+              stars: { $set: action.stars },
+            },
+          },
+        };
+      }
+      if (isCurrent) { // star update for current log when user see this log.
+        starUpdate.get = {
+          log: {
+            stars: { $set: action.stars },
+          },
+        };
+      }
+      return update(state, starUpdate);
     }
     case LOG_STAR_FAILURE:
       return update(state, {

@@ -15,8 +15,10 @@ exports.log_post = function log_post(req, res) {
         _id: savedLog._id,
         text: savedLog.text,
         has_code: savedLog.has_code,
+        author_id: savedLog.author_id,
         author_nickname: savedLog.author_nickname,
         created: savedLog.created,
+        stars: savedLog.stars,
       },
     })
   );
@@ -39,8 +41,10 @@ exports.list_get = function list_get(req, res) {
     _id: 1,
     text: 1,
     has_code: 1,
+    author_id: 1,
     author_nickname: 1,
     created: 1,
+    stars: 1,
   };
   const sort = {
     _id: -1,
@@ -103,16 +107,16 @@ exports.star_put = function star_put(req, res) {
   const { logId, userId, isStared } = req.body;
   // if starred, unstar. otherwise, star.
   let update = {
-    $addToSet: { star: userId },
+    $addToSet: { stars: userId },
   };
   if (isStared) {
     update = {
-      $pull: { star: userId },
+      $pull: { stars: userId },
     };
   }
   const option = {
     new: true,
-    select: 'star',
+    select: 'stars',
   };
   Log.findByIdAndUpdate(logId, update, option, (err, log) => {
     if (err) {
@@ -121,7 +125,7 @@ exports.star_put = function star_put(req, res) {
       });
     }
     res.json({
-      stars: log.star,
+      stars: log.stars,
     });
   });
 };
