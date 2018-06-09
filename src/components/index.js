@@ -1,5 +1,6 @@
 import DimmedLoader from './DimmedLoader';
 import Header from './Header';
+import ButtonWithAuth from './ButtonWithAuth';
 import CodeEditorBox from './CodeEditorBox';
 import CodeFrameBox from './CodeFrameBox';
 import CodeBox from './CodeBox';
@@ -15,6 +16,7 @@ import LogEditor from './LogEditor';
 export {
   DimmedLoader,
   Header,
+  ButtonWithAuth,
   CodeEditorBox,
   CodeFrameBox,
   CodeBox,

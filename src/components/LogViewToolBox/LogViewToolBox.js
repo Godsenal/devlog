@@ -6,6 +6,7 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import TurnInNotIcon from '@material-ui/icons/TurnedInNot';
 import TurnedInIcon from '@material-ui/icons/TurnedIn';
+import { ButtonWithAuth } from '../';
 
 const Container = styled.div`
   display: flex;
@@ -62,13 +63,17 @@ export default class LogViewToolBox extends Component {
     } = this.props;
     return (
       <Container>
-        <IconButton onClick={this.handleStarLog} >
-          { this.checkUserStared() ? <StarIcon /> : <StarBorderIcon /> }
-        </IconButton>
+        <ButtonWithAuth onClick={this.handleStarLog}>
+          <IconButton >
+            { this.checkUserStared() ? <StarIcon /> : <StarBorderIcon /> }
+          </IconButton>
+        </ButtonWithAuth>
         {count}
-        <IconButton onClick={this.handleBookmark}>
-          { this.checkUserBookmarked() ? <TurnedInIcon /> : <TurnInNotIcon /> }
-        </IconButton>
+        <ButtonWithAuth onClick={this.handleBookmark}>
+          <IconButton>
+            { this.checkUserBookmarked() ? <TurnedInIcon /> : <TurnInNotIcon /> }
+          </IconButton>
+        </ButtonWithAuth>
       </Container>
     );
   }
