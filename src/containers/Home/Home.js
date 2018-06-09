@@ -9,6 +9,7 @@ import { Header } from '../../components';
 */
 class Home extends Component {
   state = {
+    previousLocation: {}, // when location is not modal
     lastLocation: {},
   }
   static propTypes = {
@@ -27,14 +28,16 @@ class Home extends Component {
       nextProps.history.action !== 'POP' &&
       (!lastLocation.state || !lastLocation.state.modal)
     ) {
-      return null;
+      return {
+        previousLocation: lastLocation,
+      };
     }
     return {
-      lastLocation: nextProps.history.location,
+      lastLocation: nextProps.location,
     };
   }
   render() {
-    const { lastLocation } = this.state;
+    const { previousLocation } = this.state;
     const {
       location,
       isMobile,
@@ -42,20 +45,11 @@ class Home extends Component {
       logout,
       showModal,
       closeModal,
-      isAuthenticated,
     } = this.props;
-    if (location.pathname === '/' && !isAuthenticated) {
-      return (
-        <div>
-          <h1>Welcome!</h1>
-          <button onClick={() => this.props.showModal('LOGIN_MODAL')}> login </button>
-        </div>
-      );
-    }
     const isModal = !!(
       location.state &&
       location.state.modal &&
-      lastLocation !== location
+      previousLocation !== location
     );
     return (
       <div>
@@ -65,7 +59,7 @@ class Home extends Component {
           showModal={showModal}
           closeModal={closeModal}
         />
-        <Switch location={isModal ? lastLocation : location}>
+        <Switch location={isModal ? previousLocation : location}>
           <PropsRoute
             exact path="/"
             component={Timeline}
