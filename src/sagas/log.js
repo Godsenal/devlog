@@ -13,6 +13,9 @@ import {
   LOG_STAR_REQUEST,
   LOG_STAR_SUCCESS,
   LOG_STAR_FAILURE,
+  LOG_POST_COMMENT_REQUEST,
+  LOG_POST_COMMENT_SUCCESS,
+  LOG_POST_COMMENT_FAILURE,
 } from '../constants/actionTypes';
 import * as logApi from '../api/log';
 
@@ -90,11 +93,32 @@ function* star(action) {
       stars,
       logId,
     });
+
+    // TODO: add raw update for star and update log_star reducer
   }
   catch (err) {
     const { error } = err.response.data;
     yield put({
       type: LOG_STAR_FAILURE,
+      error,
+    });
+  }
+}
+function* postComment(action) {
+  try {
+    const { comment } = action;
+    const { data } = yield call(logApi.postComment, comment);
+    const { comments } = data;
+    yield put({
+      type: LOG_POST_COMMENT_SUCCESS,
+      comment,
+      comments,
+    });
+  }
+  catch (err) {
+    const { error } = err.response.data;
+    yield put({
+      type: LOG_POST_COMMENT_FAILURE,
       error,
     });
   }
@@ -118,6 +142,9 @@ function* watchStar() {
     task = yield fork(star, action);
   }
 }
+function* watchPostComment() {
+  yield takeLatest(LOG_POST_COMMENT_REQUEST, postComment);
+}
 /**
  * Log Sagas
  */
@@ -127,5 +154,6 @@ export default function* root() {
     fork(watchList),
     fork(watchGet),
     fork(watchStar),
+    fork(watchPostComment),
   ]);
 }

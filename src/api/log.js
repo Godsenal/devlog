@@ -18,3 +18,12 @@ export function get(logId) {
 export function star({ logId, userId, isStared }) {
   return axios.put(`${path}/star`, { logId, userId, isStared });
 }
+
+export function postComment(comment) {
+  return axios.post(`${path}/comment`, { comment });
+}
+
+export function listComment(logId) {
+  const list_path = `${path}/comment/list?log_id=${logId}`;
+  return axios.get(list_path);
+}

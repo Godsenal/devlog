@@ -14,6 +14,10 @@ import {
   LOG_STAR_REQUEST,
   LOG_STAR_SUCCESS,
   LOG_STAR_FAILURE,
+  LOG_POST_COMMENT_REQUEST,
+  LOG_POST_COMMENT_SUCCESS,
+  LOG_POST_COMMENT_FAILURE,
+  LOG_RAW_UPDATE,
 } from '../constants/actionTypes';
 
 const initialState = {
@@ -38,6 +42,12 @@ const initialState = {
     status: 'INIT',
     stars: [],
     count: 0,
+    error: 'Error',
+  },
+  comment: {
+    status: 'INIT',
+    comment: {},
+    comments: [],
     error: 'Error',
   },
 };
@@ -154,6 +164,70 @@ export default function log(state = initialState, action) {
           error: { $set: action.error },
         },
       });
+    case LOG_POST_COMMENT_REQUEST:
+      return update(state, {
+        comment: {
+          status: { $set: 'WAITING' },
+        },
+      });
+    case LOG_POST_COMMENT_SUCCESS: {
+      const listIndex = findIndex(state.list.logs, item => item._id === action.logId);
+      const isCurrent = state.get.log._id === action.logId;
+      const commentUpdate = {
+        comment: {
+          status: { $set: 'SUCCESS' },
+          comment: { $set: action.comment },
+        },
+      };
+      if (listIndex >= 0) { // star update when log is in list.
+        commentUpdate.list = {
+          logs: {
+            [listIndex]: {
+              [action.updateField]: { $set: action.update },
+            },
+          },
+        };
+      }
+      if (isCurrent) { // star update for current log when user see this log.
+        commentUpdate.get = {
+          log: {
+            [action.updateField]: { $set: action.update },
+          },
+        };
+      }
+      return update(state, commentUpdate);
+    }
+    case LOG_POST_COMMENT_FAILURE:
+      return update(state, {
+        comment: {
+          status: { $set: 'FAILURE' },
+          comments: { $set: [] },
+          comment: { $set: {} },
+          error: { $set: action.error },
+        },
+      });
+    case LOG_RAW_UPDATE: { // reducer for make raw updating for log when fetched new data.
+      const listIndex = findIndex(state.list.logs, item => item._id === action.logId);
+      const isCurrent = state.get.log._id === action.logId;
+      const rawUpdate = {};
+      if (listIndex >= 0) { // star update when log is in list.
+        rawUpdate.list = {
+          logs: {
+            [listIndex]: {
+              comment_count: { $set: action.comments.length },
+            },
+          },
+        };
+      }
+      if (isCurrent) { // star update for current log when user see this log.
+        rawUpdate.get = {
+          log: {
+            comments: { $set: action.comments },
+          },
+        };
+      }
+      return update(state, rawUpdate);
+    }
     default:
       return state;
   }

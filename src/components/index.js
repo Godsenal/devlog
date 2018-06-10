@@ -12,6 +12,7 @@ import LogContainer from './LogContainer';
 import LogMainContent from './LogMainContent';
 import LogList from './LogList';
 import LogListItem from './LogListItem';
+import LogComment from './LogComment';
 import LogEditor from './LogEditor';
 
 export {
@@ -29,5 +30,6 @@ export {
   LogMainContent,
   LogList,
   LogListItem,
+  LogComment,
   LogEditor
 };

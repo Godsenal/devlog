@@ -28,6 +28,10 @@ class FollowButton extends Component {
     dispatchFollow(followData);
   }
   render() {
+    const { followingId, userState } = this.props;
+    if (followingId === userState._id) {
+      return null;
+    }
     return (
       <ButtonWithAuth onClick={this.handleFollow}>
         { this.checkFollowed() ?

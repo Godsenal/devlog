@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import IconButton from '@material-ui/core/IconButton';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import StarIcon from '@material-ui/icons/Star';
-import TurnInNotIcon from '@material-ui/icons/TurnedInNot';
-import TurnedInIcon from '@material-ui/icons/TurnedIn';
+import CommentIcon from 'react-icons/lib/fa/comment-o';
+import BookmarkIcon from 'react-icons/lib/fa/bookmark-o';
+import FullBookmarkIcon from 'react-icons/lib/fa/bookmark';
+import StarIcon from 'react-icons/lib/fa/star-o';
+import FullStarIcon from 'react-icons/lib/fa/star';
 import { ButtonWithAuth } from '../';
 import { bookmark } from '../../actions/user';
 import { getLog, starLog } from '../../actions/log';
@@ -24,11 +25,15 @@ const Container = styled.div`
 class LogViewToolBox extends Component {
   static propTypes = {
     bookmarks: PropTypes.array.isRequired,
+    commentCount: PropTypes.number,
     handleBookmark: PropTypes.func.isRequired,
     handleStarLog: PropTypes.func.isRequired,
     logId: PropTypes.string.isRequired,
     stars: PropTypes.array.isRequired,
     userId: PropTypes.string.isRequired,
+  }
+  static defaultProps = {
+    commentCount: 0,
   }
   checkUserStared = () => {
     const { stars, userId } = this.props;
@@ -61,18 +66,25 @@ class LogViewToolBox extends Component {
   render() {
     const {
       stars,
+      commentCount,
     } = this.props;
     return (
       <Container>
         <ButtonWithAuth onClick={this.handleStarLog}>
           <IconButton >
-            { this.checkUserStared() ? <StarIcon color="secondary" /> : <StarBorderIcon /> }
-            {!!stars && stars.length}
+            <CommentIcon />
           </IconButton>
         </ButtonWithAuth>
+        {commentCount}
+        <ButtonWithAuth onClick={this.handleStarLog}>
+          <IconButton >
+            { this.checkUserStared() ? <FullStarIcon color="#ec5453" /> : <StarIcon /> }
+          </IconButton>
+        </ButtonWithAuth>
+        {!!stars && stars.length}
         <ButtonWithAuth onClick={this.handleBookmark}>
           <IconButton>
-            { this.checkUserBookmarked() ? <TurnedInIcon /> : <TurnInNotIcon /> }
+            { this.checkUserBookmarked() ? <FullBookmarkIcon color="#1cba79" /> : <BookmarkIcon /> }
           </IconButton>
         </ButtonWithAuth>
       </Container>

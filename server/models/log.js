@@ -15,6 +15,14 @@ const { Schema } = mongoose;
  * tags: array of tag
  * star: number of star
  */
+const commentSchema = new Schema({
+  author_id: Schema.Types.ObjectId,
+  author_nickname: String,
+  created: { type: Date, default: Date.now },
+  text: String,
+  thread_id: Schema.Types.ObjectId,
+  parent_id: Schema.Types.ObjectId,
+});
 const logSchema = new Schema({
   text: String,
   content: Object,
@@ -27,8 +35,8 @@ const logSchema = new Schema({
   author_id: { type: Schema.Types.ObjectId, ref: 'users' },
   author_nickname: String,
   created: { type: Date, default: Date.now },
+  comments: [commentSchema],
   tags: { type: Array, default: [] },
   stars: { type: Array, default: [] },
 });
-
 module.exports = mongoose.model('Log', logSchema);

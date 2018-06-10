@@ -12,4 +12,7 @@ router.get('/log/:logId', log_controller.log_get); // one of logs
 router.put('/log/:logId', log_controller.log_put);
 router.put('/star', verifyToken, log_controller.star_put);
 
+router.post('/comment', verifyToken, log_controller.comment_post);
+router.get('/comment/list', log_controller.comment_list);
+
 module.exports = router;

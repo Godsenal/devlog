@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Icon } from 'semantic-ui-react';
+import CodeIcon from 'react-icons/lib/fa/code';
 
 
 const ButtonBox = styled.div`
@@ -67,7 +67,7 @@ const EditorToolBox = ({ onCodeButtonClick, hasCodeBlock, handleLog }) => (
   <ButtonBox>
     <LeftBox>
       <IconButton onClick={onCodeButtonClick} active={hasCodeBlock} >
-        <Icon name="code" />
+        <CodeIcon />
       </IconButton>
     </LeftBox>
     <RightBox>

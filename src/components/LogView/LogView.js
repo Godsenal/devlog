@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { LogViewToolBox, LogMainContent, CodeBox } from '../';
+import { LogViewToolBox, LogMainContent, LogComment, CodeBox } from '../';
 import { getLog } from '../../actions/log';
 import { addToast } from '../../actions/toast';
 import { clipboard } from '../../utils';
@@ -81,7 +81,9 @@ class LogView extends Component {
             logId={log._id}
             bookmarks={userState.bookmarks}
             stars={log.stars}
+            commentCount={log.comments && log.comments.length}
           />
+          <LogComment comments={log.comments} />
         </LogMainContent>
       </div>
     );

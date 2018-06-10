@@ -18,6 +18,7 @@ exports.log_post = function log_post(req, res) {
         author_id: savedLog.author_id,
         author_nickname: savedLog.author_nickname,
         created: savedLog.created,
+        comment_count: 0,
         stars: savedLog.stars,
       },
     })
@@ -44,6 +45,7 @@ exports.list_get = function list_get(req, res) {
     author_id: 1,
     author_nickname: 1,
     created: 1,
+    comment_count: { $size: '$comments' },
     stars: 1,
   };
   const sort = {
@@ -67,17 +69,19 @@ exports.list_get = function list_get(req, res) {
       logs,
     })
   );
-  const error = (err) => (
+  const error = (err) => {
     res.status(503).json({
       error: err,
-    })
-  );
+    });
+  };
 
-  Log.find(query, projection)
-    .sort(sort)
-    .skip(skip)
-    .limit(limit)
-    .exec()
+  Log.aggregate([
+    { $match: query },
+    { $project: projection },
+    { $sort: sort },
+    { $skip: skip },
+    { $limit: limit },
+  ]).exec()
     .then(check)
     .then(success)
     .catch(error);
@@ -126,6 +130,41 @@ exports.star_put = function star_put(req, res) {
     }
     res.json({
       stars: log.stars,
+    });
+  });
+};
+
+exports.comment_post = (req, res) => {
+  const { comment } = req.body;
+  const log = new Log({ _id: comment.thread_id });
+  log.comments.push(comment);
+  const newComment = log.comments[0];
+
+  const check = (savedLog, err) => {
+    if (err) {
+      throw new Error('Fail to save comment.');
+    }
+    return savedLog.comments;
+  };
+  const success = (savedLog) => res.json({ comment: newComment, comments: savedLog.comments });
+  const error = (err) => res.status(503).json({ error: err });
+  log.save()
+    .then(check)
+    .then(success)
+    .catch(error);
+};
+
+exports.comment_list = (req, res) => {
+  const { log_id } = req.query;
+  const projection = {
+    comments: 1,
+  };
+  Log.findById(log_id, projection, (err, log) => {
+    if (err) {
+      return res.status(503).json({ error: 'Database error. Cannot find log.' });
+    }
+    return res.json({
+      comments: log.comments,
     });
   });
 };

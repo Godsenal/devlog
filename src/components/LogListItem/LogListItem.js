@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import CodeIcon from '@material-ui/icons/Code';
+import CodeIcon from 'react-icons/lib/fa/code';
 import { Link } from 'react-router-dom';
 import { LogMainContent, LogViewToolBox } from '../';
 
@@ -43,6 +43,7 @@ export default class LogListItem extends Component {
     _id: PropTypes.string.isRequired,
     author_id: PropTypes.string.isRequired,
     author_nickname: PropTypes.string.isRequired,
+    comment_count: PropTypes.number.isRequired,
     created: PropTypes.string.isRequired,
     has_code: PropTypes.bool.isRequired,
     stars: PropTypes.array.isRequired,
@@ -54,6 +55,7 @@ export default class LogListItem extends Component {
       text,
       author_id,
       author_nickname,
+      comment_count,
       has_code,
       created,
       stars,
@@ -68,11 +70,11 @@ export default class LogListItem extends Component {
         >
           { has_code && (
             <CodePreview>
-              <CodeIcon /> <span>Click to see code</span>
+              <CodeIcon /><span> Click to see code</span>
             </CodePreview>
           )}
         </LogMainContent>
-        <LogViewToolBox logId={_id} stars={stars} />
+        <LogViewToolBox logId={_id} stars={stars} commentCount={comment_count} />
       </Item>
     );
   }
