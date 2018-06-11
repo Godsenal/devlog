@@ -171,27 +171,27 @@ export default function log(state = initialState, action) {
         },
       });
     case LOG_POST_COMMENT_SUCCESS: {
-      const listIndex = findIndex(state.list.logs, item => item._id === action.logId);
-      const isCurrent = state.get.log._id === action.logId;
+      const listIndex = findIndex(state.list.logs, item => item._id === action.comment.thread_id);
+      const isCurrent = state.get.log._id === action.comment.thread_id;
       const commentUpdate = {
         comment: {
           status: { $set: 'SUCCESS' },
           comment: { $set: action.comment },
         },
       };
-      if (listIndex >= 0) { // star update when log is in list.
+      if (listIndex >= 0) {
         commentUpdate.list = {
           logs: {
             [listIndex]: {
-              [action.updateField]: { $set: action.update },
+              comment_count: { $set: action.comments.length },
             },
           },
         };
       }
-      if (isCurrent) { // star update for current log when user see this log.
+      if (isCurrent) {
         commentUpdate.get = {
           log: {
-            [action.updateField]: { $set: action.update },
+            comments: { $set: action.comments },
           },
         };
       }
@@ -214,7 +214,7 @@ export default function log(state = initialState, action) {
         rawUpdate.list = {
           logs: {
             [listIndex]: {
-              comment_count: { $set: action.comments.length },
+              [action.updateField]: { $set: action.update },
             },
           },
         };
@@ -222,7 +222,7 @@ export default function log(state = initialState, action) {
       if (isCurrent) { // star update for current log when user see this log.
         rawUpdate.get = {
           log: {
-            comments: { $set: action.comments },
+            [action.updateField]: { $set: action.update },
           },
         };
       }

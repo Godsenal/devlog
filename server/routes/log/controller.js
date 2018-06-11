@@ -136,19 +136,18 @@ exports.star_put = function star_put(req, res) {
 
 exports.comment_post = (req, res) => {
   const { comment } = req.body;
-  const log = new Log({ _id: comment.thread_id });
-  log.comments.push(comment);
-  const newComment = log.comments[0];
-
-  const check = (savedLog, err) => {
+  const { thread_id } = comment;
+  const option = { new: true, select: 'comments' };
+  const findLogAndSave = Log.findByIdAndUpdate(thread_id, { $push: { comments: comment } }, option);
+  const check = (log, err) => {
     if (err) {
       throw new Error('Fail to save comment.');
     }
-    return savedLog.comments;
+    return { comment: log.comments[0], comments: log.comments };
   };
-  const success = (savedLog) => res.json({ comment: newComment, comments: savedLog.comments });
+  const success = (result) => res.json({ ...result });
   const error = (err) => res.status(503).json({ error: err });
-  log.save()
+  findLogAndSave.exec()
     .then(check)
     .then(success)
     .catch(error);

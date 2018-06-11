@@ -108,11 +108,11 @@ function* postComment(action) {
   try {
     const { comment } = action;
     const { data } = yield call(logApi.postComment, comment);
-    const { comments } = data;
+    const { comment: newComment, comments } = data;
     yield put({
       type: LOG_POST_COMMENT_SUCCESS,
-      comment,
-      comments,
+      comment: newComment || {},
+      comments: comments || [],
     });
   }
   catch (err) {

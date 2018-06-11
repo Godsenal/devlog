@@ -16,13 +16,17 @@ const ProfileImage = styled.img`
   float: left;
 `;
 const Content = styled.div`
-  margin-left: 50px;
+  margin-left: ${props => (props.isModal ? '' : '50px')};
 `;
 const Header = styled.div`
   font-size: 14px;
+
   display: flex;
   align-items: center;
+  height: 36px;
 
+  margin-left: 50px;
+  margin-bottom: ${props => (props.isModal ? '15px' : '')};
   span {
     margin-right: 5px;
   }
@@ -43,9 +47,11 @@ const Text = styled.div`
   white-space: pre-wrap;
   word-wrap: break-word;
   line-height: 20px;
+
+  font-size: ${props => (props.isModal ? '20px' : '16px')};
 `;
 
-export default class LogContent extends Component {
+export default class MainContent extends Component {
   static propTypes = {
     author_id: PropTypes.string.isRequired,
     author_nickname: PropTypes.string.isRequired,
@@ -63,15 +69,15 @@ export default class LogContent extends Component {
     return (
       <div>
         <ProfileImage src={default_profile} />
-        <Content>
-          <Header>
-            <AuthorInfo>
-              <Author>{author_nickname}</Author>
-              <Date>{`${distanceInWordsToNow(created)} ago`}</Date>
-            </AuthorInfo>
-            { isModal && <FollowButton followingId={author_id} />}
-          </Header>
-          <Text>{text}</Text>
+        <Header isModal={isModal}>
+          <AuthorInfo>
+            <Author>{author_nickname}</Author>
+            <Date>{`${distanceInWordsToNow(created)} ago`}</Date>
+          </AuthorInfo>
+          { isModal && <FollowButton followingId={author_id} />}
+        </Header>
+        <Content isModal={isModal}>
+          <Text isModal={isModal}>{text}</Text>
           { children }
         </Content>
       </div>

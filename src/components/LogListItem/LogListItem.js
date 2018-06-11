@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import CodeIcon from 'react-icons/lib/fa/code';
 import { Link } from 'react-router-dom';
-import { LogMainContent, LogViewToolBox } from '../';
+import { MainContent, LogViewToolBox } from '../';
 
 const Item = styled(Link)`
   display: block;
@@ -62,7 +62,7 @@ export default class LogListItem extends Component {
     } = this.props;
     return (
       <Item to={{ pathname: `${author_nickname}/log/${_id}`, state: { modal: true } }}>
-        <LogMainContent
+        <MainContent
           author_id={author_id}
           author_nickname={author_nickname}
           text={text}
@@ -73,7 +73,7 @@ export default class LogListItem extends Component {
               <CodeIcon /><span> Click to see code</span>
             </CodePreview>
           )}
-        </LogMainContent>
+        </MainContent>
         <LogViewToolBox logId={_id} stars={stars} commentCount={comment_count} />
       </Item>
     );

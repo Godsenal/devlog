@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { LogViewToolBox, LogMainContent, LogComment, CodeBox } from '../';
-import { getLog } from '../../actions/log';
+import { LogViewToolBox, MainContent, CodeBox, CommentContainer } from '../';
+import { getLog, postCommentLog } from '../../actions/log';
 import { addToast } from '../../actions/toast';
 import { clipboard } from '../../utils';
 
@@ -26,6 +26,7 @@ class LogView extends Component {
   static propTypes = {
     handleAddToast: PropTypes.func.isRequired,
     handleGetLog: PropTypes.func.isRequired,
+    handlePostComment: PropTypes.func.isRequired,
     logGetState: PropTypes.object.isRequired,
     logId: PropTypes.string.isRequired,
     userState: PropTypes.object.isRequired,
@@ -53,6 +54,7 @@ class LogView extends Component {
     const {
       logGetState,
       userState,
+      handlePostComment,
     } = this.props;
     if (logGetState.status !== 'SUCCESS') {
       return <div>Loading...</div>;
@@ -62,7 +64,7 @@ class LogView extends Component {
     } = logGetState;
     return (
       <div>
-        <LogMainContent {...log} isModal>
+        <MainContent {...log} isModal>
           <CodeContent>
             { log.has_code && (
               <CodeBox
@@ -83,8 +85,14 @@ class LogView extends Component {
             stars={log.stars}
             commentCount={log.comments && log.comments.length}
           />
-          <LogComment comments={log.comments} />
-        </LogMainContent>
+        </MainContent>
+        <CommentContainer
+          userId={userState._id}
+          userNickname={userState.nickname}
+          logId={log._id}
+          comments={log.comments}
+          handlePostComment={handlePostComment}
+        />
       </div>
     );
   }
@@ -97,6 +105,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   handleAddToast: (toastProps) => dispatch(addToast(toastProps)),
   handleGetLog: (logId) => dispatch(getLog(logId)),
+  handlePostComment: (comment) => dispatch(postCommentLog(comment)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LogView);
