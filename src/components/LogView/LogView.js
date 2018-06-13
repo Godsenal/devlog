@@ -87,6 +87,7 @@ class LogView extends Component {
           />
         </MainContent>
         <CommentContainer
+          isAuthenticated={userState.isAuthenticated}
           userId={userState._id}
           userNickname={userState.nickname}
           logId={log._id}

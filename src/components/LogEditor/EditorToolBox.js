@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Button from '@material-ui/core/Button';
 import CodeIcon from 'react-icons/lib/fa/code';
-
 
 const ButtonBox = styled.div`
   position: relative;
@@ -45,24 +45,6 @@ const RightBox = styled.div`
   display: flex;
   align-items: center;
 `;
-const DoneButton = styled.button`
-  background-color: white;
-  border: none;
-
-  outline: none;
-  border-radius: 10px;
- 
-  padding: 6px 16px;
-
-  font-size: 16px;
-
-  cursor: pointer;
-
-  &:hover {
-    transform: translateY(-5px);
-    transition: transform 0.1s ease-in-out;
-  }
-`;
 const EditorToolBox = ({ onCodeButtonClick, hasCodeBlock, handleLog }) => (
   <ButtonBox>
     <LeftBox>
@@ -71,7 +53,14 @@ const EditorToolBox = ({ onCodeButtonClick, hasCodeBlock, handleLog }) => (
       </IconButton>
     </LeftBox>
     <RightBox>
-      <DoneButton onClick={handleLog} >LOG</DoneButton>
+      <Button
+        variant="contained"
+        mini
+        color="primary"
+        onClick={handleLog}
+      >
+        LOG
+      </Button>
     </RightBox>
   </ButtonBox>
 );

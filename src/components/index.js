@@ -10,6 +10,7 @@ import CommentItem from './CommentItem';
 import CommentEditor from './CommentEditor';
 import Transition from './Transition';
 import MainContent from './MainContent';
+import FullMainContent from './FullMainContent';
 import LazyList from './LazyList';
 import LogView from './LogView';
 import LogViewToolBox from './LogViewToolBox';
@@ -30,6 +31,7 @@ export {
   CommentItem,
   CommentEditor,
   MainContent,
+  FullMainContent,
   Transition,
   LazyList,
   LogView,

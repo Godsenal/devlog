@@ -1,15 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { CommentItem, CommentEditor } from '../';
+import Button from '@material-ui/core/Button';
+import { CommentItem, CommentEditor, ButtonWithAuth } from '../';
 
 const Container = styled.div`
   width: 100%;
+`;
+const Header = styled.div`
+  float: left;
+  margin: 10px 0;
+`;
+const Title = styled.span`
+  font-size: 16px;
+  color: rgba(0,0,0,.7);
+  font-weight: 600;
 `;
 export default class CommentContainer extends Component {
   static propTypes = {
     comments: PropTypes.array.isRequired,
     handlePostComment: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired,
     logId: PropTypes.string.isRequired,
     userId: PropTypes.string.isRequired,
     userNickname: PropTypes.string.isRequired,
@@ -33,10 +44,19 @@ export default class CommentContainer extends Component {
     handlePostComment(comment);
   }
   render() {
-    const { comments } = this.props;
+    const { comments, isAuthenticated } = this.props;
     return (
       <Container>
-        <CommentEditor handlePostComment={this.handleSubmit} />
+        <Header>
+          <Title>Comments</Title>
+        </Header>
+        { isAuthenticated ?
+          <CommentEditor handlePostComment={this.handleSubmit} />
+          :
+          <ButtonWithAuth>
+            <Button fullWidth variant="outlined">Login to post a comment!</Button>
+          </ButtonWithAuth>
+        }
         { comments.length > 0 ?
           comments.map((comment) => (
             <CommentItem key={comment._id} {...comment} />

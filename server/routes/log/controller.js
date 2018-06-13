@@ -89,6 +89,7 @@ exports.list_get = function list_get(req, res) {
 
 exports.log_get = function log_get(req, res) {
   const { logId } = req.params;
+  // use 'slice' to get reversed comments
   Log.findById(logId, (err, log) => {
     if (err) {
       return res.status(503).json({
@@ -137,8 +138,16 @@ exports.star_put = function star_put(req, res) {
 exports.comment_post = (req, res) => {
   const { comment } = req.body;
   const { thread_id } = comment;
+  const update = {
+    $push: {
+      comments: {
+        $each: [comment],
+        $sort: { _id: -1 },
+      },
+    },
+  };
   const option = { new: true, select: 'comments' };
-  const findLogAndSave = Log.findByIdAndUpdate(thread_id, { $push: { comments: comment } }, option);
+  const findLogAndSave = Log.findByIdAndUpdate(thread_id, update, option);
   const check = (log, err) => {
     if (err) {
       throw new Error('Fail to save comment.');

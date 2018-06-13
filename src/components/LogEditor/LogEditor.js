@@ -11,6 +11,7 @@ import EditorDraftBlock from './EditorDraftBlock';
 import EditorToolBox from './EditorToolBox';
 
 import { showModal, closeModal } from '../../actions/modal';
+import { addToast } from '../../actions/toast';
 import { postLog } from '../../actions/log';
 // Creates an Instance. At this step, a configuration object can be passed in
 // as an argument.
@@ -43,17 +44,19 @@ const ProfileImage = styled.img`
   left: 20px;
 `;
 class LogEditor extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = { ...this.getInitialState() };
   }
   static propTypes = {
+    addToast: PropTypes.func.isRequired,
     nickname: PropTypes.string.isRequired,
     postNewLog: PropTypes.func.isRequired,
     showCodeModal: PropTypes.func.isRequired,
     user_id: PropTypes.string.isRequired,
   }
   getInitialState = () => ({
+    isEmpty: true,
     code: '',
     language: '',
     frameSrc: '',
@@ -156,6 +159,11 @@ class LogEditor extends Component {
       hasCodeBlock,
       editorState,
     } = this.state;
+    const text = editorState.getCurrentContent().getPlainText();
+    if (text && text.length < 10) {
+      this.props.addToast({ message: 'Log must be at least 10 characters' });
+      return;
+    }
     /* TODO: Validate USER & editorState */
     const { user_id, nickname } = this.props;
     let logContent = {
@@ -175,7 +183,7 @@ class LogEditor extends Component {
     logContent = {
       ...logContent,
       has_code: hasCodeBlock,
-      text: editorState.getCurrentContent().getPlainText(),
+      text,
       content: editorState.getCurrentContent(),
     };
     this.props.postNewLog(logContent);
@@ -241,5 +249,6 @@ const mapDispatchToProps = dispatch => ({
   showCodeModal: (type, modalProps) => dispatch(showModal(type, modalProps)),
   closeCodeModal: () => dispatch(closeModal),
   postNewLog: (log) => dispatch(postLog(log)),
+  addToast: (toastProps) => dispatch(addToast(toastProps)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(LogEditor);

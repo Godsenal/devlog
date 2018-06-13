@@ -9,7 +9,10 @@ class ButtonWithAuth extends PureComponent {
     children: PropTypes.node.isRequired,
     dispatch: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func,
+  }
+  static defaultProps = {
+    onClick: null,
   }
   handleClick = (e) => {
     e.preventDefault();

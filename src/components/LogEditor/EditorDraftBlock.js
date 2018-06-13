@@ -63,7 +63,11 @@ class EditorDraftBlock extends Component {
       onChange,
     } = this.props;
     return (
-      <EditorContainer isFocused={isFocused} isDraftFocused={isDraftFocused} onClick={this.focusOnEditor}>
+      <EditorContainer
+        isFocused={isFocused}
+        isDraftFocused={isDraftFocused}
+        onClick={this.focusOnEditor}
+      >
         <Editor
           editorState={editorState}
           onFocus={this.onDraftFocus}
