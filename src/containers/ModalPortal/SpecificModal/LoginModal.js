@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button, Form, Message } from 'semantic-ui-react';
-
+import { Message } from 'semantic-ui-react';
+import Button from '@material-ui/core/Button';
 import Field from './Field';
 import { DimmedLoader } from '../../../components';
 import * as userActions from '../../../actions/user';
@@ -33,7 +33,7 @@ class LoginModal extends Component {
     const { username, password } = this.state;
     const { loginStatus, loginError } = this.props;
     return (
-      <Form>
+      <form>
         {
           loginStatus === 'WAITING' ? <DimmedLoader /> : null
         }
@@ -48,6 +48,7 @@ class LoginModal extends Component {
           label="Username"
           onChange={this.handleChange}
           value={username}
+          fullWidth
         />
         <Field
           name="password"
@@ -55,9 +56,10 @@ class LoginModal extends Component {
           type="password"
           onChange={this.handleChange}
           value={password}
+          fullWidth
         />
-        <Button onClick={this.handleLogin} >Log in</Button>
-      </Form>
+        <Button variant="outlined" onClick={this.handleLogin} >Log in</Button>
+      </form>
     );
   }
 }

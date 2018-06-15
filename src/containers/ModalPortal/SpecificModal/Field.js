@@ -1,31 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Message, Icon } from 'semantic-ui-react';
+import TextField from '@material-ui/core/TextField';
+import styled from 'styled-components';
 
-const Field = ({ name, label, type, isValid, value, onChange, hasMessage, loading, message }) => (
-  <Form.Field>
-    <label>{label}</label>
-    <input
+const Margined = styled.div`
+  margin-bottom: 20px;
+`;
+const Field = ({ name, label, type, isValid, value, onChange, hasMessage, message, ...props }) => (
+  <Margined>
+    <TextField
+      error={hasMessage && !isValid}
       type={type}
       name={name}
+      label={label}
       value={value}
       onChange={onChange}
+      helperText={hasMessage ? message : ''}
+      {...props}
     />
-    {
-      hasMessage ?
-        <Message visible success={isValid} error={!isValid} >
-          {loading ? <Icon name="circle notched" loading /> : null}
-          {message}
-        </Message> : null
-    }
-  </Form.Field>
+  </Margined>
 );
 
 Field.propTypes = {
   hasMessage: PropTypes.bool,
   isValid: PropTypes.bool,
   label: PropTypes.string.isRequired,
-  loading: PropTypes.bool,
   message: PropTypes.string,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
@@ -37,7 +36,6 @@ Field.defaultProps = {
   isValid: true,
   hasMessage: false,
   message: null,
-  loading: false,
 };
 
 export default Field;

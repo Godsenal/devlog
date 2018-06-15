@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button, Form } from 'semantic-ui-react';
 import debounce from 'lodash/debounce';
 import update from 'immutability-helper';
-
-import Field from './Field';
-import * as userActions from '../../../actions/user';
-import { DimmedLoader } from '../../../components';
+import Button from '@material-ui/core/Button';
+import Field from '../Field';
+import * as userActions from '../../../../actions/user';
+import { DimmedLoader } from '../../../../components';
 
 const VALID_REG = {
   password: '^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
@@ -42,8 +41,8 @@ class SignupModal extends Component {
     validate: PropTypes.func.isRequired,
     validateState: PropTypes.object.isRequired,
   }
-  handleChange = (e) => {
-    const { name, value } = e.target;
+  handleChange = name => e => {
+    const { value } = e.target;
     const newState = update(this.state, {
       [name]: { $set: value },
       init: {
@@ -72,7 +71,7 @@ class SignupModal extends Component {
       case 'confirm_password':
         this.setState(update(this.state, {
           valid: {
-            [name]: { $set: this.state.password === value },
+            [name]: { $set: this.state.password === trimmed },
           },
         }));
         break;
@@ -125,55 +124,59 @@ class SignupModal extends Component {
           signupStatus === 'WAITING' ?
             <DimmedLoader /> : null
         }
-        <Form>
+        <form noValidate>
           <Field
             name="username"
             label="Username"
             value={username}
-            onChange={this.handleChange}
+            onChange={this.handleChange('username')}
             isValid={validateState.isValid}
             hasMessage={validateState.status !== 'INIT'}
-            loading={validateState.status === 'WAITING'}
             message={validateState.message}
+            margin="normal"
+            fullWidth
           />
-          <Form.Group widths="equal">
-            <Field
-              name="password"
-              label="Password"
-              type="password"
-              value={password}
-              onChange={this.handleChange}
-              isValid={valid.password}
-              hasMessage={!init.password}
-              message={this.getMessage('password', valid.password)}
-            />
-            <Field
-              name="confirm_password"
-              label="Confirm Password"
-              type="password"
-              value={confirm_password}
-              onChange={this.handleChange}
-              isValid={valid.confirm_password}
-              hasMessage={!init.confirm_password}
-              message={this.getMessage('confirm password', valid.confirm_password)}
-            />
-          </Form.Group>
+          <Field
+            name="password"
+            label="Password"
+            type="password"
+            value={password}
+            onChange={this.handleChange('password')}
+            isValid={valid.password}
+            hasMessage={!init.password}
+            message={this.getMessage('password', valid.password)}
+            fullWidth
+          />
+          <Field
+            name="confirm_password"
+            label="Confirm Password"
+            type="password"
+            value={confirm_password}
+            onChange={this.handleChange('confirm_password')}
+            isValid={valid.confirm_password}
+            hasMessage={!init.confirm_password}
+            message={this.getMessage('confirm password', valid.confirm_password)}
+            fullWidth
+          />
           <Field
             name="nickname"
             label="Nickname"
             value={nickname}
-            onChange={this.handleChange}
+            onChange={this.handleChange('nickname')}
             isValid={valid.nickname}
             hasMessage={!init.nickname}
             message={this.getMessage('nickname', valid.nickname)}
+            fullWidth
           />
           <Button
+            variant="contained"
+            color="primary"
             disabled={!isValid || signupStatus === 'WAITING'}
             onClick={() => this.handleSignup(isValid)}
           >
             Signup
           </Button>
-        </Form>
+        </form>
       </div>
     );
   }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Switch } from 'react-router-dom';
 import { PropsRoute } from '../../routes/RouterUtil';
-import { Timeline, LogPage } from '../';
+import { Timeline, LogPage, Profile } from '../';
 import { Header } from '../../components';
 /*
   Visible when verfication ended.
@@ -66,6 +66,10 @@ class Home extends Component {
             isMobile={isMobile}
             showModal={showModal}
             closeModal={closeModal}
+          />
+          <PropsRoute
+            path="/:nickname"
+            component={Profile}
           />
         </Switch>
         <PropsRoute

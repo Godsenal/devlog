@@ -24,7 +24,7 @@ const userSchema = new Schema({
     required: true,
     unique: true,
   },
-  followings: [{ type: Schema.Types.ObjectId, ref: 'users' }], // mongoose populate api
+  followings: [{ type: Schema.Types.ObjectId, ref: 'User' }], // mongoose populate api
   tags: [{ type: Schema.Types.ObjectId, ref: 'tags' }],
   bookmarks: [{ type: Schema.Types.ObjectId, ref: 'posts' }],
 });

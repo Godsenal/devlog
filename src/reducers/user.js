@@ -30,6 +30,11 @@ const initialState = {
     message: '',
     error: 'Error',
   },
+  get: {
+    status: 'INIT',
+    user: {},
+    error: 'Error',
+  },
   bookmark: {
     status: 'INIT',
     bookmark: '',
@@ -159,6 +164,28 @@ export default function user(state = initialState, action) {
     case actionTypes.USER_VALIDATE_INITIALIZE:
       return update(state, {
         validate: { $set: initialState.validate },
+      });
+    case actionTypes.USER_GET_REQUEST:
+      return update(state, {
+        get: {
+          status: { $set: 'WAITING' },
+        },
+      });
+    case actionTypes.USER_GET_SUCCESS:
+      return {
+        ...state,
+        get: {
+          ...state.get,
+          user: action.user,
+        },
+      };
+    case actionTypes.USER_GET_FAILURE:
+      return update(state, {
+        user: {
+          status: { $set: 'FAILURE' },
+          user: { $set: {} },
+          error: { $set: action.error },
+        },
       });
     case actionTypes.USER_BOOKMARK_REQUEST:
       return update(state, {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 import default_profile from '../../images/default_profile.png';
 import { FollowButton } from '../';
@@ -66,7 +67,7 @@ export default class MainContent extends Component {
         <Header>
           <ProfileImage src={default_profile} big={isModal} />
           <AuthorInfo>
-            <Author>{author_nickname}</Author>
+            <Link to={`/${author_nickname}`}><Author>{author_nickname}</Author></Link>
             <Date>{`${distanceInWordsToNow(created)} ago`}</Date>
           </AuthorInfo>
           { isModal && <FollowButton followingId={author_id} /> }

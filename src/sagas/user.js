@@ -163,6 +163,24 @@ function* watchLogin() {
     }
   }
 }
+function* get(action) {
+  try {
+    const { nickname } = action;
+    const { data } = yield call(userApi.get, nickname);
+    const { user } = data;
+    yield put({
+      type: actions.USER_GET_SUCCESS,
+      user,
+    });
+  }
+  catch (err) {
+    const { error } = err.response.data;
+    yield put({
+      type: actions.USER_BOOKMARK_FAILURE,
+      error,
+    });
+  }
+}
 function* bookmark(action) {
   try {
     const { logId, userId, isBookmarked } = action;
@@ -208,6 +226,9 @@ function* watchSignup() {
 function* watchValidate() {
   yield takeLatest(actions.USER_VALIDATE_REQUEST, validate);
 }
+function* watchGet() {
+  yield takeLatest(actions.USER_GET_REQUEST, get);
+}
 function* watchBookmark() {
   yield takeLatest(actions.USER_BOOKMARK_REQUEST, bookmark);
 }
@@ -222,6 +243,7 @@ export default function* root() {
     fork(watchLogin),
     fork(watchSignup),
     fork(watchValidate),
+    fork(watchGet),
     fork(watchBookmark),
     fork(watchFollow),
   ]);

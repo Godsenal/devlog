@@ -1,5 +1,56 @@
 const User = require('../../models/user');
 
+exports.user_get = (req, res) => {
+  const { nickname } = req.query;
+  const findUser = (userNickname) => {
+    const match = { nickname: userNickname };
+    const projection = {
+      username: 0,
+      password: 0,
+    };
+    return User.findOne(match, projection).populate('followings', 'nickname').exec();
+  };
+  const findFollower = (user, err) => {
+    if (err || !user) {
+      throw new Error('Cannot find user');
+    }
+    const match = {
+      $match: {
+        followings: user._id,
+      },
+    };
+    const projection = {
+      $project: {
+        _id: 1,
+        nickname: 1,
+      },
+    };
+    return new Promise((resolve) => {
+      User.aggregate([
+        match,
+        projection,
+      ]).exec((_, followers) => {
+        user.followers = followers || [];
+        resolve(user);
+      });
+    });
+  };
+  const success = (user) => (
+    res.json({
+      user,
+    })
+  );
+  const error = (err) => (
+    res.status(503).json({
+      error: err,
+    })
+  );
+  findUser(nickname)
+    .then(findFollower)
+    .then(success)
+    .catch(error);
+};
+
 exports.follow_post = (req, res) => {
   const { userId, followingId, isFollowed } = req.body;
   const update = {};
