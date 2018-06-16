@@ -1,3 +1,4 @@
+import Avatar from './Avatar';
 import DimmedLoader from './DimmedLoader';
 import Header from './Header';
 import ButtonWithAuth from './ButtonWithAuth';
@@ -20,6 +21,7 @@ import LogListItem from './LogListItem';
 import LogEditor from './LogEditor';
 
 export {
+  Avatar,
   DimmedLoader,
   Header,
   ButtonWithAuth,

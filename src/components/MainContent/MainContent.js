@@ -1,19 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
-import default_profile from '../../images/default_profile.png';
-import { FollowButton } from '../';
+import { Avatar, FollowButton } from '../';
+import { history } from '../../utils';
 
-const ProfileImage = styled.img`
-  width: ${props => (props.big ? '48px' : '36px')};
-  height: ${props => (props.big ? '48px' : '36px')};
-
-  border-radius: 50%;
-  
-  flex: 0 0;
-`;
 const Content = styled.div`
   margin-left: ${props => (props.isModal ? '' : '50px')};
 `;
@@ -34,7 +25,12 @@ const AuthorInfo = styled.div`
   flex: 1 1 auto;
 `;
 const Author = styled.div`
+  color: black;
   font-weight: 600;
+  &:hover {
+    color: #43baf6;
+    text-decoration: underline;
+  }
 `;
 const Date = styled.div`
   color: #ccc;
@@ -60,14 +56,18 @@ export default class MainContent extends Component {
     children: null,
     isModal: false,
   }
+  navigateTo = (nickname) => (e) => {
+    e.preventDefault();
+    history.push(`/${nickname}`);
+  }
   render() {
     const { author_id, author_nickname, created, text, children, isModal } = this.props;
     return (
       <div>
         <Header>
-          <ProfileImage src={default_profile} big={isModal} />
+          <Avatar size={isModal ? 48 : 36} />
           <AuthorInfo>
-            <Link to={`/${author_nickname}`}><Author>{author_nickname}</Author></Link>
+            <Author onClick={this.navigateTo(author_nickname)}>{author_nickname}</Author>
             <Date>{`${distanceInWordsToNow(created)} ago`}</Date>
           </AuthorInfo>
           { isModal && <FollowButton followingId={author_id} /> }

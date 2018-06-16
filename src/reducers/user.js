@@ -176,6 +176,7 @@ export default function user(state = initialState, action) {
         ...state,
         get: {
           ...state.get,
+          status: 'SUCCESS',
           user: action.user,
         },
       };

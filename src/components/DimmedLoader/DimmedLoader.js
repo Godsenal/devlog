@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Loader } from 'semantic-ui-react';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Dimmer = styled.div`
   position: fixed;
@@ -23,7 +23,7 @@ const Dimmer = styled.div`
 
 const DimmedLoader = () => (
   <Dimmer>
-    <Loader active />
+    <CircularProgress color="primary" />
   </Dimmer>
 );
 export default DimmedLoader;

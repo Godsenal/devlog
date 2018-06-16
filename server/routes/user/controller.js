@@ -8,7 +8,12 @@ exports.user_get = (req, res) => {
       username: 0,
       password: 0,
     };
-    return User.findOne(match, projection).populate('followings', 'nickname').exec();
+    const option = {
+      lean: true, 
+      // mongoose doesn't return plain javascript object.
+      // add lean option to make mongoose return plian javacsript object.
+    };
+    return User.findOne(match, projection, option).populate('followings', 'nickname').exec();
   };
   const findFollower = (user, err) => {
     if (err || !user) {
