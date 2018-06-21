@@ -7,10 +7,13 @@ const DEFAULT_OFFSET = 50;
 export default class LazyList extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
-    initialLoad: PropTypes.func.isRequired,
+    initialLoad: PropTypes.func,
     isLast: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
     lazyLoad: PropTypes.func.isRequired,
+  }
+  static defaultProps = {
+    initialLoad: () => null,
   }
   componentDidMount() {
     this.props.initialLoad();

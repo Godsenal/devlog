@@ -5,7 +5,7 @@ import { PropsRoute } from '../../routes/RouterUtil';
 import { Timeline, LogPage, Profile } from '../';
 import { Header } from '../../components';
 /*
-  Visible when verfication ended.
+  TODO: Fix Modal route
 */
 class Home extends Component {
   state = {
@@ -51,6 +51,7 @@ class Home extends Component {
       location.state.modal &&
       previousLocation !== location
     );
+    console.log(previousLocation);
     return (
       <div>
         <Header

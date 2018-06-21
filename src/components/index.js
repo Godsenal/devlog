@@ -19,6 +19,7 @@ import LogContainer from './LogContainer';
 import LogList from './LogList';
 import LogListItem from './LogListItem';
 import LogEditor from './LogEditor';
+import ProfileContent from './ProfileContent';
 
 export {
   Avatar,
@@ -41,5 +42,6 @@ export {
   LogContainer,
   LogList,
   LogListItem,
-  LogEditor
+  LogEditor,
+  ProfileContent
 };

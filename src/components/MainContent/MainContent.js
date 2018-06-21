@@ -27,6 +27,7 @@ const AuthorInfo = styled.div`
 const Author = styled.div`
   color: black;
   font-weight: 600;
+  cursor: pointer;
   &:hover {
     color: #43baf6;
     text-decoration: underline;

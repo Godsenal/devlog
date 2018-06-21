@@ -218,7 +218,7 @@ export default function user(state = initialState, action) {
           status: { $set: 'WAITING' },
         },
       });
-    case actionTypes.USER_FOLLOW_SUCCESS:
+    case actionTypes.USER_FOLLOW_SUCCESS: {
       return update(state, {
         follow: {
           status: { $set: 'SUCCESS' },
@@ -228,6 +228,7 @@ export default function user(state = initialState, action) {
           followings: { $set: action.followings }, // add only chagned one?
         },
       });
+    }
     case actionTypes.USER_FOLLOW_FAILURE:
       return update(state, {
         follow: {

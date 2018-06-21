@@ -210,6 +210,7 @@ function* follow(action) {
       type: actions.USER_FOLLOW_SUCCESS,
       followings,
       followingId,
+      isFollowed,
     });
   }
   catch (err) {

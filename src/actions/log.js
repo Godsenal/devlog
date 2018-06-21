@@ -15,11 +15,12 @@ export function postLog(log) {
   };
 }
 
-export function listLog({ skip = 0, limit = 10 }) {
+export function listLog({ skip = 0, limit = 10, author_nickname }) {
   return {
     type: LOG_LIST_REQUEST,
     skip,
     limit,
+    author_nickname,
   };
 }
 
