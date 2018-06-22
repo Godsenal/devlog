@@ -228,7 +228,7 @@ export default function user(state = initialState, action) {
           followings: { $set: action.followings }, // add only chagned one?
         },
       };
-      /* DISCUSS: Need to update immediately?
+      /* DISCUSS: Need to update immediately? */
       // when user followed profile that user is currently watching.
       if (state.get.user._id && state.get.user._id === action.followingId) {
         followUpdate.get = {
@@ -240,7 +240,6 @@ export default function user(state = initialState, action) {
           },
         };
       }
-      */
       return update(state, followUpdate);
     }
     case actionTypes.USER_FOLLOW_FAILURE:

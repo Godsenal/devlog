@@ -19,6 +19,7 @@ const Item = styled(Link)`
 
   cursor: pointer;
 
+  box-shadow: 1px 3px 8px rgba(0,0,0,.3);
   &:hover {
     color: black;
     box-shadow: 3px 6px 16px rgba(0,0,0,.3);

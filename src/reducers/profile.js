@@ -1,4 +1,5 @@
 import update from 'immutability-helper';
+import findIndex from 'lodash/findIndex';
 import * as actionTypes from '../constants/actionTypes';
 
 const initialState = {
@@ -47,6 +48,33 @@ export default function profile(state = initialState, action) {
           error: { $set: action.error },
         },
       });
+    case actionTypes.PROFILE_LIST_RAW_UPDATE: {
+      const latestIndex = findIndex(state.latest.logs, item => item._id === action.logId);
+      const starsIndex = findIndex(state.stars.logs, item => item._id === action.logId);
+      let rawUpdate = {};
+      const fieldUpdate = { [action.updateField]: { $set: action.update } };
+      if (latestIndex >= 0) {
+        rawUpdate = {
+          ...rawUpdate,
+          latest: {
+            logs: {
+              [latestIndex]: fieldUpdate,
+            },
+          },
+        };
+      }
+      if (starsIndex >= 0) {
+        rawUpdate = {
+          ...rawUpdate,
+          stars: {
+            logs: {
+              [starsIndex]: fieldUpdate,
+            },
+          },
+        };
+      }
+      return update(state, rawUpdate);
+    }
     default:
       return state;
   }

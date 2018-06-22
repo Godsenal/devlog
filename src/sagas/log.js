@@ -16,6 +16,7 @@ import {
   LOG_POST_COMMENT_REQUEST,
   LOG_POST_COMMENT_SUCCESS,
   LOG_POST_COMMENT_FAILURE,
+  PROFILE_LIST_RAW_UPDATE,
 } from '../constants/actionTypes';
 import * as logApi from '../api/log';
 
@@ -93,7 +94,12 @@ function* star(action) {
       stars,
       logId,
     });
-
+    yield put({
+      type: PROFILE_LIST_RAW_UPDATE,
+      logId,
+      updateField: 'stars',
+      update: stars,
+    });
     // TODO: add raw update for star and update log_star reducer
   }
   catch (err) {
@@ -113,6 +119,12 @@ function* postComment(action) {
       type: LOG_POST_COMMENT_SUCCESS,
       comment: newComment || {},
       comments: comments || [],
+    });
+    yield put({
+      type: PROFILE_LIST_RAW_UPDATE,
+      logId: comment.thread_id,
+      updateField: 'comment_count',
+      update: comments && comments.length,
     });
   }
   catch (err) {

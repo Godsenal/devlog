@@ -13,16 +13,13 @@ class LogPage extends PureComponent {
     showModal: PropTypes.func.isRequired,
   }
   componentDidMount() {
-    const { isModal } = this.props;
-    if (isModal) {
-      const { match, showModal, history } = this.props;
-      const { logId } = match.params;
-      const modalProps = {
-        logId,
-        onClose: () => history.goBack(),
-      };
-      showModal('LOG_MODAL', modalProps);
-    }
+    const { match, showModal, history } = this.props;
+    const { logId } = match.params;
+    const modalProps = {
+      logId,
+      onClose: () => history.goBack(),
+    };
+    showModal('LOG_MODAL', modalProps);
   }
   // when user redirect from 'LOGIN_MODAL'
   componentDidUpdate(prevProps) {

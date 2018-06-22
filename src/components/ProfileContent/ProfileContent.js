@@ -20,7 +20,7 @@ class ProfileContent extends Component {
     nickname: PropTypes.string.isRequired,
     starsState: PropTypes.object.isRequired,
   }
-  componentDidMount = () => {
+  componentDidMount() {
     this.handleInitialLoad(TABS[0]);
     if (this.isInit) {
       this.isInit[0] = false;
@@ -73,6 +73,7 @@ class ProfileContent extends Component {
             indicatorColor="primary"
             textColor="primary"
             centered
+            fullWidth
             onChange={this.handleTabChange}
           >
             <Tab label="Latest" />

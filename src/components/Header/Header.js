@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Menu } from 'semantic-ui-react';
 import styled from 'styled-components';
+import Button from '@material-ui/core/Button';
+import { history } from '../../utils';
+import { Avatar } from '../';
 
 const HEADER_HEIGHT = 80;
 const Container = styled.div`
@@ -25,6 +27,27 @@ const Menubar = styled.div`
   
   background-color: white;
   margin: auto;
+
+  display: flex;
+  align-items: center;
+`;
+const Title = styled.a`
+  color: rgba(0, 0, 0, 0.7);
+
+  font-size: 32px;
+
+  flex: 1 1 auto;
+
+  cursor: pointer;
+
+  &:hover {
+    color: rgba(0, 0, 0, 0.7);
+  }
+`;
+const RightItem = styled.div`
+  flex: 0;
+  display: flex;
+  align-items: center;
 `;
 const Spacer = styled.div`
   position: relative;
@@ -33,14 +56,14 @@ const Spacer = styled.div`
   min-height: ${HEADER_HEIGHT}px;
 `;
 class Header extends Component {
-  state = { activeItem: 'home' }
   static propTypes = {
     loginState: PropTypes.object.isRequired,
     logout: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
   }
-
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+  handleHome = () => {
+    history.push('/');
+  }
   handleShowModal = (modalType) => {
     this.props.showModal(modalType);
   }
@@ -48,7 +71,6 @@ class Header extends Component {
     this.props.logout();
   }
   render() {
-    const { activeItem } = this.state;
     const {
       loginState,
     } = this.props;
@@ -56,26 +78,23 @@ class Header extends Component {
       <Fragment>
         <Container>
           <Menubar>
-            <Menu secondary>
-              <Menu.Item name="home" active={activeItem === 'home'} onClick={this.handleItemClick} />
-              <Menu.Menu position="right">
-                <Menu.Item>
-                  <Input icon="search" placeholder="Search..." />
-                </Menu.Item>
-                {
-                  !loginState.isAuthenticated ?
-                    <Fragment>
-                      <Menu.Item name="login" onClick={() => this.handleShowModal('LOGIN_MODAL')} />
-                      <Menu.Item name="signup" onClick={() => this.handleShowModal('SIGNUP_MODAL')} />
-                    </Fragment>
-                    :
-                    <Fragment>
-                      <Menu.Item name={loginState.nickname} />
-                      <Menu.Item name="logout" onClick={this.handleLogout} />
-                    </Fragment>
-                }
-              </Menu.Menu>
-            </Menu>
+            <Title onClick={this.handleHome}>
+              <span>DEVLOG</span>
+            </Title>
+            <RightItem>
+              {
+                !loginState.isAuthenticated ?
+                  <Fragment>
+                    <Button onClick={() => this.handleShowModal('LOGIN_MODAL')}>login</Button>
+                    <Button name="signup" onClick={() => this.handleShowModal('SIGNUP_MODAL')}>sign up</Button>
+                  </Fragment>
+                  :
+                  <Fragment>
+                    <a><Avatar /></a>
+                    <Button onClick={this.handleLogout}>log out</Button>
+                  </Fragment>
+              }
+            </RightItem>
           </Menubar>
         </Container>
         <Spacer />
