@@ -10,8 +10,6 @@ import { listLog } from '../../actions/log';
 const Background = styled.div`
   width: 100%;
   height: 100%;
-
-  background-color: #F2F2F2;
 `;
 
 const Container = styled.div`

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Icon } from 'semantic-ui-react';
-
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from 'react-icons/lib/fa/close';
 import { LoginModal, SignupModal, CodeModal, LogModal } from './SpecificModal';
 import { media } from '../../styles/util';
 
@@ -88,9 +88,9 @@ export default class Modal extends Component {
     return (
       <Container innerRef={ref => { this.container = ref; }} mounted={mounted} isMobile={isMobile}>
         <Header>
-          <Link onClick={this.handleClose}>
-            <Icon name="close" />
-          </Link>
+          <IconButton onClick={this.handleClose}>
+            <CloseIcon />
+          </IconButton>
         </Header>
         <Body>
           <SpecificModal {...modalProps} handleClose={this.handleClose} />

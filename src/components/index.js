@@ -1,4 +1,6 @@
 import Avatar from './Avatar';
+import AvatarMenu from './AvatarMenu';
+import BrowserLink from './BrowserLink';
 import DimmedLoader from './DimmedLoader';
 import Header from './Header';
 import ButtonWithAuth from './ButtonWithAuth';
@@ -23,6 +25,8 @@ import ProfileContent from './ProfileContent';
 
 export {
   Avatar,
+  AvatarMenu,
+  BrowserLink,
   DimmedLoader,
   Header,
   ButtonWithAuth,

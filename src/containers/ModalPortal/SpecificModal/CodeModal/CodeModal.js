@@ -124,11 +124,11 @@ export default class CodeModal extends Component {
     });
   }
   // Dynamic import for code language.
-  handleLanguageChange = async (_, option) => {
+  handleLanguageChange = async (e) => {
     try {
-      await import(`brace/mode/${option.value}`);
+      await import(`brace/mode/${e.target.value}`);
       this.setState({
-        language: option.value,
+        language: e.target.value,
       });
     }
     catch (err) {

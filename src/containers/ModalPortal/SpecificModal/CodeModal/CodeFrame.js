@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Icon } from 'semantic-ui-react';
+import FiddleIcon from 'react-icons/lib/fa/jsfiddle';
 import { CodeFrameBox } from '../../../../components';
 
 const JSFIDDLE_REG = RegExp(/(?:https?:)?\/\/jsfiddle.net\/\w+(\/\w+)?(\/\w+)?\/embedded\/?([,(js|html|css|result)+])*\/?(?:dark)?\/?\??((|&)(?:fontColor|accentcolor|menucolor|bodycolor)=#?\w+){0,4}\/?/, 'i');
@@ -94,7 +94,7 @@ export default class CodeFrame extends Component {
       <div>
         <IconBox>
           <IconWrapper>
-            <Icon name="jsfiddle" size="large" />
+            <FiddleIcon />
             <span>jsfiddle</span>
           </IconWrapper>
         </IconBox>

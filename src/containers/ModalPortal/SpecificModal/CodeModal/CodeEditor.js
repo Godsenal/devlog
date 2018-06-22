@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import styled from 'styled-components';
-import { Dropdown } from 'semantic-ui-react';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 
 import 'brace/mode/javascript';
 import 'brace/theme/monokai';
@@ -40,15 +41,18 @@ const CodeEditor = ({ language, languageOptions, code, handleCodeChange, handleL
       />
     </Editor>
     <DropdownBox>
-      <Dropdown
-        inline
-        upward
-        scrolling
-        floating
+      <Select
         value={language}
-        options={languageOptions}
         onChange={handleLanguageChange}
-      />
+        inputProps={{
+          name: 'code-language',
+          id: 'code-language-select',
+        }}
+      >
+        {languageOptions.map((item) => (
+          <MenuItem key={item.value} value={item.value}>{item.text}</MenuItem>
+        ))}
+      </Select>
     </DropdownBox>
   </React.Fragment>
 );

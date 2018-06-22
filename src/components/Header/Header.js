@@ -2,8 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
-import { history } from '../../utils';
-import { Avatar } from '../';
+import { AvatarMenu, BrowserLink } from '../';
 
 const HEADER_HEIGHT = 80;
 const Container = styled.div`
@@ -61,9 +60,6 @@ class Header extends Component {
     logout: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
   }
-  handleHome = () => {
-    history.push('/');
-  }
   handleShowModal = (modalType) => {
     this.props.showModal(modalType);
   }
@@ -78,8 +74,10 @@ class Header extends Component {
       <Fragment>
         <Container>
           <Menubar>
-            <Title onClick={this.handleHome}>
-              <span>DEVLOG</span>
+            <Title>
+              <BrowserLink type="push" location="/">
+                <span>DEVLOG</span>
+              </BrowserLink>
             </Title>
             <RightItem>
               {
@@ -89,10 +87,10 @@ class Header extends Component {
                     <Button name="signup" onClick={() => this.handleShowModal('SIGNUP_MODAL')}>sign up</Button>
                   </Fragment>
                   :
-                  <Fragment>
-                    <a><Avatar /></a>
-                    <Button onClick={this.handleLogout}>log out</Button>
-                  </Fragment>
+                  <AvatarMenu
+                    {...loginState}
+                    handleLogout={this.handleLogout}
+                  />
               }
             </RightItem>
           </Menubar>

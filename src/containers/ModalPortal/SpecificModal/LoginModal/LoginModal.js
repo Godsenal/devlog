@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Message } from 'semantic-ui-react';
 import Button from '@material-ui/core/Button';
-import Field from './Field';
-import { DimmedLoader } from '../../../components';
-import * as userActions from '../../../actions/user';
+import Field from '../Field';
+import { DimmedLoader } from '../../../../components';
+import * as userActions from '../../../../actions/user';
 
 class LoginModal extends Component {
   state = {
@@ -39,9 +38,9 @@ class LoginModal extends Component {
         }
         {
           loginStatus === 'FAILURE' && this._login ?
-            <Message visible error>
+            <div>
               <p>{loginError}</p>
-            </Message> : null
+            </div> : null
         }
         <Field
           name="username"

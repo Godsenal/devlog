@@ -5,8 +5,8 @@ import default_profile from '../../images/default_profile.png';
 
 const AvatarImg = styled.img`
   ${props => (`
-    width: ${props.size}px;
-    height: ${props.size}px;
+    width: ${props.imgSize}px;
+    height: ${props.imgSize}px;
   `)}
 
   border-radius: 50%;
@@ -26,7 +26,7 @@ export default class Avatar extends PureComponent {
   render() {
     const { size, src } = this.props;
     return (
-      <AvatarImg src={src} size={size} />
+      <AvatarImg src={src} imgSize={size} />
     );
   }
 }

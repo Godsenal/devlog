@@ -5,7 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 const Dimmer = styled.div`
   position: absolute;
   left: 0;
-  top: 0;
+  top: 2rem;
   right: 0;
   bottom: 0;
 
