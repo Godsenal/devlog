@@ -9,7 +9,7 @@ exports.user_get = (req, res) => {
       password: 0,
     };
     const option = {
-      lean: true, 
+      lean: true,
       // mongoose doesn't return plain javascript object.
       // add lean option to make mongoose return plian javacsript object.
     };
@@ -106,4 +106,3 @@ exports.bookmark_post = (req, res) => {
     });
   });
 };
-

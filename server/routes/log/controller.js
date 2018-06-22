@@ -35,7 +35,7 @@ exports.log_post = function log_post(req, res) {
 };
 
 exports.list_get = function list_get(req, res) {
-  const { min_id, author_nickname } = req.query;
+  const { min_id, author_nickname, star_user_id } = req.query;
   let { skip, limit } = req.query;
   const query = {};
   const projection = {
@@ -57,6 +57,9 @@ exports.list_get = function list_get(req, res) {
   }
   if (author_nickname) {
     query.author_nickname = author_nickname;
+  }
+  if (star_user_id) {
+    query.stars = star_user_id;
   }
   skip = skip ? parseInt(skip, 10) : 0;
   limit = limit ? parseInt(limit, 10) : 10;

@@ -24,7 +24,7 @@ const AuthorInfo = styled.div`
   margin-left: 15px;
   flex: 1 1 auto;
 `;
-const Author = styled.div`
+const Author = styled.span`
   color: black;
   font-weight: 600;
   cursor: pointer;
@@ -59,7 +59,7 @@ export default class MainContent extends Component {
   }
   navigateTo = (nickname) => (e) => {
     e.preventDefault();
-    history.push(`/${nickname}`);
+    history.push({ pathname: `/${nickname}` });
   }
   render() {
     const { author_id, author_nickname, created, text, children, isModal } = this.props;

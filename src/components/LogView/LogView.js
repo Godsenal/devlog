@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { LogViewToolBox, MainContent, CodeBox, CommentContainer } from '../';
+import { LogViewToolBox, MainContent, CodeBox, CommentContainer, DimmedLoader } from '../';
 import { getLog, postCommentLog } from '../../actions/log';
 import { addToast } from '../../actions/toast';
 import { clipboard } from '../../utils';
@@ -57,7 +57,7 @@ class LogView extends Component {
       handlePostComment,
     } = this.props;
     if (logGetState.status !== 'SUCCESS') {
-      return <div>Loading...</div>;
+      return <DimmedLoader />;
     }
     const {
       log,

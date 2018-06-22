@@ -6,10 +6,13 @@ export function post(log) {
   return axios.post(`${path}/post`, { log });
 }
 
-export function list({ skip, limit, author_nickname }) {
+export function list({ skip, limit, author_nickname, star_user_id }) {
   let list_path = `${path}/list?limit=${limit}&skip=${skip}`;
   if (author_nickname) {
     list_path = `${list_path}&author_nickname=${author_nickname}`;
+  }
+  if (star_user_id) {
+    list_path = `${list_path}&star_user_id=${star_user_id}`;
   }
   return axios.get(list_path);
 }

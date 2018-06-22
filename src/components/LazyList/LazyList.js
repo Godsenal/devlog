@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import throttle from 'lodash/throttle';
+import { DimmedLoader } from '../';
 
 const DEFAULT_OFFSET = 50;
 
@@ -38,9 +39,9 @@ export default class LazyList extends Component {
   render() {
     const { children, isLoading } = this.props;
     return (
-      <div>
+      <div style={{ position: 'relative' }}>
         { children }
-        { isLoading && <div>Loading...</div> }
+        { isLoading && <DimmedLoader /> }
       </div>
     );
   }

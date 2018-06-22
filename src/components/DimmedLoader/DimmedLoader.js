@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Dimmer = styled.div`
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 0;
   right: 0;

@@ -10,7 +10,7 @@ import { Header } from '../../components';
 class Home extends Component {
   state = {
     previousLocation: {}, // when location is not modal
-    lastLocation: {},
+    lastLocation: this.props.location,
   }
   static propTypes = {
     closeModal: PropTypes.func.isRequired,
@@ -22,19 +22,18 @@ class Home extends Component {
     showModal: PropTypes.func.isRequired,
   }
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { lastLocation } = prevState;
+    const { lastLocation } = prevState; // location before update
     // set previousLocation if props.location is not modal
+    const update = {
+      lastLocation: nextProps.location,
+    };
     if (
       nextProps.history.action !== 'POP' &&
       (!lastLocation.state || !lastLocation.state.modal)
     ) {
-      return {
-        previousLocation: lastLocation,
-      };
+      update.previousLocation = lastLocation;
     }
-    return {
-      lastLocation: nextProps.location,
-    };
+    return update;
   }
   render() {
     const { previousLocation } = this.state;
@@ -51,7 +50,6 @@ class Home extends Component {
       location.state.modal &&
       previousLocation !== location
     );
-    console.log(previousLocation);
     return (
       <div>
         <Header
@@ -71,6 +69,7 @@ class Home extends Component {
           <PropsRoute
             path="/:nickname"
             component={Profile}
+            key={isModal ? previousLocation.key : location.key}
           />
         </Switch>
         <PropsRoute

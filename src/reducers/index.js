@@ -3,6 +3,7 @@ import environment from './environment';
 import user from './user';
 import log from './log';
 import modal from './modal';
+import profile from './profile';
 import search from './search';
 import toast from './toast';
 
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   log,
   user,
   modal,
+  profile,
   search,
   toast,
 });

@@ -219,7 +219,7 @@ export default function user(state = initialState, action) {
         },
       });
     case actionTypes.USER_FOLLOW_SUCCESS: {
-      return update(state, {
+      const followUpdate = {
         follow: {
           status: { $set: 'SUCCESS' },
           followingId: { $set: action.followingId },
@@ -227,7 +227,21 @@ export default function user(state = initialState, action) {
         login: {
           followings: { $set: action.followings }, // add only chagned one?
         },
-      });
+      };
+      /* DISCUSS: Need to update immediately?
+      // when user followed profile that user is currently watching.
+      if (state.get.user._id && state.get.user._id === action.followingId) {
+        followUpdate.get = {
+          user: {
+            followers: (action.isFollowed ?
+              { $apply: followers => followers.filter(follower => follower.nickname !== state.login.nickname) } :
+              { $push: [{ _id: action.followingId, nickname: state.login.nickname }] }
+            ),
+          },
+        };
+      }
+      */
+      return update(state, followUpdate);
     }
     case actionTypes.USER_FOLLOW_FAILURE:
       return update(state, {
