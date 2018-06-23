@@ -22,6 +22,7 @@ import LogList from './LogList';
 import LogListItem from './LogListItem';
 import LogEditor from './LogEditor';
 import ProfileContent from './ProfileContent';
+import SearchBar from './SearchBar';
 
 export {
   Avatar,
@@ -47,5 +48,6 @@ export {
   LogList,
   LogListItem,
   LogEditor,
-  ProfileContent
+  ProfileContent,
+  SearchBar
 };

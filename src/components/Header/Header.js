@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import { AvatarMenu, BrowserLink } from '../';
+import SearchBar from '../SearchBar';
 
 const HEADER_HEIGHT = 80;
 const Container = styled.div`
@@ -87,10 +88,13 @@ class Header extends Component {
                     <Button name="signup" onClick={() => this.handleShowModal('SIGNUP_MODAL')}>sign up</Button>
                   </Fragment>
                   :
-                  <AvatarMenu
-                    {...loginState}
-                    handleLogout={this.handleLogout}
-                  />
+                  <Fragment>
+                    <SearchBar />
+                    <AvatarMenu
+                      {...loginState}
+                      handleLogout={this.handleLogout}
+                    />
+                  </Fragment>
               }
             </RightItem>
           </Menubar>

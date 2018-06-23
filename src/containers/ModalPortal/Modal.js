@@ -31,9 +31,6 @@ const Body = styled.div`
   margin: 5px 30px;
   ${media.tablet`margin: 10px;`}
 `;
-const Link = styled.a`
-  color: black;
-`;
 
 const MODAL_COMPONENTS = {
   LOGIN_MODAL: LoginModal,

@@ -3,9 +3,31 @@ import {
   SEARCH_TAG_REQUEST,
   SEARCH_TAG_SUCCESS,
   SEARCH_TAG_FAILURE,
+  SEARCH_PRE_REQUEST,
+  SEARCH_PRE_SUCCESS,
+  SEARCH_PRE_FAILURE,
 } from '../constants/actionTypes';
 import * as SearchApi from '../api/search';
 
+function* searchPre(action) {
+  const { q } = action;
+  try {
+    const { data } = yield call(SearchApi.searchPre, q);
+    const { users, logs } = data.result;
+    yield put({
+      type: SEARCH_PRE_SUCCESS,
+      users,
+      logs,
+    });
+  }
+  catch (err) {
+    const { error } = err.response.data;
+    yield put({
+      type: SEARCH_PRE_FAILURE,
+      error,
+    });
+  }
+}
 function* searchTag(action) {
   try {
     const { text } = action;
@@ -31,11 +53,15 @@ function* searchTag(action) {
     });
   }
 }
+function* watchSearchPre() {
+  yield takeLatest(SEARCH_PRE_REQUEST, searchPre);
+}
 function* watchSearchTag() {
   yield takeLatest(SEARCH_TAG_REQUEST, searchTag);
 }
 export default function* root() {
   yield all([
     fork(watchSearchTag),
+    fork(watchSearchPre),
   ]);
 }
