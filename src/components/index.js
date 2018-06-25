@@ -22,6 +22,7 @@ import LogList from './LogList';
 import LogListItem from './LogListItem';
 import LogEditor from './LogEditor';
 import ProfileContent from './ProfileContent';
+import Popover from './Popover';
 import SearchBar from './SearchBar';
 
 export {
@@ -49,5 +50,6 @@ export {
   LogListItem,
   LogEditor,
   ProfileContent,
+  Popover,
   SearchBar
 };

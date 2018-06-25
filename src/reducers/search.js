@@ -4,6 +4,7 @@ import {
   SEARCH_TAG_REQUEST,
   SEARCH_TAG_SUCCESS,
   SEARCH_TAG_FAILURE,
+  SEARCH_PRE_CLEAR,
   SEARCH_PRE_REQUEST,
   SEARCH_PRE_SUCCESS,
   SEARCH_PRE_FAILURE,
@@ -15,7 +16,8 @@ const initialState = {
     q: '',
     results: {
       users: [],
-      logs: [],
+      tags: [],
+      len: 0,
     },
     error: 'Error',
   },
@@ -29,6 +31,18 @@ const initialState = {
 
 export default function search(state = initialState, action) {
   switch (action.type) {
+    case SEARCH_PRE_CLEAR: {
+      return update(state, {
+        pre: {
+          q: { $set: '' },
+          results: {
+            users: { $set: [] },
+            tags: { $set: [] },
+            len: { $set: 0 },
+          },
+        },
+      });
+    }
     case SEARCH_PRE_REQUEST:
       return update(state, {
         pre: {
@@ -42,7 +56,8 @@ export default function search(state = initialState, action) {
           status: { $set: 'SUCCESS' },
           results: {
             users: { $set: action.users },
-            logs: { $set: action.logs },
+            tags: { $set: action.tags },
+            len: { $set: action.len },
           },
         },
       });
@@ -52,7 +67,8 @@ export default function search(state = initialState, action) {
           status: { $set: 'FAILURE' },
           results: {
             users: { $set: [] },
-            logs: { $set: [] },
+            tags: { $set: [] },
+            len: { $set: 0 },
           },
           error: { $set: action.error },
         },

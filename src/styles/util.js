@@ -22,3 +22,8 @@ export const shadow = () => (
   `
 );
 
+export const linkText = () => (`
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+`);

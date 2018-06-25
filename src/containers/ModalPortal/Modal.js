@@ -22,10 +22,7 @@ const Container = styled.div`
   border-radius: 10px;
 `;
 const Header = styled.div`
-  width: 100%;
-  padding: 10px;
-
-  text-align: right;
+  float: right;
 `;
 const Body = styled.div`
   margin: 5px 30px;

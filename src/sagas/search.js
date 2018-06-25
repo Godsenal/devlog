@@ -13,11 +13,13 @@ function* searchPre(action) {
   const { q } = action;
   try {
     const { data } = yield call(SearchApi.searchPre, q);
-    const { users, logs } = data.result;
+    const { users, tags } = data.result;
+    const len = users.length + tags.length;
     yield put({
       type: SEARCH_PRE_SUCCESS,
       users,
-      logs,
+      tags,
+      len,
     });
   }
   catch (err) {

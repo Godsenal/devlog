@@ -1,4 +1,5 @@
 import {
+  SEARCH_PRE_CLEAR,
   SEARCH_PRE_REQUEST,
   SEARCH_TAG_REQUEST,
   SEARCH_USER_REQUEST,
@@ -12,6 +13,11 @@ export function searchTag(text) {
   };
 }
 
+export function searchPreClear() {
+  return {
+    type: SEARCH_PRE_CLEAR,
+  };
+}
 export function searchPre(q) {
   return {
     type: SEARCH_PRE_REQUEST,

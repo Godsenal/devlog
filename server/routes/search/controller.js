@@ -1,17 +1,18 @@
 const User = require('../../models/user');
 const Log = require('../../models/log');
+const Tag = require('../../models/tag');
 
 exports.search_get = function search_get(req, res) {
   const { q } = req.query;
   const query = { $regex: q, $options: 'i' };
   const userQuery = { nickname: query };
-  const logQuery = { text: query };
+  const tagQuery = { name: query };
 
   const userProjection = { nickname: 1 };
-  const logProjection = { author_nickname: 1, text: 1, stars: 1 };
+  const tagProjection = { name: 1 };
   const findUser = () => (
     new Promise((resolve, reject) => {
-      User.find(userQuery, userProjection).limit(10).exec((err, users) => {
+      User.find(userQuery, userProjection).limit(5).exec((err, users) => {
         if (err) {
           reject(err);
         }
@@ -19,13 +20,13 @@ exports.search_get = function search_get(req, res) {
       });
     })
   );
-  const findLog = (payload) => (
+  const findTag = (payload) => (
     new Promise((resolve, reject) => {
-      Log.find(logQuery, logProjection).limit(10).exec((err, logs) => {
+      Tag.find(tagQuery, tagProjection).limit(5).exec((err, tags) => {
         if (err) {
           reject(err);
         }
-        resolve({ logs, ...payload });
+        resolve({ tags, ...payload });
       });
     })
   );
@@ -36,7 +37,7 @@ exports.search_get = function search_get(req, res) {
   );
   const error = (err) => res.status(503).json({ err });
   findUser()
-    .then(findLog)
+    .then(findTag)
     .then(success)
     .catch(error);
 };
