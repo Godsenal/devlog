@@ -208,7 +208,7 @@ class SearchBar extends PureComponent {
             placeholder="Search DEVLOG..."
           />
         </Container>
-        <Popover open={isFocused && !!searchWord} handleClose={this.handleClose}>
+        <Popover anchorEl={this._input} open={isFocused && !!searchWord} handleClose={this.handleClose}>
           <ResultHeader
             innerRef={ref => this.setPreRef(0, ref)}
             onKeyDown={this.handlePreKeyDown}

@@ -26,7 +26,7 @@ export default class Avatar extends PureComponent {
   render() {
     const { size, src } = this.props;
     return (
-      <AvatarImg src={src} imgSize={size} />
+      <AvatarImg src={src} imgSize={size} {...this.props} />
     );
   }
 }

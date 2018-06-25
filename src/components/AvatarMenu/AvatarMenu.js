@@ -1,10 +1,17 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ButtonBase from '@material-ui/core/ButtonBase';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import { Avatar, BrowserLink } from '../';
+import styled from 'styled-components';
+import { Avatar, Popover } from '../';
+import { history } from '../../utils';
 
+const ListItem = styled.div`
+  padding: 16px 30px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+`;
 export default class AvatarMenu extends Component {
   state = {
     anchorEl: null,
@@ -13,45 +20,43 @@ export default class AvatarMenu extends Component {
     handleLogout: PropTypes.func.isRequired,
     nickname: PropTypes.string.isRequired,
   }
-  handleAvatarClick = (e) => {
+  setContainerRef = (ref) => {
+    this._container = ref;
+  }
+  handleOpen = (e) => {
     this.setState({
       anchorEl: e.currentTarget,
     });
   }
-  handleAvatarClose = () => {
+  handleClose = () => {
     this.setState({
       anchorEl: null,
     });
   }
   handleLogout = () => {
     this.props.handleLogout();
-    this.handleAvatarClose();
+    this.handleClose();
+  }
+  handleProfile = () => {
+    history.push(`/${this.props.nickname}`);
+    this.handleClose();
   }
   render() {
     const { anchorEl } = this.state;
-    const { nickname } = this.props;
     return (
-      <Fragment>
-        <ButtonBase
-          disableRipple
-          aria-owns={anchorEl ? 'profile-menu' : null}
-          aria-haspopup="true"
-          onClick={this.handleAvatarClick}
-        >
-          <Avatar />
-        </ButtonBase>
-        <Menu
-          id="profile-menu"
+      <div ref={this.setContainerRef}>
+        <Avatar onClick={this.handleOpen} />
+        <Popover
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
-          onClose={this.handleAvatarClose}
+          handleClose={this.handleClose}
         >
-          <MenuItem onClick={this.handleAvatarClose}>
-            <BrowserLink type="push" location={`${nickname}`}>Profile</BrowserLink>
-          </MenuItem>
-          <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
-        </Menu>
-      </Fragment>
+          <ListItem onClick={this.handleProfile}>
+            Profile
+          </ListItem>
+          <ListItem onClick={this.handleLogout}>Logout</ListItem>
+        </Popover>
+      </div>
     );
   }
 }

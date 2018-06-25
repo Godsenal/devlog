@@ -4,20 +4,19 @@ import styled from 'styled-components';
 import { media } from '../../styles/util';
 
 const Container = styled.div`
-  position: relative; 
-  word-break: break-all;
-`;
-const Inner = styled.div`
   position: absolute;
-  left: 0;
-  top: 10px;
+  word-break: break-all;
 
+  left: ${props => `${props.left}px`};
+  top: ${props => `${props.top}px`};
 
   width: 200px;
   ${media.tablet`
+    position: fixed;
+    left: 0;
+    top:  ${props => `${props.top}px`};
     width: 100%;
   `}
-
   border-radius: 5px;
   background-color: white;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
@@ -25,9 +24,13 @@ const Inner = styled.div`
 
 export default class Popover extends Component {
   static propTypes = {
+    anchorEl: PropTypes.any,
     children: PropTypes.node.isRequired,
     handleClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
+  }
+  static defaultProps = {
+    anchorEl: null,
   }
   componentDidMount() {
     window.addEventListener('mousedown', this.checkClickOutside);
@@ -43,16 +46,29 @@ export default class Popover extends Component {
       this.props.handleClose();
     }
   }
+  getCalculatedLeftAndTop = anchorEl => {
+    const { width = 0, height = 0, left, top } = anchorEl.getBoundingClientRect();
+    const defaultTopGap = 20;
+    const calcLeft = (left - 100) + (width / 2);
+    const calcTop = top + height + defaultTopGap;
+    return {
+      calcLeft,
+      calcTop,
+    };
+  }
   render() {
-    const { open, children } = this.props;
-    if (!open) {
+    const { anchorEl, children, open } = this.props;
+    if (!anchorEl || !open) {
       return null;
     }
+    const { calcLeft, calcTop } = this.getCalculatedLeftAndTop(anchorEl);
     return (
-      <Container innerRef={this.setContainerRef}>
-        <Inner>
-          {children}
-        </Inner>
+      <Container
+        innerRef={this.setContainerRef}
+        left={calcLeft}
+        top={calcTop}
+      >
+        {children}
       </Container>
     );
   }
