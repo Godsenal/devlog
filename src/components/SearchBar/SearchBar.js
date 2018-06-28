@@ -6,12 +6,9 @@ import debounce from 'lodash/debounce';
 import SearchIcon from 'react-icons/lib/md/search';
 import { Avatar, Popover } from '../';
 import { searchPre, searchPreClear } from '../../actions/search';
-import { linkText } from '../../styles/util';
+import { defaultPadding, linkText } from '../../styles/util';
 import { history } from '../../utils';
 
-const defaultPadding = () => (`
-  padding: 5px 14px;
-`);
 const Container = styled.div`
   position: relative;
   display: flex;
@@ -89,6 +86,7 @@ class SearchBar extends PureComponent {
     this._selected = -1;
     this._pre = [];
     this.setState({
+      searchWord: '',
       isFocused: false,
     }, cb);
   }
@@ -177,6 +175,17 @@ class SearchBar extends PureComponent {
       pre.focus();
     }
   }
+  handleSearchEnter = (searchWord) => (e) => {
+    if (e.key === 'Enter') {
+      if (!searchWord) {
+        return;
+      }
+      this.pushToSearch(searchWord);
+    }
+  }
+  handleSearchClick = (searchWord) => () => {
+    this.pushToSearch(searchWord);
+  }
   handleUserEnter = (nickname) => (e) => {
     if (e.key === 'Enter') {
       this.pushToProfile(nickname);
@@ -187,6 +196,9 @@ class SearchBar extends PureComponent {
   }
   pushToProfile = (nickname) => {
     this.clearSearch(() => history.push(`/${nickname}`));
+  }
+  pushToSearch = (searchWord) => {
+    this.clearSearch(() => history.push(`/search/?q=${searchWord}`));
   }
   render() {
     const { isFocused, searchWord } = this.state;
@@ -203,6 +215,7 @@ class SearchBar extends PureComponent {
             value={searchWord}
             isFocused={searchWord || isFocused}
             onKeyDown={this.handleInputKeyDown}
+            onKeyPress={this.handleSearchEnter(searchWord)}
             onChange={this.handleChange}
             onBlur={this.handleBlur}
             placeholder="Search DEVLOG..."
@@ -212,6 +225,8 @@ class SearchBar extends PureComponent {
           <ResultHeader
             innerRef={ref => this.setPreRef(0, ref)}
             onKeyDown={this.handlePreKeyDown}
+            onKeyPress={this.handleSearchEnter(searchWord)}
+            onClick={this.handleSearchClick(searchWord)}
             tabIndex="-1"
           >
             <IconWrapper>

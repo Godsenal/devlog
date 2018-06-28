@@ -1,5 +1,5 @@
 import update from 'immutability-helper';
-
+import findIndex from 'lodash/findIndex';
 import {
   SEARCH_TAG_REQUEST,
   SEARCH_TAG_SUCCESS,
@@ -8,6 +8,13 @@ import {
   SEARCH_PRE_REQUEST,
   SEARCH_PRE_SUCCESS,
   SEARCH_PRE_FAILURE,
+  SEARCH_LOG_REQUEST,
+  SEARCH_LOG_SUCCESS,
+  SEARCH_LOG_FAILURE,
+  SEARCH_LOG_RAW_UPDATE,
+  SEARCH_USER_REQUEST,
+  SEARCH_USER_SUCCESS,
+  SEARCH_USER_FAILURE,
 } from '../constants/actionTypes';
 
 const initialState = {
@@ -20,6 +27,20 @@ const initialState = {
       len: 0,
     },
     error: 'Error',
+  },
+  log: {
+    status: 'INIT',
+    q: '',
+    isLast: false,
+    isInit: true,
+    logs: [],
+  },
+  user: {
+    status: 'INIT',
+    q: '',
+    isLast: false,
+    isInit: true,
+    users: [],
   },
   tag: {
     status: 'INIT',
@@ -70,6 +91,67 @@ export default function search(state = initialState, action) {
             tags: { $set: [] },
             len: { $set: 0 },
           },
+          error: { $set: action.error },
+        },
+      });
+    case SEARCH_LOG_REQUEST:
+      return update(state, {
+        log: {
+          status: { $set: 'WAITING' },
+          q: { $set: action.q },
+        },
+      });
+    case SEARCH_LOG_SUCCESS:
+      return update(state, {
+        log: {
+          status: { $set: 'SUCCESS' },
+          isInit: { $set: action.isInit },
+          isLast: { $set: action.isLast },
+          logs: action.isInit ? { $set: action.logs } : { $push: action.logs },
+        },
+      });
+    case SEARCH_LOG_FAILURE:
+      return update(state, {
+        log: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.error },
+        },
+      });
+    case SEARCH_LOG_RAW_UPDATE: {
+      const logIndex = findIndex(state.log.logs, item => item._id === action.logId);
+      let rawUpdate = {};
+      const fieldUpdate = { [action.updateField]: { $set: action.update } };
+      if (logIndex >= 0) {
+        rawUpdate = {
+          log: {
+            logs: {
+              [logIndex]: fieldUpdate,
+            },
+          },
+        };
+      }
+      return update(state, rawUpdate);
+    }
+    case SEARCH_USER_REQUEST:
+      return update(state, {
+        user: {
+          status: { $set: 'WAITING' },
+          q: { $set: action.q },
+        },
+      });
+    case SEARCH_USER_SUCCESS:
+      return update(state, {
+        user: {
+          status: { $set: 'SUCCESS' },
+          isInit: { $set: action.isInit },
+          isLast: { $set: action.isLast },
+          users: action.isInit ? { $set: action.users } : { $push: action.users },
+        },
+      });
+    case SEARCH_USER_FAILURE:
+      return update(state, {
+        user: {
+          status: { $set: 'FAILURE' },
           error: { $set: action.error },
         },
       });

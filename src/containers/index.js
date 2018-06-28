@@ -2,6 +2,7 @@ import App from './App';
 import Home from './Home';
 import Timeline from './Timeline';
 import Profile from './Profile';
+import Search from './Search';
 import Login from './Login';
 import LogPage from './LogPage';
 import ModalPortal from './ModalPortal';
@@ -12,6 +13,7 @@ export {
   Home,
   Timeline,
   Profile,
+  Search,
   Login,
   LogPage,
   ModalPortal,

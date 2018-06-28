@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { media } from '../../styles/util';
+import { mainContainer } from '../../styles/util';
 
 import { LogList } from '../../components';
 import { listLog } from '../../actions/log';
@@ -13,19 +13,10 @@ const Background = styled.div`
 `;
 
 const Container = styled.div`
+  ${mainContainer()}
   display: flex;
-  
-  width: 80%;
-  ${media.tablet`width: 90%;`}
-  min-height: 800px;
-  
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem 0;
 
   justify-content: space-between;
-
-  overflow-y: auto;
 
 `;
 const MainContent = styled.div`

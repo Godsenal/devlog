@@ -9,7 +9,7 @@ const Item = styled(Link)`
   display: block;
   position: relative;
 
-  margin: 10px 0;
+  margin: 10px 5px;
   padding: 10px;
   
   color: black;
@@ -62,7 +62,7 @@ export default class LogListItem extends Component {
       stars,
     } = this.props;
     return (
-      <Item to={{ pathname: `${author_nickname}/log/${_id}`, state: { modal: true } }}>
+      <Item to={{ pathname: `/${author_nickname}/log/${_id}`, state: { modal: true } }}>
         <MainContent
           author_id={author_id}
           author_nickname={author_nickname}

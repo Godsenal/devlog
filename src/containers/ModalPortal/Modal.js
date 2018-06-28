@@ -25,7 +25,7 @@ const Header = styled.div`
   float: right;
 `;
 const Body = styled.div`
-  margin: 5px 30px;
+  margin: 30px;
   ${media.tablet`margin: 10px;`}
 `;
 

@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import { LazyList, LogListItem } from '../';
+import { LazyList, LogListItem, Tabs } from '../';
 import { listLatest, listStars } from '../../actions/profile';
 
 const TABS = ['latest', 'stars'];
@@ -67,19 +64,14 @@ class ProfileContent extends Component {
     const { latestState, starsState } = this.props;
     return (
       <div>
-        <Paper>
-          <Tabs
-            value={tab}
-            indicatorColor="primary"
-            textColor="primary"
-            centered
-            fullWidth
-            onChange={this.handleTabChange}
-          >
-            <Tab label="Latest" />
-            <Tab label="Stars" />
-          </Tabs>
-        </Paper>
+        <Tabs
+          selected={tab}
+          centered
+          handleTabChange={this.handleTabChange}
+        >
+          <span>Latest</span>
+          <span>Star</span>
+        </Tabs>
         { tab === 0 && (
           <LazyList
             lazyLoad={this.handleLazyLoad('latest')}

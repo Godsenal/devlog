@@ -17,6 +17,7 @@ import {
   LOG_POST_COMMENT_SUCCESS,
   LOG_POST_COMMENT_FAILURE,
   PROFILE_LIST_RAW_UPDATE,
+  SEARCH_LOG_RAW_UPDATE,
 } from '../constants/actionTypes';
 import * as logApi from '../api/log';
 
@@ -100,7 +101,12 @@ function* star(action) {
       updateField: 'stars',
       update: stars,
     });
-    // TODO: add raw update for star and update log_star reducer
+    yield put({
+      type: SEARCH_LOG_RAW_UPDATE,
+      logId,
+      updateField: 'stars',
+      update: stars,
+    });
   }
   catch (err) {
     const { error } = err.response.data;
@@ -120,11 +126,18 @@ function* postComment(action) {
       comment: newComment || {},
       comments: comments || [],
     });
-    yield put({
-      type: PROFILE_LIST_RAW_UPDATE,
+    const rawUpdate = {
       logId: comment.thread_id,
       updateField: 'comment_count',
       update: comments && comments.length,
+    };
+    yield put({
+      type: PROFILE_LIST_RAW_UPDATE,
+      ...rawUpdate,
+    });
+    yield put({
+      type: SEARCH_LOG_RAW_UPDATE,
+      ...rawUpdate,
     });
   }
   catch (err) {

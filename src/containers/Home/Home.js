@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Switch } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { PropsRoute } from '../../routes/RouterUtil';
-import { Timeline, LogPage, Profile } from '../';
+import { Timeline, LogPage, Profile, Search } from '../';
 import { Header } from '../../components';
 /*
   TODO: Fix Modal route
@@ -65,6 +65,10 @@ class Home extends Component {
             isMobile={isMobile}
             showModal={showModal}
             closeModal={closeModal}
+          />
+          <Route
+            path="/search/:type?"
+            component={Search}
           />
           <PropsRoute
             path="/:nickname"

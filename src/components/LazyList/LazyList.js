@@ -25,6 +25,7 @@ export default class LazyList extends Component {
   }
   handleScroll = () => {
     if (this.props.isLast) {
+      document.removeEventListener('scroll', this.handleScroll);
       return;
     }
     const { documentElement } = document;

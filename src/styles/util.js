@@ -27,3 +27,24 @@ export const linkText = () => (`
   text-decoration: none;
   cursor: pointer;
 `);
+
+export const mainContainer = () => (`
+  width: 80%;
+  ${media.tablet`width: 90%;`}
+  min-height: 800px;
+
+  max-width: 1200px;
+  margin: 0 auto;
+`);
+
+export const emptyContainer = () => (`
+  width: 100%;
+  margin: 100px 0;
+
+  text-align: center;
+`);
+
+export const defaultPadding = () => (`
+  padding: 5px 14px;
+`);
+

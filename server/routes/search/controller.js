@@ -45,7 +45,9 @@ exports.search_get = function search_get(req, res) {
 exports.users_get = function users_get(req, res) {
   const { skip, limit, q } = req.query;
   const query = { nickname: { $regex: q, $options: 'i' } };
-  const projection = { author_nickname: 1, text: 1, stars: 1 };
+  const projection = { nickname: 1 };
+  const parsedSkip = skip ? parseInt(skip, 10) : 10;
+  const parsedLimit = limit ? parseInt(limit, 10) : 10;
   const check = (users, err) => {
     if (err) {
       throw new Error('Database error');
@@ -55,14 +57,14 @@ exports.users_get = function users_get(req, res) {
   const success = (users) => res.json({ users });
   const error = (err) => res.status(503).json({ error: err.message });
   User.find(query, projection)
-    .skip(skip || 0)
-    .limit(limit || 10)
+    .skip(parsedSkip)
+    .limit(parsedLimit)
     .then(check)
     .then(success)
     .catch(error);
 };
 
-exports.logs_get = function users_get(req, res) {
+exports.logs_get = function logs_get(req, res) {
   const { skip, limit, q } = req.query;
   const query = { text: { $regex: q, $options: 'i' } };
   const projection = {
@@ -76,6 +78,8 @@ exports.logs_get = function users_get(req, res) {
     stars: 1,
   };
   const sort = { _id: -1 };
+  const parsedSkip = skip ? parseInt(skip, 10) : 10;
+  const parsedLimit = limit ? parseInt(limit, 10) : 10;
   const check = (logs, err) => {
     if (err) {
       throw new Error('Database Error');
@@ -97,8 +101,8 @@ exports.logs_get = function users_get(req, res) {
     { $match: query },
     { $project: projection },
     { $sort: sort },
-    { $skip: skip || 0 },
-    { $limit: limit || 10 },
+    { $skip: parsedSkip },
+    { $limit: parsedLimit },
   ]).exec()
     .then(check)
     .then(success)

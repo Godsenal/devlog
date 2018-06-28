@@ -6,6 +6,12 @@ import {
   SEARCH_PRE_REQUEST,
   SEARCH_PRE_SUCCESS,
   SEARCH_PRE_FAILURE,
+  SEARCH_LOG_REQUEST,
+  SEARCH_LOG_SUCCESS,
+  SEARCH_LOG_FAILURE,
+  SEARCH_USER_REQUEST,
+  SEARCH_USER_SUCCESS,
+  SEARCH_USER_FAILURE,
 } from '../constants/actionTypes';
 import * as SearchApi from '../api/search';
 
@@ -26,6 +32,46 @@ function* searchPre(action) {
     const { error } = err.response.data;
     yield put({
       type: SEARCH_PRE_FAILURE,
+      error,
+    });
+  }
+}
+function* searchLog(action) {
+  const { skip, limit, q } = action;
+  try {
+    const { data } = yield call(SearchApi.searchLog, { skip, limit, q });
+    const { logs } = data;
+    yield put({
+      type: SEARCH_LOG_SUCCESS,
+      isInit: skip === 0,
+      isLast: logs.length < limit,
+      logs,
+    });
+  }
+  catch (err) {
+    const { error } = err.response.data;
+    yield put({
+      type: SEARCH_LOG_FAILURE,
+      error,
+    });
+  }
+}
+function* searchUser(action) {
+  const { skip, limit, q } = action;
+  try {
+    const { data } = yield call(SearchApi.searchUser, { skip, limit, q });
+    const { users } = data;
+    yield put({
+      type: SEARCH_USER_SUCCESS,
+      isInit: skip === 0,
+      isLast: users.length < limit,
+      users,
+    });
+  }
+  catch (err) {
+    const { error } = err.response.data;
+    yield put({
+      type: SEARCH_USER_FAILURE,
       error,
     });
   }
@@ -61,9 +107,17 @@ function* watchSearchPre() {
 function* watchSearchTag() {
   yield takeLatest(SEARCH_TAG_REQUEST, searchTag);
 }
+function* watchSearchLog() {
+  yield takeLatest(SEARCH_LOG_REQUEST, searchLog);
+}
+function* watchSearchUser() {
+  yield takeLatest(SEARCH_USER_REQUEST, searchUser);
+}
 export default function* root() {
   yield all([
     fork(watchSearchTag),
     fork(watchSearchPre),
+    fork(watchSearchUser),
+    fork(watchSearchLog),
   ]);
 }
