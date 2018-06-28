@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from 'react-icons/lib/fa/close';
 import { LoginModal, SignupModal, CodeModal, LogModal } from './SpecificModal';
+import { IconButton } from '../../components';
 import { media } from '../../styles/util';
 
 const Container = styled.div`
@@ -22,6 +22,7 @@ const Container = styled.div`
   border-radius: 10px;
 `;
 const Header = styled.div`
+  margin: 5px;
   float: right;
 `;
 const Body = styled.div`

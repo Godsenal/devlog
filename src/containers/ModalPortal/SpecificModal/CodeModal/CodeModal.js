@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Button from '@material-ui/core/Button';
 
 import CodeEditor from './CodeEditor';
 import CodeFrame from './CodeFrame';
@@ -43,42 +44,12 @@ const Tab = styled.div`
 `;
 const ButtonBox = styled.div`
   width: 100%;
-  
-  padding: 1rem 0;
+  margin: 1rem 0;
   
   text-align: center;
 `;
-const Button = styled.button`
-  border: none;
-  border-radius: 0.5rem;
-  outline: none;
-
-  color: white;
-  background-color: ${props => (props.negative ? '#ec3c54' : '#1cbc94')};
-
-  min-height: 1em;
-  margin-left: 1rem;
-  padding: 0.8rem 3rem;
-  
-  font-weight: 600;
-  font-size: 1rem;
-
-  text-align: right;
-
-  cursor: pointer;
-
-  opacity: 1;
-  &:hover {
-    opacity: 0.75;
-    transition: opacity 0.3s ease;
-  }
-  ${props => (!props.valid && !props.negative ? `
-    opacity: 0.3;
-    &:hover {
-      opacity: 0.3;
-    }
-    ` : null
-  )}
+const MarginRight = styled.span`
+  margin-right: 10px;
 `;
 export default class CodeModal extends Component {
   constructor(props) {
@@ -124,11 +95,11 @@ export default class CodeModal extends Component {
     });
   }
   // Dynamic import for code language.
-  handleLanguageChange = async (e) => {
+  handleLanguageChange = async (value) => {
     try {
-      await import(`brace/mode/${e.target.value}`);
+      await import(`brace/mode/${value}`);
       this.setState({
-        language: e.target.value,
+        language: value,
       });
     }
     catch (err) {
@@ -159,7 +130,7 @@ export default class CodeModal extends Component {
       <Container>
         <TabBox>
           <Tab active={codeBlockType === 'editor'} onClick={() => this.handleModeChange('editor')}>Editor</Tab>
-          <Tab active={codeBlockType === 'frame'} onClick={() => this.handleModeChange('frame')}>Something</Tab>
+          <Tab active={codeBlockType === 'frame'} onClick={() => this.handleModeChange('frame')}>Embed</Tab>
         </TabBox>
         {
           codeBlockType === 'editor' ?
@@ -173,8 +144,12 @@ export default class CodeModal extends Component {
             <CodeFrame frameType={frameType} frameSrc={frameSrc} handleFrameChange={this.handleFrameChange} />
         }
         <ButtonBox>
-          <Button onClick={this.handleCodeBlockChange} disabled={!validToSave} valid={validToSave} >Save</Button>
-          <Button negative onClick={handleClose}>Close</Button>
+          <MarginRight>
+            <Button variant="outlined" onClick={this.handleCodeBlockChange} color="primary" disabled={!validToSave} >Save</Button>
+          </MarginRight>
+          <MarginRight>
+            <Button variant="outlined" onClick={handleClose}>Close</Button>
+          </MarginRight>
         </ButtonBox>
       </Container>
     );

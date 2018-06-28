@@ -3,6 +3,7 @@ import AvatarMenu from './AvatarMenu';
 import BrowserLink from './BrowserLink';
 import DimmedLoader from './DimmedLoader';
 import Header from './Header';
+import IconButton from './IconButton';
 import ButtonWithAuth from './ButtonWithAuth';
 import FollowButton from './FollowButton';
 import CodeEditorBox from './CodeEditorBox';
@@ -11,6 +12,7 @@ import CodeBox from './CodeBox';
 import CommentContainer from './CommentContainer';
 import CommentItem from './CommentItem';
 import CommentEditor from './CommentEditor';
+import Dropdown from './Dropdown';
 import MainContent from './MainContent';
 import FullMainContent from './FullMainContent';
 import LazyList from './LazyList';
@@ -25,6 +27,7 @@ import Popover from './Popover';
 import SearchBar from './SearchBar';
 import SearchSwitch from './SearchSwitch';
 import Tabs from './Tabs';
+import Textarea from './Textarea';
 import Transition from './Transition';
 import UserListItem from './UserListItem';
 
@@ -34,6 +37,7 @@ export {
   BrowserLink,
   DimmedLoader,
   Header,
+  IconButton,
   ButtonWithAuth,
   FollowButton,
   CodeEditorBox,
@@ -42,6 +46,7 @@ export {
   CommentContainer,
   CommentItem,
   CommentEditor,
+  Dropdown,
   MainContent,
   FullMainContent,
   LazyList,
@@ -56,6 +61,7 @@ export {
   SearchBar,
   SearchSwitch,
   Tabs,
+  Textarea,
   Transition,
   UserListItem
 };

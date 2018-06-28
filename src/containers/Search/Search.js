@@ -36,16 +36,25 @@ const Input = styled.input`
 
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   font-size: 3em;
+
+  background-color: inherit;
 `;
 class Search extends Component {
   state = {
-    searchWord: queryString.parse(this.props.location.search).q,
+    searchWord: queryString.parse(this.props.location.search).q || '',
     selected: findIndex(TABS, tab => tab.text === checkType(this.props.match.params.type)),
   }
   static propTypes = {
     history: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     match: PropTypes.object.isRequired,
+  }
+  componentDidUpdate = (prevProps) => {
+    if (this.props.location.search !== prevProps.location.search) {
+      this.setState({
+        searchWord: queryString.parse(this.props.location.search).q,
+      });
+    }
   }
   handleInputChange = (e) => {
     this.setState({

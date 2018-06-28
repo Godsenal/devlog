@@ -18,7 +18,7 @@ const Container = styled.div`
 `;
 const IconWrapper = styled.span`
   margin-right: 10px;
-
+  cursor: pointer;
 `;
 const Input = styled.input`
   width: ${props => (props.isFocused ? '200px' : '1px')};

@@ -3,15 +3,13 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { getUser } from '../../actions/user';
+import { mainContainer } from '../../styles/util';
 import { Avatar, DimmedLoader, FollowButton, ProfileContent } from '../../components';
 
 const IMAGE_SIZE = 120;
 const Container = styled.div`
+  ${mainContainer()}
   max-width: 860px;
-  min-height: 800px;
-
-  padding: 0 10px;
-  margin: auto;
 `;
 const Top = styled.div`
   display: flex;

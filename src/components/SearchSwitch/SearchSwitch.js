@@ -14,9 +14,12 @@ class SearchSwitch extends Component {
     dispatchSearchLog: PropTypes.func.isRequired,
     dispatchSearchUser: PropTypes.func.isRequired,
     logState: PropTypes.object.isRequired,
-    searchWord: PropTypes.string.isRequired,
+    searchWord: PropTypes.string,
     type: PropTypes.string.isRequired,
     userState: PropTypes.object.isRequired,
+  }
+  static defaultProps = {
+    searchWord: '',
   }
   shouldComponentUpdate = (nextProps) => {
     if (this.props.type !== nextProps.type) {
@@ -85,8 +88,12 @@ class SearchSwitch extends Component {
   }
   render() {
     const { type, searchWord } = this.props;
-    if (!type) {
-      return <div>NOT FOUND</div>;
+    if (!type || !searchWord) {
+      return (
+        <NotFound>
+          <h3>Couldn't find anything.</h3>
+        </NotFound>
+      );
     }
     const { isLast, status, data, ItemComp } = this.getListData(type);
     return (

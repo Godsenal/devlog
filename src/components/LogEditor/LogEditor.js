@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import grey from '@material-ui/core/colors/grey';
 
 import 'draft-js-emoji-plugin/lib/plugin.css';
 
@@ -23,9 +24,8 @@ const Container = styled.div`
   width: 100%;
   padding: 10px 20px;
 
-  border-radius: 10px;
-
-  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid ${grey[300]};
+  border-radius: 5px;
 `;
 
 const EditorBlock = styled.div`
@@ -160,7 +160,7 @@ class LogEditor extends Component {
       editorState,
     } = this.state;
     const text = editorState.getCurrentContent().getPlainText();
-    if (text && text.length < 10) {
+    if (!text || text.length < 10) {
       this.props.addToast({ message: 'Log must be at least 10 characters' });
       return;
     }

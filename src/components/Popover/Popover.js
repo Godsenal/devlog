@@ -8,13 +8,11 @@ const Container = styled.div`
   word-break: break-all;
 
   left: ${props => `${props.left}px`};
-  top: ${props => `${props.top}px`};
 
   width: 200px;
   ${media.tablet`
     position: fixed;
     left: 0;
-    top:  ${props => `${props.top}px`};
     width: 100%;
   `}
   border-radius: 5px;
@@ -47,13 +45,10 @@ export default class Popover extends Component {
     }
   }
   getCalculatedLeftAndTop = anchorEl => {
-    const { width = 0, height = 0, left, top } = anchorEl.getBoundingClientRect();
-    const defaultTopGap = 20;
+    const { width = 0, left } = anchorEl.getBoundingClientRect();
     const calcLeft = (left - 100) + (width / 2);
-    const calcTop = top + height + defaultTopGap;
     return {
       calcLeft,
-      calcTop,
     };
   }
   render() {
@@ -61,12 +56,11 @@ export default class Popover extends Component {
     if (!anchorEl || !open) {
       return null;
     }
-    const { calcLeft, calcTop } = this.getCalculatedLeftAndTop(anchorEl);
+    const { calcLeft } = this.getCalculatedLeftAndTop(anchorEl);
     return (
       <Container
         innerRef={this.setContainerRef}
         left={calcLeft}
-        top={calcTop}
       >
         {children}
       </Container>

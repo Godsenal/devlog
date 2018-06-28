@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Editor from 'draft-js-plugins-editor';
 import createEmojiPlugin from 'draft-js-emoji-plugin';
+import grey from '@material-ui/core/colors/grey';
 
+import 'draft-js/dist/Draft.css';
 import 'draft-js-emoji-plugin/lib/plugin.css';
 // Creates an Instance. At this step, a configuration object can be passed in
 // as an argument.
@@ -16,8 +18,8 @@ const EditorContainer = styled.div`
   ${({ isFocused }) => isFocused && 'min-height: 100px;'}
   padding: 10px 12px;
 
-  border: 1px solid #929292;
-  ${({ isDraftFocused }) => isDraftFocused && 'border-width: 3px;'}
+  border: 1px solid ${grey[300]};
+  ${({ isDraftFocused }) => isDraftFocused && 'border-width: 1.5px;'}
   border-radius: 10px;
 
   font-size: 16px;
@@ -69,6 +71,7 @@ class EditorDraftBlock extends Component {
         onClick={this.focusOnEditor}
       >
         <Editor
+          placeholder="Write your today's log"
           editorState={editorState}
           onFocus={this.onDraftFocus}
           onBlur={this.onDraftBlur}

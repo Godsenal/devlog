@@ -2,19 +2,20 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
+import grey from '@material-ui/core/colors/grey';
 import { CommentItem, CommentEditor, ButtonWithAuth } from '../';
 
 const Container = styled.div`
   width: 100%;
+  border-top: 1px solid ${grey[300]};
 `;
 const Header = styled.div`
   float: left;
   margin: 10px 0;
 `;
-const Title = styled.span`
+const Title = styled.h3`
   font-size: 16px;
   color: rgba(0,0,0,.7);
-  font-weight: 600;
 `;
 export default class CommentContainer extends Component {
   static propTypes = {

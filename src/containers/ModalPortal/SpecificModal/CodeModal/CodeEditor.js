@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import styled from 'styled-components';
 import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
 
 import 'brace/mode/javascript';
 import 'brace/theme/monokai';
+import { Dropdown } from '../../../../components';
 
 const EDITOR_HEIGHT = 200;
 
@@ -25,37 +25,58 @@ const DropdownBox = styled.div`
 
   color: black;
 `;
-
-const CodeEditor = ({ language, languageOptions, code, handleCodeChange, handleLanguageChange }) => (
-  <React.Fragment>
-    <Editor>
-      <AceEditor
-        width="100%"
-        height={`${EDITOR_HEIGHT}px`}
-        mode={language}
-        theme="monokai"
-        onChange={handleCodeChange}
-        value={code}
-        name="editor_code_block"
-        editorProps={{ $blockScrolling: true }}
-      />
-    </Editor>
-    <DropdownBox>
-      <Select
-        value={language}
-        onChange={handleLanguageChange}
-        inputProps={{
-          name: 'code-language',
-          id: 'code-language-select',
-        }}
-      >
-        {languageOptions.map((item) => (
-          <MenuItem key={item.value} value={item.value}>{item.text}</MenuItem>
-        ))}
-      </Select>
-    </DropdownBox>
-  </React.Fragment>
-);
+class CodeEditor extends PureComponent {
+  state = {
+    open: false,
+  }
+  handleSelectOpen = () => {
+    this.setState({
+      open: true,
+    });
+  }
+  handleSelectClose = () => {
+    this.setState({
+      open: false,
+    });
+  }
+  handleSelect = (value) => () => {
+    this.handleSelectClose();
+    this.props.handleLanguageChange(value);
+  }
+  render() {
+    const { open } = this.state;
+    const { language, languageOptions, code, handleCodeChange } = this.props;
+    return (
+      <React.Fragment>
+        <Editor>
+          <AceEditor
+            width="100%"
+            height={`${EDITOR_HEIGHT}px`}
+            mode={language}
+            theme="monokai"
+            onChange={handleCodeChange}
+            value={code}
+            name="editor_code_block"
+            editorProps={{ $blockScrolling: true }}
+          />
+        </Editor>
+        <DropdownBox>
+          <Dropdown
+            selected={language}
+            open={open}
+            upward
+            handleOpen={this.handleSelectOpen}
+            handleClose={this.handleSelectClose}
+          >
+            {languageOptions.map((item) => (
+              <MenuItem key={item.value} value={item.value} onClick={this.handleSelect(item.value)}>{item.text}</MenuItem>
+            ))}
+          </Dropdown>
+        </DropdownBox>
+      </React.Fragment>
+    );
+  }
+}
 
 CodeEditor.propTypes = {
   code: PropTypes.string.isRequired,

@@ -2,8 +2,8 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
-import { AvatarMenu, BrowserLink } from '../';
-import SearchBar from '../SearchBar';
+import { AvatarMenu, BrowserLink, SearchBar } from '../';
+import { linkText } from '../../styles/util';
 
 const HEADER_HEIGHT = 80;
 const Container = styled.div`
@@ -31,17 +31,17 @@ const Menubar = styled.div`
   display: flex;
   align-items: center;
 `;
-const Title = styled.a`
+const Title = styled.div`
   color: rgba(0, 0, 0, 0.7);
 
   font-size: 32px;
 
   flex: 1 1 auto;
-
-  cursor: pointer;
-
+`;
+const TitleLink = styled.a`
+  ${linkText()}
   &:hover {
-    color: rgba(0, 0, 0, 0.7);
+    color: black;
   }
 `;
 const RightItem = styled.div`
@@ -76,9 +76,11 @@ class Header extends Component {
         <Container>
           <Menubar>
             <Title>
-              <BrowserLink type="push" location="/">
-                <span>DEVLOG</span>
-              </BrowserLink>
+              <TitleLink>
+                <BrowserLink type="push" location="/">
+                  <span>DEVLOG</span>
+                </BrowserLink>
+              </TitleLink>
             </Title>
             <RightItem>
               {

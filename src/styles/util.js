@@ -34,7 +34,7 @@ export const mainContainer = () => (`
   min-height: 800px;
 
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 1rem auto;
 `);
 
 export const emptyContainer = () => (`

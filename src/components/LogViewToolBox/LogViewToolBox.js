@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import IconButton from '@material-ui/core/IconButton';
 import CommentIcon from 'react-icons/lib/fa/comment-o';
 import BookmarkIcon from 'react-icons/lib/fa/bookmark-o';
 import FullBookmarkIcon from 'react-icons/lib/fa/bookmark';
 import StarIcon from 'react-icons/lib/fa/star-o';
 import FullStarIcon from 'react-icons/lib/fa/star';
-import { ButtonWithAuth } from '../';
+import { ButtonWithAuth, IconButton } from '../';
 import { bookmark } from '../../actions/user';
 import { getLog, starLog } from '../../actions/log';
 import { addToast } from '../../actions/toast';
@@ -21,6 +20,7 @@ const Container = styled.div`
 
   justify-content: flex-end;
   align-items: center;
+  
 `;
 class LogViewToolBox extends Component {
   static propTypes = {
@@ -70,14 +70,12 @@ class LogViewToolBox extends Component {
     } = this.props;
     return (
       <Container>
-        <ButtonWithAuth onClick={this.handleStarLog}>
-          <IconButton >
-            <CommentIcon />
-          </IconButton>
-        </ButtonWithAuth>
+        <IconButton>
+          <CommentIcon />
+        </IconButton>
         {commentCount}
         <ButtonWithAuth onClick={this.handleStarLog}>
-          <IconButton >
+          <IconButton>
             { this.checkUserStared() ? <FullStarIcon color="#ec5453" /> : <StarIcon /> }
           </IconButton>
         </ButtonWithAuth>

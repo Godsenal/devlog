@@ -17,6 +17,8 @@ const TabList = styled.div`
   overflow-y: hidden;
 `;
 const Tab = styled.span`
+  cursor: pointer;
+  
   margin-right: 15px;
   ${props => !props.selected && 'color: rgba(0, 0, 0, 0.5)'}
 `;

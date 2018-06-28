@@ -9,12 +9,13 @@ const Item = styled(Link)`
   display: block;
   position: relative;
 
-  margin: 10px 5px;
+  margin: 10px 1px;
   padding: 10px;
   
   color: black;
   background-color: white;
 
+  text-decoration: none;
   border-radius: 5px;
 
   cursor: pointer;
