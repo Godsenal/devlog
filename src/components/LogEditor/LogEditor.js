@@ -64,6 +64,7 @@ class LogEditor extends Component {
     codeBlockType: 'editor',
     isFocused: false,
     hasCodeBlock: false,
+    tags: [],
     editorState: EditorState.createEmpty(),
   })
   /* Change Draftjs state */
@@ -95,6 +96,12 @@ class LogEditor extends Component {
       handleCodeBlockChange: this.handleCodeBlockChange,
     };
     this.props.showCodeModal('CODE_MODAL', modalProps);
+  }
+  showTagModal = () => {
+    // TODO: add tag modal to insert tag.
+    this.setState({
+      tags: [...this.state.tags, 'newTag!!!!'],
+    });
   }
   setContainerRef = (ref) => {
     this.container = ref;
@@ -158,6 +165,7 @@ class LogEditor extends Component {
       codeBlockType,
       hasCodeBlock,
       editorState,
+      tags,
     } = this.state;
     const text = editorState.getCurrentContent().getPlainText();
     if (!text || text.length < 10) {
@@ -184,6 +192,7 @@ class LogEditor extends Component {
       ...logContent,
       has_code: hasCodeBlock,
       text,
+      tags,
       content: editorState.getCurrentContent(),
     };
     this.props.postNewLog(logContent);
@@ -229,6 +238,7 @@ class LogEditor extends Component {
                 }
                 <EditorToolBox
                   onCodeButtonClick={this.showCodeModal}
+                  onTagButtonClick={this.showTagModal}
                   hasCodeBlock={hasCodeBlock}
                   handleLog={this.handleLog}
                 />

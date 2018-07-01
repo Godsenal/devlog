@@ -10,7 +10,7 @@ const { Schema } = mongoose;
  * star: number of star
  */
 const tagSchema = new Schema({
-  name: String,
+  name: { type: String, unique: true },
   count: Number,
   description: String,
 });

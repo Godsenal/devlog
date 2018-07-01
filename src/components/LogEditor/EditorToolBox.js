@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import CodeIcon from 'react-icons/lib/fa/code';
+import TagIcon from 'react-icons/lib/fa/tags';
+
 import { IconButton } from '../';
 
 const ButtonBox = styled.div`
@@ -27,11 +29,14 @@ const RightBox = styled.div`
   display: flex;
   align-items: center;
 `;
-const EditorToolBox = ({ onCodeButtonClick, hasCodeBlock, handleLog }) => (
+const EditorToolBox = ({ onCodeButtonClick, hasCodeBlock, onTagButtonClick, handleLog }) => (
   <ButtonBox>
     <LeftBox>
       <IconButton onClick={onCodeButtonClick} active={hasCodeBlock} >
         <CodeIcon />
+      </IconButton>
+      <IconButton onClick={onTagButtonClick}>
+        <TagIcon />
       </IconButton>
     </LeftBox>
     <RightBox>
@@ -51,6 +56,7 @@ EditorToolBox.propTypes = {
   handleLog: PropTypes.func.isRequired,
   hasCodeBlock: PropTypes.bool.isRequired,
   onCodeButtonClick: PropTypes.func.isRequired,
+  onTagButtonClick: PropTypes.func.isRequired,
 };
 
 export default EditorToolBox;

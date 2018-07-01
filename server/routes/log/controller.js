@@ -1,6 +1,7 @@
 const Log = require('../../models/log');
+const Tag = require('../../models/tag');
 
-exports.log_post = function log_post(req, res) {
+exports.log_post = async function log_post(req, res) {
   const { log } = req.body;
   const newLog = new Log(log);
   const check = (savedLog, err) => {
@@ -20,6 +21,7 @@ exports.log_post = function log_post(req, res) {
         created: savedLog.created,
         comment_count: 0,
         stars: savedLog.stars,
+        tags: savedLog.tags,
       },
     })
   );
@@ -28,10 +30,14 @@ exports.log_post = function log_post(req, res) {
       error: err,
     })
   );
-  newLog.save()
-    .then(check)
-    .then(success)
-    .catch(error);
+  const documents = log.tags.map(tag => ({ name: tag }));
+  const option = { ordered: false };
+  Tag.insertMany(documents, option, () => {
+    newLog.save()
+      .then(check)
+      .then(success)
+      .catch(error);
+  });
 };
 
 exports.list_get = function list_get(req, res) {
@@ -80,7 +86,6 @@ exports.list_get = function list_get(req, res) {
       error: err,
     });
   };
-
   Log.aggregate([
     { $match: query },
     { $project: projection },
