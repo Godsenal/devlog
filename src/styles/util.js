@@ -47,4 +47,3 @@ export const emptyContainer = () => (`
 export const defaultPadding = () => (`
   padding: 5px 14px;
 `);
-

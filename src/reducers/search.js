@@ -1,9 +1,6 @@
 import update from 'immutability-helper';
 import findIndex from 'lodash/findIndex';
 import {
-  SEARCH_TAG_REQUEST,
-  SEARCH_TAG_SUCCESS,
-  SEARCH_TAG_FAILURE,
   SEARCH_PRE_CLEAR,
   SEARCH_PRE_REQUEST,
   SEARCH_PRE_SUCCESS,
@@ -15,6 +12,9 @@ import {
   SEARCH_USER_REQUEST,
   SEARCH_USER_SUCCESS,
   SEARCH_USER_FAILURE,
+  SEARCH_TAG_REQUEST,
+  SEARCH_TAG_SUCCESS,
+  SEARCH_TAG_FAILURE,
 } from '../constants/actionTypes';
 
 const initialState = {
@@ -34,6 +34,7 @@ const initialState = {
     isLast: false,
     isInit: true,
     logs: [],
+    error: 'Error',
   },
   user: {
     status: 'INIT',
@@ -41,11 +42,14 @@ const initialState = {
     isLast: false,
     isInit: true,
     users: [],
+    error: 'Error',
   },
   tag: {
     status: 'INIT',
-    text: '',
-    results: [],
+    q: '',
+    isLast: false,
+    isInit: true,
+    tags: [],
     error: 'Error',
   },
 };
@@ -159,21 +163,22 @@ export default function search(state = initialState, action) {
       return update(state, {
         tag: {
           status: { $set: 'WAITING' },
-          text: { $set: action.text },
+          q: { $set: action.q },
         },
       });
     case SEARCH_TAG_SUCCESS:
       return update(state, {
         tag: {
           status: { $set: 'SUCCESS' },
-          results: { $set: action.results },
+          isInit: { $set: action.isInit },
+          isLast: { $set: action.isLast },
+          tags: action.isInit ? { $set: action.tags } : { $push: action.tags },
         },
       });
     case SEARCH_TAG_FAILURE:
       return update(state, {
         tag: {
           status: { $set: 'FAILURE' },
-          results: { $set: [] },
           error: { $set: action.error },
         },
       });

@@ -77,20 +77,24 @@ function* searchUser(action) {
   }
 }
 function* searchTag(action) {
-  try {
-    const { text } = action;
-    const response = yield call(SearchApi.searchTag, text);
-    const { tags } = response.data;
-    const parseResult = tags.map((tag) => ({
-      ...tag,
-      value: tag._id,
-      key: tag._id,
-      text: tag.name,
-      description: tag.description,
-    }));
+  const { q, skip, limit } = action;
+  if (q.length === 0) {
     yield put({
       type: SEARCH_TAG_SUCCESS,
-      results: parseResult,
+      tags: [],
+      isInit: true,
+      isLast: false,
+    });
+    return;
+  }
+  try {
+    const { data } = yield call(SearchApi.searchTag, { q, skip, limit });
+    const { tags } = data;
+    yield put({
+      type: SEARCH_TAG_SUCCESS,
+      tags,
+      isInit: skip === 0,
+      isLast: tags.length < limit,
     });
   }
   catch (err) {
@@ -104,20 +108,20 @@ function* searchTag(action) {
 function* watchSearchPre() {
   yield takeLatest(SEARCH_PRE_REQUEST, searchPre);
 }
-function* watchSearchTag() {
-  yield takeLatest(SEARCH_TAG_REQUEST, searchTag);
-}
 function* watchSearchLog() {
   yield takeLatest(SEARCH_LOG_REQUEST, searchLog);
 }
 function* watchSearchUser() {
   yield takeLatest(SEARCH_USER_REQUEST, searchUser);
 }
+function* watchSearchTag() {
+  yield takeLatest(SEARCH_TAG_REQUEST, searchTag);
+}
 export default function* root() {
   yield all([
-    fork(watchSearchTag),
     fork(watchSearchPre),
     fork(watchSearchUser),
     fork(watchSearchLog),
+    fork(watchSearchTag),
   ]);
 }

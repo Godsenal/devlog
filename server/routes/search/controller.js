@@ -46,7 +46,7 @@ exports.users_get = function users_get(req, res) {
   const { skip, limit, q } = req.query;
   const query = { nickname: { $regex: q, $options: 'i' } };
   const projection = { nickname: 1 };
-  const parsedSkip = skip ? parseInt(skip, 10) : 10;
+  const parsedSkip = skip ? parseInt(skip, 10) : 0;
   const parsedLimit = limit ? parseInt(limit, 10) : 10;
   const check = (users, err) => {
     if (err) {
@@ -78,7 +78,7 @@ exports.logs_get = function logs_get(req, res) {
     stars: 1,
   };
   const sort = { _id: -1 };
-  const parsedSkip = skip ? parseInt(skip, 10) : 10;
+  const parsedSkip = skip ? parseInt(skip, 10) : 0;
   const parsedLimit = limit ? parseInt(limit, 10) : 10;
   const check = (logs, err) => {
     if (err) {
@@ -104,6 +104,28 @@ exports.logs_get = function logs_get(req, res) {
     { $skip: parsedSkip },
     { $limit: parsedLimit },
   ]).exec()
+    .then(check)
+    .then(success)
+    .catch(error);
+};
+
+exports.tags_get = function tags_get(req, res) {
+  const { skip, limit, q } = req.query;
+  const query = { name: { $regex: q, $options: 'i' } };
+  const projection = { name: 1 };
+  const parsedSkip = skip ? parseInt(skip, 10) : 0;
+  const parsedLimit = limit ? parseInt(limit, 10) : 30;
+  const check = (tags, err) => {
+    if (err) {
+      throw new Error('Database error');
+    }
+    return tags;
+  };
+  const success = (tags) => res.json({ tags });
+  const error = (err) => res.status(503).json({ error: err.message });
+  Tag.find(query, projection)
+    .skip(parsedSkip)
+    .limit(parsedLimit)
     .then(check)
     .then(success)
     .catch(error);

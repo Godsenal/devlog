@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import CloseIcon from 'react-icons/lib/fa/close';
-import { LoginModal, SignupModal, CodeModal, LogModal } from './SpecificModal';
+import { LoginModal, SignupModal, CodeModal, LogModal, TagModal } from './SpecificModal';
 import { IconButton } from '../../components';
 import { media } from '../../styles/util';
 
@@ -35,6 +35,7 @@ const MODAL_COMPONENTS = {
   SIGNUP_MODAL: SignupModal,
   CODE_MODAL: CodeModal,
   LOG_MODAL: LogModal,
+  TAG_MODAL: TagModal,
 };
 export default class Modal extends Component {
   state = {

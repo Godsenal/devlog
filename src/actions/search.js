@@ -6,13 +6,6 @@ import {
   SEARCH_LOG_REQUEST,
 } from '../constants/actionTypes';
 
-export function searchTag(text) {
-  return {
-    type: SEARCH_TAG_REQUEST,
-    text,
-  };
-}
-
 export function searchPreClear() {
   return {
     type: SEARCH_PRE_CLEAR,
@@ -43,3 +36,11 @@ export function searchLog({ skip = 0, limit = 10, q }) {
   };
 }
 
+export function searchTag({ skip = 0, limit = 30, q }) {
+  return {
+    type: SEARCH_TAG_REQUEST,
+    skip,
+    limit,
+    q,
+  };
+}

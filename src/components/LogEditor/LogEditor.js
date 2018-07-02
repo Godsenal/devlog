@@ -10,6 +10,7 @@ import 'draft-js-emoji-plugin/lib/plugin.css';
 import EditorCodeBlock from './EditorCodeBlock';
 import EditorDraftBlock from './EditorDraftBlock';
 import EditorToolBox from './EditorToolBox';
+import EditorTagBlock from './EditorTagBlock';
 
 import { showModal, closeModal } from '../../actions/modal';
 import { addToast } from '../../actions/toast';
@@ -26,6 +27,8 @@ const Container = styled.div`
 
   border: 1px solid ${grey[300]};
   border-radius: 5px;
+
+  background-color: white;
 `;
 
 const EditorBlock = styled.div`
@@ -50,9 +53,9 @@ class LogEditor extends Component {
   }
   static propTypes = {
     addToast: PropTypes.func.isRequired,
+    dispatchShowModal: PropTypes.func.isRequired,
     nickname: PropTypes.string.isRequired,
     postNewLog: PropTypes.func.isRequired,
-    showCodeModal: PropTypes.func.isRequired,
     user_id: PropTypes.string.isRequired,
   }
   getInitialState = () => ({
@@ -95,13 +98,15 @@ class LogEditor extends Component {
       frameType,
       handleCodeBlockChange: this.handleCodeBlockChange,
     };
-    this.props.showCodeModal('CODE_MODAL', modalProps);
+    this.props.dispatchShowModal('CODE_MODAL', modalProps);
   }
   showTagModal = () => {
-    // TODO: add tag modal to insert tag.
-    this.setState({
-      tags: [...this.state.tags, 'newTag!!!!'],
-    });
+    const { tags } = this.state;
+    const modalProps = {
+      selectedTags: tags,
+      handleTagChange: this.handleTagChange,
+    };
+    this.props.dispatchShowModal('TAG_MODAL', modalProps);
   }
   setContainerRef = (ref) => {
     this.container = ref;
@@ -154,6 +159,11 @@ class LogEditor extends Component {
       frameType: '',
       codeBlockType: 'editor',
       hasCodeBlock: false,
+    });
+  }
+  handleTagChange = (tags) => {
+    this.setState({
+      tags,
     });
   }
   handleLog = () => {
@@ -210,6 +220,7 @@ class LogEditor extends Component {
       language,
       frameSrc,
       frameType,
+      tags,
     } = this.state;
     return (
       <Container innerRef={this.setContainerRef}>
@@ -224,6 +235,7 @@ class LogEditor extends Component {
           {
             isFocused &&
               <div>
+                { tags.length > 0 && <EditorTagBlock tags={tags} showTagModal={this.showTagModal} /> }
                 {
                   hasCodeBlock &&
                     <EditorCodeBlock
@@ -256,8 +268,8 @@ const mapStateToProps = state => ({
   nickname: state.user.login.nickname,
 });
 const mapDispatchToProps = dispatch => ({
-  showCodeModal: (type, modalProps) => dispatch(showModal(type, modalProps)),
-  closeCodeModal: () => dispatch(closeModal),
+  dispatchShowModal: (type, modalProps) => dispatch(showModal(type, modalProps)),
+  dispatchCloseModal: () => dispatch(closeModal),
   postNewLog: (log) => dispatch(postLog(log)),
   addToast: (toastProps) => dispatch(addToast(toastProps)),
 });

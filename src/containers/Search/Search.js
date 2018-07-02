@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import queryString from 'query-string';
 import findIndex from 'lodash/findIndex';
-import { Tabs, SearchSwitch } from '../../components';
+import { Tabs, SearchSwitch, Input } from '../../components';
 import { mainContainer } from '../../styles/util';
 
 const TABS = [
@@ -26,18 +26,6 @@ const checkType = (type = 'logs') => {
 const Container = styled.div`
   ${mainContainer()}
   max-width: 800px;
-`;
-const Input = styled.input`
-  width: 100%;
-  margin-bottom: 20px;
-
-  border: none;
-  outline: none;
-
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-  font-size: 3em;
-
-  background-color: inherit;
 `;
 class Search extends Component {
   state = {
