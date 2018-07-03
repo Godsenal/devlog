@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { LogListItem, LazyList } from '../';
+import { LazyList, UserListItem } from '../';
 import LoadingWrapper from '../LoadingWrapper';
 
-class LogList extends Component {
+class UserList extends Component {
   static propTypes = {
-    handleListLog: PropTypes.func.isRequired,
+    handleListUser: PropTypes.func.isRequired,
     isLast: PropTypes.bool.isRequired,
-    logs: PropTypes.array.isRequired,
     status: PropTypes.string.isRequired,
+    users: PropTypes.array.isRequired,
   }
   handleLazyLoad = () => {
-    const { logs } = this.props;
-    this.props.handleListLog({ skip: logs.length });
+    const { users } = this.props;
+    this.props.handleListUser({ skip: users.length });
   }
   render() {
-    const { logs, status, isLast } = this.props;
+    const { users, status, isLast } = this.props;
     return (
       <div>
         <LazyList
@@ -23,11 +23,11 @@ class LogList extends Component {
           isLast={isLast}
           isLoading={status === 'WAITING'}
         >
-          { logs.map((log) => <LogListItem key={log._id} {...log} />)}
+          { users.map((user, i) => <UserListItem key={i} {...user} />)}
         </LazyList>
       </div>
     );
   }
 }
 
-export default LoadingWrapper(LogList);
+export default LoadingWrapper(UserList);

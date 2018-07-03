@@ -1,23 +1,43 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tag, NoneStyleList } from '../';
+import styled from 'styled-components';
+import AngleDownIcon from 'react-icons/lib/fa/angle-down';
+import { Tag, NoneStyleList, DimmedLoader, IconButton } from '../';
+import LoadingWrapper from '../LoadingWrapper';
 
-export default function TagList({ tags, onTagClick }) {
+const Centering = styled.div`
+  display: flex;
+  justify-content: center;
+
+  margin-top: 15px;
+`;
+function TagList({ tags, status, isLast, handleListTag }) {
   return (
     <NoneStyleList>
       {
         tags.map((tag, i) => (
-          <Tag key={i} {...tag} onClick={onTagClick(tag)}>{tag.name}</Tag>
+          <Tag key={i} {...tag}>{tag.name}</Tag>
         ))
       }
+      {
+        !isLast && tags.length > 0 && (
+          <Centering>
+            <IconButton onClick={() => handleListTag({ skip: tags.length })} fontSize="1.5em">
+              <AngleDownIcon />
+            </IconButton>
+          </Centering>
+        )
+      }
+      { status === 'WAITING' && <div style={{ position: 'relative' }}><DimmedLoader /></div>}
     </NoneStyleList>
   );
 }
 
 TagList.propTypes = {
-  onTagClick: PropTypes.func,
+  handleListTag: PropTypes.func.isRequired,
+  isLast: PropTypes.bool.isRequired,
+  status: PropTypes.string.isRequired,
   tags: PropTypes.array.isRequired,
 };
-TagList.defaultProps = {
-  onTagClick: () => null,
-};
+
+export default LoadingWrapper(TagList);

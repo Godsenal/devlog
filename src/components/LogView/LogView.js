@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { LogViewToolBox, MainContent, CodeBox, CommentContainer, DimmedLoader } from '../';
+import { LogViewToolBox, MainContent, CodeBox, CommentContainer, DimmedLoader, NoneStyleList, Tag } from '../';
 import { getLog, postCommentLog } from '../../actions/log';
 import { addToast } from '../../actions/toast';
 import { clipboard } from '../../utils';
 
 const CodeContent = styled.div`
   position: relative;
+`;
+const TagContent = styled.div`
+  text-align: right;
 `;
 const Clipboard = styled.a`
   position: absolute;
@@ -85,6 +88,11 @@ class LogView extends Component {
             stars={log.stars}
             commentCount={log.comments && log.comments.length}
           />
+          <TagContent>
+            <NoneStyleList>
+              {log.tags.map((tag, i) => <Tag key={i}>{tag}</Tag>)}
+            </NoneStyleList>
+          </TagContent>
         </MainContent>
         <CommentContainer
           isAuthenticated={userState.isAuthenticated}

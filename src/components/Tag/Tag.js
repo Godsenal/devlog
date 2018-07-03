@@ -10,6 +10,8 @@ const Tag = styled.li`
 
   border-radius: 5px;
 
+  cursor: pointer;
+  
   background-color: ${grey[100]};
   &:hover {
     background-color: ${grey[300]};

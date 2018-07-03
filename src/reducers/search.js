@@ -103,6 +103,7 @@ export default function search(state = initialState, action) {
         log: {
           status: { $set: 'WAITING' },
           q: { $set: action.q },
+          isInit: { $set: action.skip === 0 },
         },
       });
     case SEARCH_LOG_SUCCESS:
@@ -141,6 +142,7 @@ export default function search(state = initialState, action) {
         user: {
           status: { $set: 'WAITING' },
           q: { $set: action.q },
+          isInit: { $set: action.skip === 0 },
         },
       });
     case SEARCH_USER_SUCCESS:
@@ -164,6 +166,7 @@ export default function search(state = initialState, action) {
         tag: {
           status: { $set: 'WAITING' },
           q: { $set: action.q },
+          isInit: { $set: action.skip === 0 },
         },
       });
     case SEARCH_TAG_SUCCESS:

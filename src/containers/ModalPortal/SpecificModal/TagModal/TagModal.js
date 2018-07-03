@@ -6,7 +6,7 @@ import debounce from 'lodash/debounce';
 import findIndex from 'lodash/findIndex';
 import AngleDownIcon from 'react-icons/lib/fa/angle-down';
 import ActionTag from './ActionTag';
-import { Input, NoneStyleList } from '../../../../components';
+import { Input, NoneStyleList, IconButton } from '../../../../components';
 import { searchTag } from '../../../../actions/search';
 
 const Header = styled.h3`
@@ -14,8 +14,8 @@ const Header = styled.h3`
   font-size: 14px;
 `;
 const IconWrapper = styled.div`
-  text-align: center;
-  font-size: 20px;
+  display: flex;
+  justify-content: center;
 `;
 class TagModal extends PureComponent {
   state = {
@@ -32,6 +32,16 @@ class TagModal extends PureComponent {
     if (prevState.selectedTags !== this.state.selectedTags) {
       this.props.handleTagChange(this.state.selectedTags);
     }
+  }
+  validateTag = (tag) => {
+    const tagReg = /^[a-zA-Z0-9]{2,10}$/g;
+    if (tag.length < 2) {
+      return false;
+    }
+    if (!tagReg.test(tag)) {
+      return false;
+    }
+    return true;
   }
   handleInputChange = (e) => {
     const q = e.target.value;
@@ -50,6 +60,12 @@ class TagModal extends PureComponent {
     /* if init = true, reset searchWord */
     /* when user add tag without search, init will be triggered */
     /* tag validation */
+    if (!this.validateTag(selected)) {
+      return;
+    }
+    if (findIndex(this.state.selectedTags, name => name === selected) >= 0) {
+      return;
+    }
     this.setState(state => ({
       selectedTags: [...state.selectedTags, selected],
       searchWord: init ? '' : state.searchWord,
@@ -60,8 +76,11 @@ class TagModal extends PureComponent {
       selectedTags: state.selectedTags.filter(tag => tag !== selected),
     }));
   }
-  handleSearchTag = debounce(({ q }) => {
-    this.props.dispatchSearchTag({ q });
+  handleListTag = ({ q, skip }) => {
+    this.props.dispatchSearchTag({ q, skip });
+  }
+  handleSearchTag = debounce(({ q, skip }) => {
+    this.handleListTag({ q, skip });
   }, 1000);
   render() {
     const { searchWord, selectedTags } = this.state;
@@ -109,7 +128,13 @@ class TagModal extends PureComponent {
                 })
               }
               {
-                searchState.tags.length > 0 && !searchState.isLast && <IconWrapper><AngleDownIcon /></IconWrapper>
+                searchState.tags.length > 0 && !searchState.isLast && (
+                  <IconWrapper>
+                    <IconButton onClick={() => this.handleListTag({ q: searchWord, skip: searchState.tags.length })}>
+                      <AngleDownIcon />
+                    </IconButton>
+                  </IconWrapper>
+                )
               }
             </NoneStyleList>
           )

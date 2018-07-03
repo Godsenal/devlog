@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const IconWrapper = styled.button`
   display: flex;
 
-  font-size: 1em;
+  font-size: ${props => props.fontSize || '1em'};
   cursor: pointer;
 
   border: none;

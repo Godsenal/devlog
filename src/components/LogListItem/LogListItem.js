@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import CodeIcon from 'react-icons/lib/fa/code';
 import { Link } from 'react-router-dom';
+import grey from '@material-ui/core/colors/grey';
 import { MainContent, LogViewToolBox } from '../';
 
 const Item = styled(Link)`
@@ -17,10 +18,9 @@ const Item = styled(Link)`
 
   text-decoration: none;
   border-radius: 5px;
-
+  border: 1px solid ${grey[300]};
   cursor: pointer;
 
-  box-shadow: 1px 3px 8px rgba(0,0,0,.3);
   &:hover {
     color: black;
     box-shadow: 3px 6px 16px rgba(0,0,0,.3);

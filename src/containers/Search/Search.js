@@ -15,6 +15,10 @@ const TABS = [
     path: '/users',
     text: 'users',
   },
+  {
+    path: '/tags',
+    text: 'tags',
+  },
 ];
 const checkType = (type = 'logs') => {
   const check = TABS.filter(tab => tab.text === type);

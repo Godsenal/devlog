@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { mainContainer } from '../../styles/util';
 
-import { LogList } from '../../components';
+import { LogList, LogEditor } from '../../components';
 import { listLog } from '../../actions/log';
 
 const Background = styled.div`
@@ -40,6 +40,9 @@ class Timeline extends Component {
     isMobile: PropTypes.bool.isRequired,
     logList: PropTypes.object.isRequired,
   }
+  componentDidMount() {
+    this.props.handleListLog({ skip: 0 });
+  }
   render() {
     const {
       isMobile,
@@ -50,6 +53,7 @@ class Timeline extends Component {
       <Background>
         <Container>
           <MainContent>
+            <LogEditor />
             <LogList
               {...logList}
               handleListLog={handleListLog}
@@ -72,7 +76,7 @@ const mapStateToProps = state => ({
   logList: state.log.list,
 });
 const mapDispatchToProps = dispatch => ({
-  handleListLog: (skip, limit, min_id) => dispatch(listLog({ skip, limit, min_id })),
+  handleListLog: (payload) => dispatch(listLog(payload)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timeline);

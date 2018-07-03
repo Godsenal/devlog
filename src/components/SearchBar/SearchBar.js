@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import debounce from 'lodash/debounce';
 import SearchIcon from 'react-icons/lib/md/search';
+import TagIcon from 'react-icons/lib/md/local-offer';
 import { Avatar, Popover } from '../';
 import { searchPre, searchPreClear } from '../../actions/search';
 import { defaultPadding, linkText } from '../../styles/util';
@@ -18,6 +19,7 @@ const Container = styled.div`
 `;
 const IconWrapper = styled.span`
   margin-right: 10px;
+  color: rgba(0, 0, 0, 0.6);
   cursor: pointer;
 `;
 const Input = styled.input`
@@ -44,12 +46,23 @@ const ListItem = styled.a`
 
   ${defaultPadding()}
   ${linkText()}
+
+  color: rgba(0, 0, 0, 0.84);
 `;
 const ListHeader = styled.div`
   font-weight: 600;
   ${defaultPadding()}
 `;
-const AvatarText = styled.span`
+const TagIconWrapper = styled.span`
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: rgba(0, 0, 0, 0.6);
+`;
+const MarginText = styled.span`
   margin-left: 10px;  
 `;
 const VK_LEFT = 37;
@@ -71,20 +84,24 @@ class SearchBar extends PureComponent {
       this.updatePreRef();
     }
   }
+  getSnapshotBeforeUpdate(prevProps) {
+    if (prevProps.preState.results !== this.props.preState.results) {
+      this._pre = [];
+    }
+    return null;
+  }
   _selected = -1;
   _pre = [];
   setInputRef = (ref) => {
     this._input = ref;
   }
-  setPreRef = (i, ref) => {
-    this._pre[i] = ref;
+  setPreRef = (index, ref) => {
+    this._pre[this._pre.length] = ref;
   }
   updatePreRef = () => {
     this._pre = this._pre.filter(pre => pre !== null);
   }
   clearSearch = (cb) => {
-    this._selected = -1;
-    this._pre = [];
     this.setState({
       searchWord: '',
       isFocused: false,
@@ -95,6 +112,7 @@ class SearchBar extends PureComponent {
       this.handleSearch(e.target.value);
     }
     else {
+      this.handleSearch.cancel();
       this.props.dispatchSearchPreClear();
     }
     this.setState({
@@ -239,7 +257,7 @@ class SearchBar extends PureComponent {
               <PreList>
                 <ListHeader>Users</ListHeader>
                 {results.users.map((user, i) => (
-                  <li key={user._id}>
+                  <li key={i}>
                     <ListItem
                       innerRef={ref => this.setPreRef(i + 1, ref)}
                       onKeyDown={this.handlePreKeyDown}
@@ -248,14 +266,34 @@ class SearchBar extends PureComponent {
                       tabIndex="-1"
                     >
                       <Avatar size={32} />
-                      <AvatarText>{user.nickname}</AvatarText>
+                      <MarginText>{user.nickname}</MarginText>
                     </ListItem>
                   </li>
                 ))}
               </PreList>
             )
           }
-          {/* reulsts.tags ~~ */}
+          {
+            results.tags.length > 0 && (
+              <PreList>
+                <ListHeader>Tags</ListHeader>
+                {results.tags.map((tag, i) => (
+                  <li key={i}>
+                    <ListItem
+                      innerRef={ref => this.setPreRef(i + results.users.length + 1, ref)}
+                      onKeyDown={this.handlePreKeyDown}
+                      onKeyPress={null/*this.handleTagEnter(tag.name)*/}
+                      onClick={null/*this.handleTaglick(tag.name)*/}
+                      tabIndex="-1"
+                    >
+                      <TagIconWrapper><TagIcon /></TagIconWrapper>
+                      <MarginText>{tag.name}</MarginText>
+                    </ListItem>
+                  </li>
+                ))}
+              </PreList>
+            )
+          }
         </Popover>
       </div>
     );

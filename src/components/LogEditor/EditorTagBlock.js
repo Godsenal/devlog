@@ -7,20 +7,13 @@ const Container = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
-const Pointer = styled.span`
-  cursor: pointer;
-`;
 
 export default function EditorTagBlock({ tags, showTagModal }) {
   return (
     <Container>
       <NoneStyleList>
         {
-          tags.map((tag, i) => (
-            <Pointer key={i} onClick={showTagModal}>
-              <Tag>{tag}</Tag>
-            </Pointer>
-          ))
+          tags.map((tag, i) => <Tag key={i} onClick={showTagModal}>{tag}</Tag>)
         }
       </NoneStyleList>
     </Container>
