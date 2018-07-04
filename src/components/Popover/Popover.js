@@ -7,7 +7,8 @@ const Container = styled.div`
   position: absolute;
   word-break: break-all;
 
-  left: ${props => `${props.left}px`};
+  ${props => props.top && `top: ${props.top}px;`}
+  ${props => props.left && `left: ${props.left}px;`}
 
   width: 200px;
   ${media.tablet`
@@ -19,7 +20,6 @@ const Container = styled.div`
   background-color: white;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 `;
-
 export default class Popover extends Component {
   static propTypes = {
     anchorEl: PropTypes.any,
@@ -45,9 +45,11 @@ export default class Popover extends Component {
     }
   }
   getCalculatedLeftAndTop = anchorEl => {
-    const { width = 0, left } = anchorEl.getBoundingClientRect();
+    const { width = 0, left, height = 0, top } = anchorEl.getBoundingClientRect();
+    const calcTop = (top + height) + 5;
     const calcLeft = (left - 100) + (width / 2);
     return {
+      calcTop,
       calcLeft,
     };
   }
@@ -56,10 +58,11 @@ export default class Popover extends Component {
     if (!anchorEl || !open) {
       return null;
     }
-    const { calcLeft } = this.getCalculatedLeftAndTop(anchorEl);
+    const { calcTop, calcLeft } = this.getCalculatedLeftAndTop(anchorEl);
     return (
       <Container
         innerRef={this.setContainerRef}
+        top={calcTop}
         left={calcLeft}
       >
         {children}

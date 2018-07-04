@@ -9,7 +9,7 @@ import { Header } from '../../components';
 */
 class Home extends Component {
   state = {
-    previousLocation: {}, // when location is not modal
+    previousLocation: { pathname: '/' }, // when location is not modal
     lastLocation: this.props.location,
   }
   static propTypes = {

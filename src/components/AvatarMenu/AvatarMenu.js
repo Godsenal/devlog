@@ -12,6 +12,9 @@ const ListItem = styled.div`
     background-color: rgba(0, 0, 0, 0.1);
   }
 `;
+const Pointer = styled.span`
+  cursor: pointer;
+`;
 export default class AvatarMenu extends Component {
   state = {
     anchorEl: null,
@@ -45,7 +48,7 @@ export default class AvatarMenu extends Component {
     const { anchorEl } = this.state;
     return (
       <div ref={this.setContainerRef}>
-        <Avatar onClick={this.handleOpen} />
+        <Pointer><Avatar onClick={this.handleOpen} /></Pointer>
         <Popover
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}

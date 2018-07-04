@@ -8,16 +8,25 @@ class LogPage extends PureComponent {
     closeModal: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     isModal: PropTypes.bool.isRequired,
+    location: PropTypes.object.isRequired,
     match: PropTypes.object.isRequired,
     modalType: PropTypes.string.isRequired,
     showModal: PropTypes.func.isRequired,
   }
   componentDidMount() {
-    const { match, showModal, history } = this.props;
+    const { match, showModal, history, location } = this.props;
     const { logId } = match.params;
+    let onClose = () => history.goBack();
+    /*
+      Modal's onclose action will be push to match nickname's profile,
+      When if user come this page directly
+    */
+    if (history.action === 'POP' && !(location.state && location.state.modal)) {
+      onClose = () => history.push(`/${match.params.nickname}`);
+    }
     const modalProps = {
       logId,
-      onClose: () => history.goBack(),
+      onClose,
     };
     showModal('LOG_MODAL', modalProps);
   }
