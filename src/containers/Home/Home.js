@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import { PropsRoute } from '../../routes/RouterUtil';
-import { Timeline, LogPage, Profile, Search } from '../';
+import { Timeline, LogPage, Profile, Search, TagPage, NotFoundPage } from '../';
 import { Header } from '../../components';
 /*
   TODO: Fix Modal route
@@ -67,6 +67,10 @@ class Home extends Component {
             closeModal={closeModal}
           />
           <Route
+            path="/tag"
+            component={TagPage}
+          />
+          <Route
             path="/search/:type?"
             component={Search}
           />
@@ -74,6 +78,9 @@ class Home extends Component {
             path="/:nickname"
             component={Profile}
             key={isModal ? previousLocation.key : location.key}
+          />
+          <Route
+            component={NotFoundPage}
           />
         </Switch>
         <PropsRoute

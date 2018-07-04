@@ -182,7 +182,7 @@ export default function user(state = initialState, action) {
       };
     case actionTypes.USER_GET_FAILURE:
       return update(state, {
-        user: {
+        get: {
           status: { $set: 'FAILURE' },
           user: { $set: {} },
           error: { $set: action.error },

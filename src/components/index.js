@@ -15,6 +15,7 @@ import CommentItem from './CommentItem';
 import CommentEditor from './CommentEditor';
 import Dropdown from './Dropdown';
 import MainContent from './MainContent';
+import NotFound from './NotFound';
 import NoneStyleList from './NoneStyleList';
 import FullMainContent from './FullMainContent';
 import LazyList from './LazyList';
@@ -55,6 +56,7 @@ export {
   CommentEditor,
   Dropdown,
   MainContent,
+  NotFound,
   NoneStyleList,
   FullMainContent,
   LazyList,

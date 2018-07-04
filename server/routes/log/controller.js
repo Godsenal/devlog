@@ -41,7 +41,7 @@ exports.log_post = async function log_post(req, res) {
 };
 
 exports.list_get = function list_get(req, res) {
-  const { min_id, author_nickname, star_user_id } = req.query;
+  const { tags, min_id, author_nickname, star_user_id } = req.query;
   let { skip, limit } = req.query;
   const query = {};
   const projection = {
@@ -66,6 +66,9 @@ exports.list_get = function list_get(req, res) {
   }
   if (star_user_id) {
     query.stars = star_user_id;
+  }
+  if (tags && tags.length > 0) {
+    query.tags = { $in: tags };
   }
   skip = skip ? parseInt(skip, 10) : 0;
   limit = limit ? parseInt(limit, 10) : 10;

@@ -13,7 +13,7 @@ export default function EditorTagBlock({ tags, showTagModal }) {
     <Container>
       <NoneStyleList>
         {
-          tags.map((tag, i) => <Tag key={i} onClick={showTagModal}>{tag}</Tag>)
+          tags.map((tag, i) => <Tag key={i} onClick={showTagModal} name={tag} />)
         }
       </NoneStyleList>
     </Container>

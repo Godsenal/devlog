@@ -1,21 +1,20 @@
+import React from 'react';
 import styled from 'styled-components';
-import grey from '@material-ui/core/colors/grey';
+import PropTypes from 'prop-types';
+import { defaultTag } from '../../styles/util';
+import { history } from '../../utils';
 
-const Tag = styled.li`
-  display: inline-block;
-
-  padding: 10px 20px;
-  margin-right: 5px;
-  margin-bottom: 10px;
-
-  border-radius: 5px;
-
-  cursor: pointer;
-  
-  background-color: ${grey[100]};
-  &:hover {
-    background-color: ${grey[300]};
-  }
+const TagItem = styled.li`
+  ${defaultTag}
 `;
-
+const Tag = ({ name, children, ...props }) => (
+  <TagItem onClick={() => history.push(`/tag?tags=${name}`)} {...props}>
+    {name}
+    {children}
+  </TagItem>
+);
+Tag.propTypes = {
+  children: PropTypes.node,
+  name: PropTypes.string.isRequired,
+};
 export default Tag;

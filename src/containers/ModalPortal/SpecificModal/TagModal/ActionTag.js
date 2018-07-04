@@ -5,7 +5,7 @@ import red from '@material-ui/core/colors/red';
 import green from '@material-ui/core/colors/green';
 import MinusIcon from 'react-icons/lib/fa/minus-square';
 import PlusIcon from 'react-icons/lib/fa/plus-square';
-import { Tag } from '../../../../components';
+import { defaultTag } from '../../../../styles/util';
 
 const Pointer = styled.span`
   cursor: pointer;
@@ -17,7 +17,9 @@ const IconWrapper = styled.span`
 
   margin-left: 5px;
 `;
-
+const Tag = styled.li`
+  ${defaultTag}
+`;
 export default class ActionTag extends PureComponent {
   static propTypes = {
     children: PropTypes.node.isRequired,

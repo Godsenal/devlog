@@ -1,4 +1,5 @@
 import { css } from 'styled-components';
+import grey from '@material-ui/core/colors/grey';
 
 const sizes = {
   desktop: 992,
@@ -46,4 +47,21 @@ export const emptyContainer = () => (`
 
 export const defaultPadding = () => (`
   padding: 5px 14px;
+`);
+
+export const defaultTag = () => (`
+  display: inline-block;
+
+  padding: 10px 20px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+
+  border-radius: 5px;
+
+  cursor: pointer;
+
+  background-color: ${grey[100]};
+  &:hover {
+    background-color: ${grey[300]};
+  }
 `);

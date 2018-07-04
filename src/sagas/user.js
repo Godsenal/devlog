@@ -176,7 +176,7 @@ function* get(action) {
   catch (err) {
     const { error } = err.response.data;
     yield put({
-      type: actions.USER_BOOKMARK_FAILURE,
+      type: actions.USER_GET_FAILURE,
       error,
     });
   }

@@ -212,11 +212,22 @@ class SearchBar extends PureComponent {
   handleUserClick = (nickname) => () => {
     this.pushToProfile(nickname);
   }
+  handleTagEnter = (tagname) => (e) => {
+    if (e.key === 'Enter') {
+      this.pushToTag(tagname);
+    }
+  }
+  handleTagClick = (tagname) => () => {
+    this.pushToTag(tagname);
+  }
   pushToProfile = (nickname) => {
     this.clearSearch(() => history.push(`/${nickname}`));
   }
   pushToSearch = (searchWord) => {
     this.clearSearch(() => history.push(`/search/?q=${searchWord}`));
+  }
+  pushToTag = (tagname) => {
+    this.clearSearch(() => history.push(`/tag?tags=${tagname}`));
   }
   render() {
     const { isFocused, searchWord } = this.state;
@@ -282,8 +293,8 @@ class SearchBar extends PureComponent {
                     <ListItem
                       innerRef={ref => this.setPreRef(i + results.users.length + 1, ref)}
                       onKeyDown={this.handlePreKeyDown}
-                      onKeyPress={null/*this.handleTagEnter(tag.name)*/}
-                      onClick={null/*this.handleTaglick(tag.name)*/}
+                      onKeyPress={this.handleTagEnter(tag.name)}
+                      onClick={this.handleTagClick(tag.name)}
                       tabIndex="-1"
                     >
                       <TagIconWrapper><TagIcon /></TagIconWrapper>

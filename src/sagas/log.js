@@ -40,8 +40,8 @@ function* post(action) {
 }
 function* list(action) {
   try {
-    const { skip, limit, author_nickname, star_user_id } = action;
-    const { data } = yield call(logApi.list, { skip, limit, author_nickname, star_user_id });
+    const { skip, limit, tags, author_nickname, star_user_id } = action;
+    const { data } = yield call(logApi.list, { skip, limit, tags, author_nickname, star_user_id });
     const { logs } = data;
     const payload = {
       ...data,

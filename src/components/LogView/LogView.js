@@ -90,7 +90,7 @@ class LogView extends Component {
           />
           <TagContent>
             <NoneStyleList>
-              {log.tags.map((tag, i) => <Tag key={i}>{tag}</Tag>)}
+              {log.tags.map((tag, i) => <Tag key={i} name={tag} />)}
             </NoneStyleList>
           </TagContent>
         </MainContent>

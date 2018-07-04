@@ -16,7 +16,7 @@ function TagList({ tags, status, isLast, handleListTag }) {
     <NoneStyleList>
       {
         tags.map((tag, i) => (
-          <Tag key={i} {...tag}>{tag.name}</Tag>
+          <Tag key={i} {...tag} />
         ))
       }
       {
@@ -28,7 +28,11 @@ function TagList({ tags, status, isLast, handleListTag }) {
           </Centering>
         )
       }
-      { status === 'WAITING' && <div style={{ position: 'relative' }}><DimmedLoader /></div>}
+      { status === 'WAITING' && (
+        <div style={{ position: 'relative' }}>
+          <DimmedLoader />
+        </div>
+      )}
     </NoneStyleList>
   );
 }

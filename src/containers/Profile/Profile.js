@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { getUser } from '../../actions/user';
 import { mainContainer } from '../../styles/util';
-import { Avatar, DimmedLoader, FollowButton, ProfileContent } from '../../components';
+import { Avatar, DimmedLoader, FollowButton, ProfileContent, NotFound } from '../../components';
 
 const IMAGE_SIZE = 120;
 const Container = styled.div`
@@ -15,6 +15,9 @@ const Top = styled.div`
   display: flex;
 
   margin-bottom: 20px;
+`;
+const Message = styled.h2`
+  margin-top: 60px;
 `;
 const FlexLeft = styled.div`
   flex: 0 0;
@@ -41,38 +44,43 @@ class Profile extends Component {
     this.props.dispatchGetUser(nickname);
   }
   render() {
-    const { userGetState } = this.props;
+    const { userGetState, match } = this.props;
+    const { nickname } = match.params;
     const { status, user } = userGetState;
-    if (status !== 'SUCCESS') {
+    if (status === 'WAITING') {
       return <DimmedLoader />;
     }
+    if (status === 'FAILURE') {
+      return <NotFound><Message>Couldn't find anyone with name '{nickname}'</Message></NotFound>;
+    }
     return (
-      <Container>
-        <Top>
-          <FlexLeft>
-            <Avatar size={IMAGE_SIZE} />
-          </FlexLeft>
-          <FlexRight>
-            <RightItem>
-              <h1>{user.nickname}</h1>
-            </RightItem>
-            <RightItem>
-              <Follow>
-                <span>{user.followings && user.followings.length} Followings </span>
-                <span>{user.followers && user.followers.length} Followers </span>
-              </Follow>
-            </RightItem>
-            <RightItem>
-              <div>
-                <FollowButton followingId={user._id} />
-              </div>
-            </RightItem>
-          </FlexRight>
-        </Top>
-        <ProfileContent
-          {...user}
-        />
-      </Container>
+      status === 'SUCCESS' &&
+        <Container>
+          <Top>
+            <FlexLeft>
+              <Avatar size={IMAGE_SIZE} />
+            </FlexLeft>
+            <FlexRight>
+              <RightItem>
+                <h1>{user.nickname}</h1>
+              </RightItem>
+              <RightItem>
+                <Follow>
+                  <span>{user.followings && user.followings.length} Followings </span>
+                  <span>{user.followers && user.followers.length} Followers </span>
+                </Follow>
+              </RightItem>
+              <RightItem>
+                <div>
+                  <FollowButton followingId={user._id} />
+                </div>
+              </RightItem>
+            </FlexRight>
+          </Top>
+          <ProfileContent
+            {...user}
+          />
+        </Container>
     );
   }
 }

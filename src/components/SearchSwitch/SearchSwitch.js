@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { LogList, UserList, TagList } from '../';
+import { LogList, UserList, TagList, NotFound } from '../';
 import { searchUser, searchLog, searchTag } from '../../actions/search';
-import { emptyContainer } from '../../styles/util';
 
-const NotFound = styled.div`
-  ${emptyContainer()}
-`;
 class SearchSwitch extends Component {
   static propTypes = {
     dispatchSearchLog: PropTypes.func.isRequired,
