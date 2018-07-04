@@ -8,6 +8,7 @@ import AngleDownIcon from 'react-icons/lib/fa/angle-down';
 import ActionTag from './ActionTag';
 import { Input, NoneStyleList, IconButton } from '../../../../components';
 import { searchTag } from '../../../../actions/search';
+import { addToast } from '../../../../actions/toast';
 
 const Header = styled.h3`
   color: #555;
@@ -23,6 +24,7 @@ class TagModal extends PureComponent {
     selectedTags: this.props.selectedTags,
   }
   static propTypes = {
+    dispatchAddToast: PropTypes.func.isRequired,
     dispatchSearchTag: PropTypes.func.isRequired,
     handleTagChange: PropTypes.func.isRequired,
     searchState: PropTypes.object.isRequired,
@@ -60,10 +62,17 @@ class TagModal extends PureComponent {
     /* if init = true, reset searchWord */
     /* when user add tag without search, init will be triggered */
     /* tag validation */
+    const { dispatchAddToast } = this.props;
     if (!this.validateTag(selected)) {
+      dispatchAddToast({ message: 'tag must be at least two characters with out special characters', type: 'error' });
       return;
     }
     if (findIndex(this.state.selectedTags, name => name === selected) >= 0) {
+      dispatchAddToast({ message: 'selected tag already exist', type: 'error' });
+      return;
+    }
+    if (this.state.selectedTags.length >= 5) {
+      dispatchAddToast({ message: 'You can choose tags up to 5', type: 'error' });
       return;
     }
     this.setState(state => ({
@@ -149,6 +158,7 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
   dispatchSearchTag: payload => dispatch(searchTag(payload)),
+  dispatchAddToast: toastProps => dispatch(addToast(toastProps)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TagModal);

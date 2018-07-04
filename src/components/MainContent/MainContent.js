@@ -14,7 +14,7 @@ const Header = styled.div`
   display: flex;
   align-items: center;
 
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 
   span {
     margin-right: 5px;

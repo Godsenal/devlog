@@ -179,7 +179,7 @@ class LogEditor extends Component {
     } = this.state;
     const text = editorState.getCurrentContent().getPlainText();
     if (!text || text.length < 10) {
-      this.props.addToast({ message: 'Log must be at least 10 characters' });
+      this.props.addToast({ message: 'Log must be at least 10 characters', type: 'error' });
       return;
     }
     /* TODO: Validate USER & editorState */

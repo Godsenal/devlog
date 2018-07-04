@@ -99,7 +99,7 @@ class TagPage extends Component {
         <MainHeader>
           Tags: { tags.map((item, i) => <Tag key={i} name={item} />) }
         </MainHeader>
-        { tagState.tags.length > 1 && (
+        { tagState.status === 'SUCCESS' && tagState.tags.length > 1 && (
           <React.Fragment>
             <SubHeader>Related Tags</SubHeader>
             <NoneStyleList>
