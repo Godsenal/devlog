@@ -1,16 +1,33 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import ProfileIcon from 'react-icons/lib/md/account-circle';
+import BookmarkIcon from 'react-icons/lib/md/book';
+import LogoutIcon from 'react-icons/lib/md/exit-to-app';
 import { Avatar, Popover } from '../';
 import { history } from '../../utils';
+import { linkText } from '../../styles/util';
 
 const ListItem = styled.div`
-  padding: 16px 30px;
-  cursor: pointer;
+  padding: 16px 15px;  
+`;
+const Link = styled.a`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
+  ${linkText()}
+  color: rgba(0, 0, 0, 0.6);
   &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.84);
   }
+`;
+const Divider = styled.div`
+  border-top: solid 1px rgba(0,0,0,.05);
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 0;
+  padding-top: 0;
 `;
 const Pointer = styled.span`
   cursor: pointer;
@@ -40,6 +57,10 @@ export default class AvatarMenu extends Component {
     this.props.handleLogout();
     this.handleClose();
   }
+  handleBookmark = () => {
+    history.push(`/${this.props.nickname}/bookmark`);
+    this.handleClose();
+  }
   handleProfile = () => {
     history.push(`/${this.props.nickname}`);
     this.handleClose();
@@ -54,10 +75,22 @@ export default class AvatarMenu extends Component {
           open={Boolean(anchorEl)}
           handleClose={this.handleClose}
         >
-          <ListItem onClick={this.handleProfile}>
-            Profile
+          <ListItem>
+            <Link onClick={this.handleProfile}>
+              <ProfileIcon /> My Profile
+            </Link>
           </ListItem>
-          <ListItem onClick={this.handleLogout}>Logout</ListItem>
+          <ListItem>
+            <Link onClick={this.handleBookmark}>
+              <BookmarkIcon /> My Bookmark
+            </Link>
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <Link onClick={this.handleLogout}>
+              <LogoutIcon /> Logout
+            </Link>
+          </ListItem>
         </Popover>
       </div>
     );
