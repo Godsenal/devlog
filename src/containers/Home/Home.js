@@ -2,16 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import { PropsRoute, PrivateRoute } from '../../routes/RouterUtil';
-import { Timeline, LogPage, Profile, Search, TagPage, NotFoundPage } from '../';
+import { Timeline, LogPage, Profile, Search, TagPage, NotFoundPage, ScrollToTop } from '../';
 import { Header } from '../../components';
 import BookmarkPage from '../BookmarkPage';
-
-// Scroll to top when router changed.
-// Exception: Modal
-const ScrollToTop = () => {
-  window.scrollTo(0, 0);
-  return null;
-};
 
 class Home extends Component {
   state = {
@@ -65,40 +58,41 @@ class Home extends Component {
           showModal={showModal}
           closeModal={closeModal}
         />
-        { !isModal && <Route component={ScrollToTop} /> }
-        <Switch location={isModal ? previousLocation : location}>
-          <PrivateRoute
-            exact path="/"
-            isAuthenticated={isAuthenticated}
-            redirectTo="/login"
-            component={Timeline}
-            isMobile={isMobile}
-            showModal={showModal}
-            closeModal={closeModal}
-          />
-          <Route
-            path="/tag"
-            component={TagPage}
-          />
-          <Route
-            path="/search/:type?"
-            component={Search}
-          />
-          <PrivateRoute
-            path="/:nickname/bookmark"
-            component={BookmarkPage}
-            isAuthenticated={isAuthenticated}
-            redirectTo="/login"
-          />
-          <PropsRoute
-            path="/:nickname"
-            component={Profile}
-            key={isModal ? previousLocation.key : location.key}
-          />
-          <Route
-            component={NotFoundPage}
-          />
-        </Switch>
+        <ScrollToTop isModal={isModal}>
+          <Switch location={isModal ? previousLocation : location}>
+            <PrivateRoute
+              exact path="/"
+              isAuthenticated={isAuthenticated}
+              redirectTo="/login"
+              component={Timeline}
+              isMobile={isMobile}
+              showModal={showModal}
+              closeModal={closeModal}
+            />
+            <Route
+              path="/tag"
+              component={TagPage}
+            />
+            <Route
+              path="/search/:type?"
+              component={Search}
+            />
+            <PrivateRoute
+              path="/:nickname/bookmark"
+              component={BookmarkPage}
+              isAuthenticated={isAuthenticated}
+              redirectTo="/login"
+            />
+            <PropsRoute
+              path="/:nickname"
+              component={Profile}
+              key={isModal ? previousLocation.key : location.key}
+            />
+            <Route
+              component={NotFoundPage}
+            />
+          </Switch>
+        </ScrollToTop>
         <PropsRoute
           path="/:nickname/log/:logId"
           component={LogPage}

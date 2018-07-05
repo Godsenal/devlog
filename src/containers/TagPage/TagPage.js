@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import queryString from 'query-string';
-import findIndex from 'lodash/findIndex';
 import { listLog } from '../../actions/log';
 import { searchTag } from '../../actions/search';
 import { mainContainer } from '../../styles/util';
@@ -107,9 +106,9 @@ class TagPage extends Component {
             <SubHeader>Related Tags</SubHeader>
             <NoneStyleList>
               {
-                relatedTags.map((item, i) => {
-                  return <Tag key={i} name={item.name} onClick={this.handleTagClick(item.name)} />;
-                })
+                relatedTags.map((item, i) => (
+                  <Tag key={i} name={item.name} onClick={this.handleTagClick(item.name)} />
+                ))
               }
             </NoneStyleList>
           </React.Fragment>
