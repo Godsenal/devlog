@@ -6,8 +6,12 @@ import {
   PROFILE_STARS_REQUEST,
   PROFILE_STARS_SUCCESS,
   PROFILE_STARS_FAILURE,
+  PROFILE_BOOKMARKS_REQUEST,
+  PROFILE_BOOKMARKS_SUCCESS,
+  PROFILE_BOOKMARKS_FAILURE,
 } from '../constants/actionTypes';
 import { list } from '../api/log';
+import { listBookmark } from '../api/user';
 
 function* latest(action) {
   const { skip, limit, author_nickname, listType } = action;
@@ -61,16 +65,46 @@ function* stars(action) {
     });
   }
 }
+function* bookmarks(action) {
+  const { skip, limit, listType } = action;
+  try {
+    const { data } = yield call(listBookmark, { skip, limit });
+    const { bookmarks: logs } = data;
+    const payload = {
+      logs,
+      listType,
+      isInit: skip === 0,
+      isLast: logs.length < limit,
+      limit,
+    };
+    yield put({
+      type: PROFILE_BOOKMARKS_SUCCESS,
+      ...payload,
+    });
+  }
+  catch (err) {
+    const { error } = err.response.data;
+    // logout when INVALID STATUS error ?
+    yield put({
+      type: PROFILE_BOOKMARKS_FAILURE,
+      error,
+    });
+  }
+}
 function* watchLatest() {
   yield takeLatest(PROFILE_LATEST_REQUEST, latest);
 }
 function* watchStars() {
   yield takeLatest(PROFILE_STARS_REQUEST, stars);
 }
+function* watchBookmarks() {
+  yield takeLatest(PROFILE_BOOKMARKS_REQUEST, bookmarks);
+}
 export default function* root() {
   yield all([
     fork(watchLatest),
     fork(watchStars),
+    fork(watchBookmarks),
   ]);
 }
 

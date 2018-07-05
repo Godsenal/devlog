@@ -1,6 +1,7 @@
 import {
   PROFILE_LATEST_REQUEST,
   PROFILE_STARS_REQUEST,
+  PROFILE_BOOKMARKS_REQUEST,
 } from '../constants/actionTypes';
 
 export function listLatest({ skip = 0, limit = 10, listType = 'latest', author_nickname }) {
@@ -20,5 +21,14 @@ export function listStars({ skip = 0, limit = 10, listType = 'stars', star_user_
     limit,
     listType,
     star_user_id,
+  };
+}
+
+export function listBookmarks({ skip = 0, limit = 10, listType = 'bookmarks' }) {
+  return {
+    type: PROFILE_BOOKMARKS_REQUEST,
+    skip,
+    limit,
+    listType,
   };
 }

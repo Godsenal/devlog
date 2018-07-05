@@ -106,3 +106,50 @@ exports.bookmark_post = (req, res) => {
     });
   });
 };
+
+exports.bookmark_list_get = (req, res) => {
+  const { _id } = req.decoded;
+  let { skip, limit } = req.query;
+  skip = skip ? parseInt(skip, 10) : 0;
+  limit = limit ? parseInt(limit, 10) : 10;
+  const populateOption = {
+    path: 'bookmarks',
+    options: {
+      sort: { _id: -1 },
+      limit,
+      skip,
+    },
+  };
+  const query = User.findOne({ _id }).populate(populateOption).lean();
+  const check = (user, err) => {
+    if (err) {
+      throw new Error('Database Error');
+    }
+    if (!user) {
+      return [];
+    }
+    return user.bookmarks;
+  };
+  const addField = (bookmarks) => {
+    const withCommentCount = bookmarks.map((bookmark) => {
+      bookmark.comment_count = bookmark.comments.length;
+      return bookmark;
+    });
+    return withCommentCount;
+  };
+  const success = (bookmarks) => (
+    res.json({
+      bookmarks,
+    })
+  );
+  const error = (err) => (
+    res.status(503).json({
+      error: err.message,
+    })
+  );
+  query.exec()
+    .then(check)
+    .then(addField)
+    .then(success)
+    .catch(error);
+};

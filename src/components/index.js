@@ -3,6 +3,7 @@ import AvatarMenu from './AvatarMenu';
 import BrowserLink from './BrowserLink';
 import DimmedLoader from './DimmedLoader';
 import Header from './Header';
+import HeaderText from './HeaderText';
 import IconButton from './IconButton';
 import Input from './Input';
 import ButtonWithAuth from './ButtonWithAuth';
@@ -44,6 +45,7 @@ export {
   BrowserLink,
   DimmedLoader,
   Header,
+  HeaderText,
   IconButton,
   Input,
   ButtonWithAuth,

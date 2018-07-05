@@ -44,6 +44,7 @@ exports.list_get = function list_get(req, res) {
   const { tags, min_id, author_nickname, star_user_id } = req.query;
   let { skip, limit } = req.query;
   const query = {};
+  // default log projection
   const projection = {
     _id: 1,
     text: 1,

@@ -10,7 +10,7 @@ import { history } from '../../utils';
 import * as userActions from '../../actions/user';
 import * as modalActions from '../../actions/modal';
 import { PropsRoute } from '../../routes/RouterUtil';
-import { ModalPortal, ToastPortal, Home, Login } from '../';
+import { ModalPortal, ToastPortal, Home, LoginPage } from '../';
 import { resize } from '../../actions/environment';
 
 class App extends Component {
@@ -47,7 +47,7 @@ class App extends Component {
       showModal,
       verifyStatus,
     } = this.props;
-    if (verifyStatus === ('INIT' || 'WAITING')) {
+    if (verifyStatus === 'WAITING' || verifyStatus === 'INIT') {
       return null;
     }
     return (
@@ -57,9 +57,9 @@ class App extends Component {
             <PropsRoute
               path="/login"
               isAuthenticated={isAuthenticated}
-              component={Login}
+              component={LoginPage}
               loginStatus={loginStatus}
-              handleLoginModal={() => showModal('LOGIN_MODAL')}
+              showModal={showModal}
             />
             <PropsRoute path="/" component={Home} {...this.props} />
           </Switch>

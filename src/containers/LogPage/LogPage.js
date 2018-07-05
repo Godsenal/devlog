@@ -16,35 +16,34 @@ class LogPage extends PureComponent {
   componentDidMount() {
     const { match, showModal, history, location } = this.props;
     const { logId } = match.params;
-    let onClose = () => history.goBack();
-    /*
-      Modal's onclose action will be push to match nickname's profile,
-      When if user come this page directly
-    */
-    if (history.action === 'POP' && !(location.state && location.state.modal)) {
-      onClose = () => history.push(`/${match.params.nickname}`);
-    }
+    const isDirect = this.checkDirect(history.action, location);
     const modalProps = {
       logId,
-      onClose,
+      onClose: isDirect ? () => history.replace(`/${match.params.nickname}`) : () => history.goBack(),
     };
     showModal('LOG_MODAL', modalProps);
   }
   // when user redirect from 'LOGIN_MODAL'
   componentDidUpdate(prevProps) {
-    const { isModal } = this.props;
-    if (isModal && prevProps.modalType !== 'LOG_MODAL' && prevProps.modalType !== this.props.modalType) {
+    if (prevProps.modalType !== 'LOG_MODAL' && prevProps.modalType !== this.props.modalType) {
       const { match, showModal, history } = this.props;
       const { logId } = match.params;
+      const isDirect = this.checkDirect(history.action, location);
       const modalProps = {
         logId,
-        onClose: () => history.goBack(),
+        onClose: isDirect ? () => history.replace(`/${match.params.nickname}`) : () => history.goBack(),
       };
       showModal('LOG_MODAL', modalProps);
     }
   }
   componentWillUnmount() {
     this.props.closeModal();
+  }
+  checkDirect = (action, location) => {
+    if (action !== 'POP' && !(location.state && location.state.modal)) {
+      return false;
+    }
+    return true;
   }
   render() {
     const { isModal, match } = this.props;

@@ -11,3 +11,6 @@ export function bookmark({ logId, userId, isBookmarked }) {
 export function follow({ userId, followingId, isFollowed }) {
   return axios.post(`${path}/follow`, { userId, followingId, isFollowed });
 }
+export function listBookmark({ skip, limit }) {
+  return axios.get(`${path}/bookmarks?skip=${skip}&limit=${limit}`);
+}

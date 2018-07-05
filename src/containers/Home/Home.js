@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
-import { PropsRoute } from '../../routes/RouterUtil';
+import { PropsRoute, PrivateRoute } from '../../routes/RouterUtil';
 import { Timeline, LogPage, Profile, Search, TagPage, NotFoundPage } from '../';
 import { Header } from '../../components';
-/*
-  TODO: Fix Modal route
-*/
+import BookmarkPage from '../BookmarkPage';
+
+// Scroll to top when router changed.
+// Exception: Modal
+const ScrollToTop = () => {
+  window.scrollTo(0, 0);
+  return null;
+};
+
 class Home extends Component {
   state = {
     previousLocation: { pathname: '/' }, // when location is not modal
@@ -39,6 +45,7 @@ class Home extends Component {
     const { previousLocation } = this.state;
     const {
       location,
+      isAuthenticated,
       isMobile,
       loginState,
       logout,
@@ -58,9 +65,12 @@ class Home extends Component {
           showModal={showModal}
           closeModal={closeModal}
         />
+        { !isModal && <Route component={ScrollToTop} /> }
         <Switch location={isModal ? previousLocation : location}>
-          <PropsRoute
+          <PrivateRoute
             exact path="/"
+            isAuthenticated={isAuthenticated}
+            redirectTo="/login"
             component={Timeline}
             isMobile={isMobile}
             showModal={showModal}
@@ -73,6 +83,12 @@ class Home extends Component {
           <Route
             path="/search/:type?"
             component={Search}
+          />
+          <PrivateRoute
+            path="/:nickname/bookmark"
+            component={BookmarkPage}
+            isAuthenticated={isAuthenticated}
+            redirectTo="/login"
           />
           <PropsRoute
             path="/:nickname"
