@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import { PropsRoute, PrivateRoute } from '../../routes/RouterUtil';
-import { Timeline, LogPage, Profile, Search, TagPage, NotFoundPage, ScrollToTop } from '../';
+import { Timeline, LogPage, Profile, Search, TagPage, NotFoundPage, ScrollToTop, BookmarkPage, LandingPage } from '../';
 import { Header } from '../../components';
-import BookmarkPage from '../BookmarkPage';
 
 class Home extends Component {
   state = {
@@ -60,11 +59,9 @@ class Home extends Component {
         />
         <ScrollToTop isModal={isModal}>
           <Switch location={isModal ? previousLocation : location}>
-            <PrivateRoute
+            <PropsRoute
               exact path="/"
-              isAuthenticated={isAuthenticated}
-              redirectTo="/login"
-              component={Timeline}
+              component={isAuthenticated ? Timeline : LandingPage}
               isMobile={isMobile}
               showModal={showModal}
               closeModal={closeModal}

@@ -1,6 +1,7 @@
 import App from './App';
 import BookmarkPage from './BookmarkPage';
 import Home from './Home';
+import LandingPage from './LandingPage';
 import LoginPage from './LoginPage';
 import LogPage from './LogPage';
 import ModalPortal from './ModalPortal';
@@ -16,6 +17,7 @@ export {
   App,
   BookmarkPage,
   Home,
+  LandingPage,
   LoginPage,
   LogPage,
   ModalPortal,

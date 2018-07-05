@@ -8,6 +8,7 @@ injectGlobal`
   body {
     height: 100%;
     width: 100%;
+    background: #fff;
   }
   h1, h2, h3 {
     font-weight: 400;
@@ -16,5 +17,8 @@ injectGlobal`
   button {
     font-family: 'Ubuntu Mono', monospace;
     font-weight: 600;
+  }
+  input {
+    background: inherit;
   }
 `;

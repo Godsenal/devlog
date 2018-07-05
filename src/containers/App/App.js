@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import styled from 'styled-components';
 import { history } from '../../utils';
 import * as userActions from '../../actions/user';
 import * as modalActions from '../../actions/modal';
@@ -13,6 +13,9 @@ import { PropsRoute } from '../../routes/RouterUtil';
 import { ModalPortal, ToastPortal, Home, LoginPage } from '../';
 import { resize } from '../../actions/environment';
 
+const Container = styled.div`
+  background: #fff;
+`;
 class App extends Component {
   constructor() {
     super();
@@ -52,7 +55,7 @@ class App extends Component {
     }
     return (
       <Router history={history}>
-        <div>
+        <Container>
           <Switch>
             <PropsRoute
               path="/login"
@@ -65,7 +68,7 @@ class App extends Component {
           </Switch>
           <ModalPortal />
           <ToastPortal />
-        </div>
+        </Container>
       </Router>
     );
   }

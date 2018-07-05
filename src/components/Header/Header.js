@@ -16,16 +16,19 @@ const Container = styled.div`
 
   width: 100%;
   min-height: ${HEADER_HEIGHT}px;
-  background-color: white;
 
   z-index: 100;
-
+  border: none;
+  background-color: #fff;
+  transition: min-height 0.2s ease-in-out;
+  ${props => props.isCollapsed && `
+    border-bottom: 1px solid #efefef;
+    min-height: ${HEADER_HEIGHT - 20}px;
+  `}
 `;
 const Menubar = styled.div`
 
   width: 80%;
-  
-  background-color: white;
   margin: auto;
 
   display: flex;
@@ -51,15 +54,39 @@ const RightItem = styled.div`
 `;
 const Spacer = styled.div`
   position: relative;
-
-  background-color: white;
   min-height: ${HEADER_HEIGHT}px;
 `;
 class Header extends Component {
+  state = {
+    headerCollapse: false,
+  }
   static propTypes = {
     loginState: PropTypes.object.isRequired,
     logout: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
+  }
+  componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
+    this.checkHeaderCollpase(this.state.headerCollapse);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+  checkHeaderCollpase= (currentHeader) => {
+    const top = window.pageYOffset || document.documentElement.scrollTop;
+    if (top >= HEADER_HEIGHT && !currentHeader) {
+      this.setState({
+        headerCollapse: true,
+      });
+    }
+    else if (top <= HEADER_HEIGHT && currentHeader) {
+      this.setState({
+        headerCollapse: false,
+      });
+    }
+  }
+  handleScroll = () => {
+    this.checkHeaderCollpase(this.state.headerCollapse);
   }
   handleShowModal = (modalType) => {
     this.props.showModal(modalType);
@@ -69,11 +96,14 @@ class Header extends Component {
   }
   render() {
     const {
+      headerCollapse,
+    } = this.state;
+    const {
       loginState,
     } = this.props;
     return (
       <Fragment>
-        <Container>
+        <Container isCollapsed={headerCollapse}>
           <Menubar>
             <Title>
               <TitleLink>
