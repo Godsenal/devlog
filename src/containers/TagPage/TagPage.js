@@ -64,6 +64,7 @@ class TagPage extends Component {
     const { tags } = queryString.parse(search);
     return tags;
   }
+  getNotInArray = (arr, standard) => arr.filter(item => standard.indexOf(item.name) === -1)
   pushToArray = (item) => {
     /* function for push string OR array to array */
     const arr = [];
@@ -92,22 +93,21 @@ class TagPage extends Component {
     if (!tag) {
       return <NotFound />;
     }
-    const tags = this.pushToArray(tag);
     const { logState, tagState } = this.props;
+    const tags = this.pushToArray(tag);
+    const relatedTags = this.getNotInArray(tagState.tags, tags);
+    const showRelated = tagState.status === 'SUCCESS' && relatedTags.length > 0;
     return (
       <Container>
         <MainHeader>
           Tags: { tags.map((item, i) => <Tag key={i} name={item} />) }
         </MainHeader>
-        { tagState.status === 'SUCCESS' && tagState.tags.length > 1 && (
+        { showRelated && (
           <React.Fragment>
             <SubHeader>Related Tags</SubHeader>
             <NoneStyleList>
               {
-                tagState.tags.map((item, i) => {
-                  if (findIndex(tags, (standard) => item.name === standard) >= 0) {
-                    return null;
-                  }
+                relatedTags.map((item, i) => {
                   return <Tag key={i} name={item.name} onClick={this.handleTagClick(item.name)} />;
                 })
               }
