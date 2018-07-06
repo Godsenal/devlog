@@ -11,7 +11,7 @@ class ScrollToTop extends Component {
     location: PropTypes.object.isRequired,
   }
   componentDidUpdate(prevProps) {
-    if (!this.props.isModal && this.props.location !== prevProps.location) {
+    if (!prevProps.isModal && !this.props.isModal && this.props.location !== prevProps.location) {
       window.scrollTo(0, 0);
     }
   }
