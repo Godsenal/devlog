@@ -9,6 +9,10 @@ const Container = styled.div`
   display: flex;
 `;
 const MainContent = styled.div`
+  opacity: ${props => (props.isMounted ? 1 : 0)};
+  transform: ${props => (props.isMounted ? 'translateY(-20px)' : 'translateY(0px)')};
+  transition: opacity 0.8s ease, transform 0.8s ease;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -33,10 +37,22 @@ const MarginRight = styled.span`
   margin-right: 10px;
 `;
 export default class LandingPage extends Component {
+  state = {
+    isMounted: false,
+  }
   static propTypes = {
     showModal: PropTypes.func.isRequired,
   }
   componentDidMount() {
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        if (this._shouldMount) {
+          this.setState({
+            isMounted: true,
+          });
+        }
+      });
+    });
     if (this._lottieContainer) {
       this._lottie = lottie.loadAnimation({
         container: this._lottieContainer, // the dom element that will contain the animation
@@ -47,6 +63,10 @@ export default class LandingPage extends Component {
       });
     }
   }
+  componentWillUnmount() {
+    this._shouldMount = false;
+  }
+  _shouldMount = true;
   setLottieRef = (ref) => {
     this._lottieContainer = ref;
   }
@@ -54,9 +74,10 @@ export default class LandingPage extends Component {
     this.props.showModal(type);
   }
   render() {
+    const { isMounted } = this.state;
     return (
       <Container>
-        <MainContent>
+        <MainContent isMounted={isMounted}>
           <Hero>
             <LottieContainer innerRef={this.setLottieRef} />
           </Hero>

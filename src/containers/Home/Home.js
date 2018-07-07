@@ -75,7 +75,8 @@ class Home extends Component {
               component={Search}
             />
             <PrivateRoute
-              path="/:nickname/bookmark"
+              exact
+              path="/my/bookmark"
               component={BookmarkPage}
               isAuthenticated={isAuthenticated}
               redirectTo="/login"
@@ -83,7 +84,6 @@ class Home extends Component {
             <PropsRoute
               path="/:nickname"
               component={Profile}
-              key={isModal ? previousLocation.key : location.key}
             />
             <Route
               component={NotFoundPage}

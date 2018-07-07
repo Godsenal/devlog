@@ -58,7 +58,7 @@ export default class AvatarMenu extends Component {
     this.handleClose();
   }
   handleBookmark = () => {
-    history.push(`/${this.props.nickname}/bookmark`);
+    history.push('/my/bookmark');
     this.handleClose();
   }
   handleProfile = () => {

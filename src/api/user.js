@@ -14,3 +14,9 @@ export function follow({ userId, followingId, isFollowed }) {
 export function listBookmark({ skip, limit }) {
   return axios.get(`${path}/bookmarks?skip=${skip}&limit=${limit}`);
 }
+export function listFollower({ nickname, skip, limit }) {
+  return axios.get(`${path}/follower?nickname=${nickname}&skip=${skip}&limit=${limit}`);
+}
+export function listFollowing({ nickname, skip, limit }) {
+  return axios.get(`${path}/following?nickname=${nickname}&skip=${skip}&limit=${limit}`);
+}

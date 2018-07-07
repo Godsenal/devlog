@@ -3,22 +3,20 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import CodeIcon from 'react-icons/lib/fa/code';
 import { Link } from 'react-router-dom';
-import grey from '@material-ui/core/colors/grey';
 import { MainContent, LogViewToolBox } from '../';
+import { listItem } from '../../styles/util';
 
 const Item = styled(Link)`
   display: block;
   position: relative;
 
-  margin: 10px 1px;
+  ${listItem()}
   padding: 10px;
   
   color: black;
   background-color: white;
 
   text-decoration: none;
-  border-radius: 5px;
-  border: 1px solid ${grey[300]};
   cursor: pointer;
 
   &:hover {

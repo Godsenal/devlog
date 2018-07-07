@@ -9,9 +9,15 @@ import {
   PROFILE_BOOKMARKS_REQUEST,
   PROFILE_BOOKMARKS_SUCCESS,
   PROFILE_BOOKMARKS_FAILURE,
+  PROFILE_FOLLOWING_REQUEST,
+  PROFILE_FOLLOWING_SUCCESS,
+  PROFILE_FOLLOWING_FAILURE,
+  PROFILE_FOLLOWER_REQUEST,
+  PROFILE_FOLLOWER_SUCCESS,
+  PROFILE_FOLLOWER_FAILURE,
 } from '../constants/actionTypes';
 import { list } from '../api/log';
-import { listBookmark } from '../api/user';
+import { listBookmark, listFollower, listFollowing } from '../api/user';
 
 function* latest(action) {
   const { skip, limit, author_nickname, listType } = action;
@@ -91,6 +97,54 @@ function* bookmarks(action) {
     });
   }
 }
+function* follower(action) {
+  const { nickname, skip, limit } = action;
+  try {
+    const { data } = yield call(listFollower, { nickname, skip, limit });
+    const { followers } = data;
+    const payload = {
+      followers,
+      limit,
+      isInit: skip === 0,
+      isLast: followers.length < limit,
+    };
+    yield put({
+      type: PROFILE_FOLLOWER_SUCCESS,
+      ...payload,
+    });
+  }
+  catch (err) {
+    const { error } = err.response.data;
+    yield put({
+      type: PROFILE_FOLLOWER_FAILURE,
+      error,
+    });
+  }
+}
+function* following(action) {
+  const { nickname, skip, limit } = action;
+  try {
+    const { data } = yield call(listFollowing, { nickname, skip, limit });
+    const { followings } = data;
+    const payload = {
+      followings,
+      limit,
+      isInit: skip === 0,
+      isLast: followings.length < limit,
+    };
+    yield put({
+      type: PROFILE_FOLLOWING_SUCCESS,
+      ...payload,
+    });
+  }
+  catch (err) {
+    const { error } = err.response.data;
+    yield put({
+      type: PROFILE_FOLLOWING_FAILURE,
+      error,
+    });
+  }
+}
 function* watchLatest() {
   yield takeLatest(PROFILE_LATEST_REQUEST, latest);
 }
@@ -100,11 +154,19 @@ function* watchStars() {
 function* watchBookmarks() {
   yield takeLatest(PROFILE_BOOKMARKS_REQUEST, bookmarks);
 }
+function* watchFollowing() {
+  yield takeLatest(PROFILE_FOLLOWING_REQUEST, following);
+}
+function* watchFollower() {
+  yield takeLatest(PROFILE_FOLLOWER_REQUEST, follower);
+}
 export default function* root() {
   yield all([
     fork(watchLatest),
     fork(watchStars),
     fork(watchBookmarks),
+    fork(watchFollowing),
+    fork(watchFollower),
   ]);
 }
 

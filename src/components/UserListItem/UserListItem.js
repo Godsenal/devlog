@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Avatar, FollowButton, BrowserLink } from '../';
-import { defaultPadding, linkText } from '../../styles/util';
+import { defaultPadding, linkText, listItem } from '../../styles/util';
 
 const ListItem = styled.a`
   display: flex;
   align-items: center;
 
-  margin: 15px 0;
+  ${listItem()}
   ${defaultPadding()}
-  ${linkText()}
 `;
 const AvatarText = styled.span`
   margin-left: 10px;  
+  ${linkText()}
 `;
 const FlexLeft = styled.div`
   flex: 1 1 auto;

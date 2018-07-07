@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { LazyList, LogListItem, Tabs } from '../';
+import { LogList, Tabs } from '../';
 import { listLatest, listStars } from '../../actions/profile';
 
 const TABS = ['latest', 'stars'];
@@ -17,8 +17,20 @@ class ProfileContent extends Component {
     nickname: PropTypes.string.isRequired,
     starsState: PropTypes.object.isRequired,
   }
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.props.latestState !== nextProps.latestState) {
+      return true;
+    }
+    if (this.props.starsState !== nextProps.starsState) {
+      return true;
+    }
+    if (this.state.tab !== nextState.tab) {
+      return true;
+    }
+    return false;
+  }
   componentDidMount() {
-    this.handleInitialLoad(TABS[0]);
+    this.handleListLog(TABS[0])({ skip: 0 });
     if (this.isInit) {
       this.isInit[0] = false;
     }
@@ -27,36 +39,20 @@ class ProfileContent extends Component {
   handleTabChange = (_, tab) => {
     if (this.isInit[tab]) {
       this.isInit[tab] = false;
-      this.handleInitialLoad(TABS[tab]);
+      this.handleListLog(TABS[tab])({ skip: 0 });
     }
     this.setState({
       tab,
     });
   }
-  handleInitialLoad = (type) => {
+  handleListLog = (type) => ({ skip, limit }) => {
     if (type === 'latest') {
       const { dispatchListLatest, nickname } = this.props;
-      dispatchListLatest({ author_nickname: nickname });
+      dispatchListLatest({ author_nickname: nickname, skip, limit });
     }
     else if (type === 'stars') {
       const { dispatchListStars, _id } = this.props;
-      dispatchListStars({ star_user_id: _id });
-    }
-  }
-  handleLazyLoad = (type) => () => {
-    if (type === 'latest') {
-      const { dispatchListLatest, latestState, nickname } = this.props;
-      dispatchListLatest({
-        skip: latestState.logs.length,
-        author_nickname: nickname,
-      });
-    }
-    else if (type === 'stars') {
-      const { dispatchListStars, starsState, _id } = this.props;
-      dispatchListStars({
-        skip: starsState.logs.length,
-        star_user_id: _id,
-      });
+      dispatchListStars({ star_user_id: _id, skip, limit });
     }
   }
   render() {
@@ -73,22 +69,18 @@ class ProfileContent extends Component {
           <span>Star</span>
         </Tabs>
         { tab === 0 && (
-          <LazyList
-            lazyLoad={this.handleLazyLoad('latest')}
-            isLast={latestState.isLast}
-            isLoading={latestState.status === 'WAITING'}
-          >
-            { latestState.logs.map((log) => <LogListItem key={log._id} {...log} />)}
-          </LazyList>
+          latestState.logs.length > 0 ?
+            <LogList
+              {...latestState}
+              handleListLog={this.handleListLog('latest')}
+            /> : null
         )}
         { tab === 1 && (
-          <LazyList
-            lazyLoad={this.handleLazyLoad('stars')}
-            isLast={starsState.isLast}
-            isLoading={starsState.status === 'WAITING'}
-          >
-            { starsState.logs.map((log) => <LogListItem key={log._id} {...log} />)}
-          </LazyList>
+          starsState.logs.length > 0 ?
+            <LogList
+              {...starsState}
+              handleListLog={this.handleListLog('stars')}
+            /> : null
         )}
       </div>
     );

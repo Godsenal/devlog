@@ -8,6 +8,7 @@ import {
   USER_BOOKMARK_REQUEST,
   USER_FOLLOW_REQUEST,
 } from '../constants/actionTypes';
+import { history } from '../utils';
 
 export function login(username, password) {
   return {
@@ -18,6 +19,8 @@ export function login(username, password) {
 }
 
 export function logout() {
+  // Delete all reducer
+  history.push('/');
   return {
     type: USER_LOGOUT_REQUEST,
   };

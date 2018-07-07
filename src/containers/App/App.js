@@ -10,7 +10,8 @@ import { history } from '../../utils';
 import * as userActions from '../../actions/user';
 import * as modalActions from '../../actions/modal';
 import { PropsRoute } from '../../routes/RouterUtil';
-import { ModalPortal, ToastPortal, Home, LoginPage } from '../';
+import { Home, LoginPage, LandingPage } from '../';
+import { Header } from '../../components';
 import { resize } from '../../actions/environment';
 
 const Container = styled.div`
@@ -46,11 +47,27 @@ class App extends Component {
   render() {
     const {
       isAuthenticated,
+      loginState,
       loginStatus,
+      logout,
       showModal,
+      closeModal,
       verifyStatus,
     } = this.props;
-    if (verifyStatus === 'WAITING' || verifyStatus === 'INIT') {
+    if (verifyStatus === 'INIT') {
+      return (
+        <div>
+          <Header
+            loginState={loginState}
+            logout={logout}
+            showModal={showModal}
+            closeModal={closeModal}
+          />
+          <LandingPage showModal={showModal} closeModal={closeModal} />
+        </div>
+      );
+    }
+    if (verifyStatus === 'WAITING') {
       return null;
     }
     return (
@@ -66,8 +83,6 @@ class App extends Component {
             />
             <PropsRoute path="/" component={Home} {...this.props} />
           </Switch>
-          <ModalPortal />
-          <ToastPortal />
         </Container>
       </Router>
     );

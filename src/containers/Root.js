@@ -5,6 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import App from './App';
 import configureStore from '../store/configureStore';
 import theme from '../styles/theme';
+import { ModalPortal, ToastPortal } from './';
 
 const store = configureStore();
 
@@ -15,6 +16,8 @@ export default class Root extends Component {
         <Provider store={store}>
           <CssBaseline>
             <App />
+            <ModalPortal />
+            <ToastPortal />
           </CssBaseline>
         </Provider>
       </MuiThemeProvider>

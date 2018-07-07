@@ -12,6 +12,8 @@ export default class Login extends Component {
   componentDidMount() {
     this.props.showModal('LOGIN_MODAL');
   }
+  componentWillUnmount() {
+  }
   render() {
     const { location, isAuthenticated, loginStatus } = this.props;
     const { from } = location.state || { from: { pathname: '/' } };

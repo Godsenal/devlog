@@ -7,7 +7,7 @@ import profile from './profile';
 import search from './search';
 import toast from './toast';
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   environment,
   log,
   user,
@@ -16,5 +16,12 @@ const rootReducer = combineReducers({
   search,
   toast,
 });
+const rootReducer = (state, action) => {
+  // initialize state on logout
+  if (action.type === 'USER_LOGOUT_REQUEST') {
+    state = undefined;
+  }
+  return appReducer(state, action);
+};
 
 export default rootReducer;

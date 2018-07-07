@@ -1,5 +1,6 @@
 import App from './App';
 import BookmarkPage from './BookmarkPage';
+import FollowPage from './FollowPage';
 import Home from './Home';
 import LandingPage from './LandingPage';
 import LoginPage from './LoginPage';
@@ -16,6 +17,7 @@ import ToastPortal from './ToastPortal';
 export {
   App,
   BookmarkPage,
+  FollowPage,
   Home,
   LandingPage,
   LoginPage,

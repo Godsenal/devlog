@@ -2,6 +2,8 @@ import {
   PROFILE_LATEST_REQUEST,
   PROFILE_STARS_REQUEST,
   PROFILE_BOOKMARKS_REQUEST,
+  PROFILE_FOLLOWER_REQUEST,
+  PROFILE_FOLLOWING_REQUEST,
 } from '../constants/actionTypes';
 
 export function listLatest({ skip = 0, limit = 10, listType = 'latest', author_nickname }) {
@@ -30,5 +32,23 @@ export function listBookmarks({ skip = 0, limit = 10, listType = 'bookmarks' }) 
     skip,
     limit,
     listType,
+  };
+}
+
+export function listFollowing({ skip = 0, limit = 10, nickname }) {
+  return {
+    type: PROFILE_FOLLOWING_REQUEST,
+    skip,
+    limit,
+    nickname,
+  };
+}
+
+export function listFollower({ skip = 0, limit = 10, nickname }) {
+  return {
+    type: PROFILE_FOLLOWER_REQUEST,
+    skip,
+    limit,
+    nickname,
   };
 }

@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Switch } from 'react-router-dom';
+import { PropsRoute } from '../../routes/RouterUtil';
 import { getUser } from '../../actions/user';
-import { mainContainer } from '../../styles/util';
-import { Avatar, DimmedLoader, FollowButton, ProfileContent, NotFound } from '../../components';
+import { mainContainer, linkText } from '../../styles/util';
+import { FollowPage, NotFoundPage } from '../';
+import { Avatar, DimmedLoader, FollowButton, ProfileContent, NotFound, BrowserLink } from '../../components';
 
 const IMAGE_SIZE = 120;
 const Container = styled.div`
@@ -33,15 +36,27 @@ const RightItem = styled.div`
 const Follow = styled.div`
   color: rgba(0, 0, 0, 0.6);
 `;
+const FollowLink = styled.a`
+  ${linkText()};
+`;
 class Profile extends Component {
   static propTypes = {
     dispatchGetUser: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired,
     match: PropTypes.object.isRequired,
     userGetState: PropTypes.object.isRequired,
   }
   componentDidMount() {
     const { nickname } = this.props.match.params;
     this.props.dispatchGetUser(nickname);
+  }
+  componentDidUpdate(prevProps) {
+    const { nickname: prevNickname } = prevProps.match.params;
+    const { nickname } = this.props.match.params;
+    if (prevNickname !== nickname) {
+      window.scrollTo(0, 0);
+      this.props.dispatchGetUser(nickname);
+    }
   }
   render() {
     const { userGetState, match } = this.props;
@@ -66,8 +81,17 @@ class Profile extends Component {
               </RightItem>
               <RightItem>
                 <Follow>
-                  <span>{user.followings && user.followings.length} Followings </span>
-                  <span>{user.followers && user.followers.length} Followers </span>
+                  <FollowLink>
+                    <BrowserLink type="push" location={`${match.url}/following`}>
+                      {user.followings && user.followings.length} Followings
+                    </BrowserLink>
+                  </FollowLink>
+                  {' '}
+                  <FollowLink>
+                    <BrowserLink type="push" location={`${match.url}/follower`}>
+                      {user.followers && user.followers.length} Followers
+                    </BrowserLink>
+                  </FollowLink>
                 </Follow>
               </RightItem>
               <RightItem>
@@ -77,9 +101,27 @@ class Profile extends Component {
               </RightItem>
             </FlexRight>
           </Top>
-          <ProfileContent
-            {...user}
-          />
+          <Switch>
+            <PropsRoute
+              exact
+              path={match.url}
+              component={ProfileContent}
+              {...user}
+            />
+            <PropsRoute
+              path={`${match.url}/following`}
+              component={FollowPage}
+              nickname={nickname}
+            />
+            <PropsRoute
+              path={`${match.url}/follower`}
+              component={FollowPage}
+              nickname={nickname}
+            />
+            <PropsRoute
+              component={NotFoundPage}
+            />
+          </Switch>
         </Container>
     );
   }
@@ -89,7 +131,7 @@ const mapStateToProps = state => ({
   userGetState: state.user.get,
 });
 const mapDispatchToProps = dispatch => ({
-  dispatchGetUser: (userId) => dispatch(getUser(userId)),
+  dispatchGetUser: (nickname) => dispatch(getUser(nickname)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

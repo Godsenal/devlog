@@ -45,6 +45,13 @@ export const emptyContainer = () => (`
   text-align: center;
 `);
 
+export const listItem = () => (`
+  margin: 10px 1px;
+
+  border-radius: 5px;
+  border: 1px solid #e0e0e0;
+`);
+
 export const defaultPadding = () => (`
   padding: 5px 14px;
 `);

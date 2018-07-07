@@ -47,7 +47,7 @@ exports.user_get = (req, res) => {
   );
   const error = (err) => (
     res.status(503).json({
-      error: err,
+      error: err.messag,
     })
   );
   findUser(nickname)
@@ -150,6 +150,112 @@ exports.bookmark_list_get = (req, res) => {
   query.exec()
     .then(check)
     .then(addField)
+    .then(success)
+    .catch(error);
+};
+
+exports.following_get = (req, res) => {
+  const { nickname } = req.query;
+  let { skip, limit } = req.query;
+  skip = skip ? parseInt(skip, 10) : 0;
+  limit = limit ? parseInt(limit, 10) : 10;
+  const match = {
+    nickname,
+  };
+  const projection = {
+    followings: 1,
+  };
+  const option = {
+    sort: {
+      _id: -1,
+    },
+    skip,
+    limit,
+  };
+  const query = User.findOne(match, projection, option).populate('followings', 'nickname');
+  const check = (user, err) => {
+    if (err) {
+      throw new Error('Database Error');
+    }
+    if (!user) {
+      return [];
+    }
+    return user.followings;
+  };
+  const success = (followings) => res.json({ followings });
+  const error = (err) => res.status(503).json({ error: err.message });
+  query.exec()
+    .then(check)
+    .then(success)
+    .catch(error);
+};
+
+exports.follower_get = (req, res) => {
+  const { nickname } = req.query;
+  let { skip, limit } = req.query;
+  skip = skip ? parseInt(skip, 10) : 0;
+  limit = limit ? parseInt(limit, 10) : 10;
+  const match = { nickname };
+  const projection = {
+    _id: 1,
+  };
+  const option = {
+    sort: { _id: -1 },
+    skip,
+    limit,
+    // mongoose doesn't return plain javascript object.
+    // add lean option to make mongoose return plian javacsript object.
+  };
+  const query = User.findOne(match, projection, option);
+  const check = (user, err) => {
+    if (err) {
+      throw new Error('Database Error');
+    }
+    if (!user) {
+      throw new Error('Could not find user');
+    }
+    return user._id;
+  };
+  const findFollower = (userId) => {
+    const secondMatch = {
+      $match: {
+        followings: userId,
+      },
+    };
+    const secondProjection = {
+      $project: {
+        _id: 1,
+        nickname: 1,
+      },
+    };
+    return User.aggregate([
+      secondMatch,
+      secondProjection,
+    ]).exec();
+  };
+  const checkFollower = (followers, err) => {
+    if (err) {
+      throw new Error('Database Error');
+    }
+    if (!followers) {
+      throw new Error('Could not find follower');
+    }
+    return followers;
+  };
+  const success = (followers) => (
+    res.json({
+      followers,
+    })
+  );
+  const error = (err) => (
+    res.status(503).json({
+      error: err.message,
+    })
+  );
+  query.exec()
+    .then(check)
+    .then(findFollower)
+    .then(checkFollower)
     .then(success)
     .catch(error);
 };

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { listBookmarks } from '../../actions/profile';
 import { LogList, NotFound, HeaderText } from '../../components';
 import { mainContainer } from '../../styles/util';
@@ -17,7 +16,6 @@ class BookmarkPage extends Component {
     bookmarkState: PropTypes.object.isRequired,
     dispatchListBookmark: PropTypes.func.isRequired,
     loginState: PropTypes.object.isRequired,
-    match: PropTypes.object.isRequired,
   }
   componentDidMount() {
     this.handleLoadBookmark({});
@@ -26,11 +24,7 @@ class BookmarkPage extends Component {
     this.props.dispatchListBookmark({ skip, limit });
   }
   render() {
-    const { nickname } = this.props.match.params;
-    const { loginState, bookmarkState } = this.props;
-    if (nickname !== loginState.nickname) {
-      return <Redirect to={`/${loginState.nickname}/bookmark`} />;
-    }
+    const { bookmarkState } = this.props;
     const { logs } = bookmarkState;
     return (
       <Container>

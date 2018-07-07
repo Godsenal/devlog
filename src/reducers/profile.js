@@ -8,6 +8,7 @@ const initialState = {
     logs: [],
     error: '',
     limit: 10,
+    isInit: true,
     isLast: false,
   },
   stars: {
@@ -15,6 +16,7 @@ const initialState = {
     logs: [],
     error: '',
     limit: 10,
+    isInit: true,
     isLast: false,
   },
   bookmarks: {
@@ -22,6 +24,23 @@ const initialState = {
     logs: [],
     error: '',
     limit: 10,
+    isInit: true,
+    isLast: false,
+  },
+  following: {
+    status: 'INIT',
+    followings: [],
+    error: '',
+    limit: 10,
+    isInit: true,
+    isLast: false,
+  },
+  follower: {
+    status: 'INIT',
+    followers: [],
+    error: '',
+    limit: 10,
+    isInit: true,
     isLast: false,
   },
 };
@@ -35,6 +54,7 @@ export default function profile(state = initialState, action) {
       const defaultUpdate = {
         [action.listType]: {
           status: { $set: 'WAITING' },
+          isInit: { $set: isInit },
         },
       };
       if (isInit) {
@@ -50,6 +70,7 @@ export default function profile(state = initialState, action) {
         [action.listType]: {
           status: { $set: 'SUCCESS' },
           logs: isInit ? { $set: logs } : { $push: logs },
+          isInit: { $set: isInit },
           isLast: { $set: isLast },
           limit: { $set: limit },
         },
@@ -101,6 +122,74 @@ export default function profile(state = initialState, action) {
         };
       }
       return update(state, rawUpdate);
+    }
+    case actionTypes.PROFILE_FOLLOWING_REQUEST: {
+      const isInit = action.skip === 0;
+      const followingUpdate = {
+        status: { $set: 'WAITING' },
+        isInit: { $set: isInit },
+      };
+      if (isInit) {
+        followingUpdate.followings = {
+          $set: [],
+        };
+      }
+      return update(state, {
+        following: followingUpdate,
+      });
+    }
+    case actionTypes.PROFILE_FOLLOWING_SUCCESS: {
+      return update(state, {
+        following: {
+          status: { $set: 'SUCCESS' },
+          followings: { $push: action.followings },
+          limit: { $set: action.limit },
+          isLast: { $set: action.isLast },
+          isInit: { $set: action.isInit },
+        },
+      });
+    }
+    case actionTypes.PROFILE_FOLLOWING_FAILURE: {
+      return update(state, {
+        following: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.error },
+        },
+      });
+    }
+    case actionTypes.PROFILE_FOLLOWER_REQUEST: {
+      const isInit = action.skip === 0;
+      const followerUpdate = {
+        status: { $set: 'WAITING' },
+        isInit: { $set: isInit },
+      };
+      if (isInit) {
+        followerUpdate.followers = {
+          $set: [],
+        };
+      }
+      return update(state, {
+        follower: followerUpdate,
+      });
+    }
+    case actionTypes.PROFILE_FOLLOWER_SUCCESS: {
+      return update(state, {
+        follower: {
+          status: { $set: 'SUCCESS' },
+          followers: { $push: action.followers },
+          limit: { $set: action.limit },
+          isLast: { $set: action.isLast },
+          isInit: { $set: action.isInit },
+        },
+      });
+    }
+    case actionTypes.PROFILE_FOLLOWER_FAILURE: {
+      return update(state, {
+        follower: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.error },
+        },
+      });
     }
     default:
       return state;

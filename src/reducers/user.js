@@ -67,6 +67,9 @@ export default function user(state = initialState, action) {
           bookmarks: { $set: action.bookmarks },
           isAuthenticated: { $set: true },
         },
+        verify: {
+          status: { $set: 'SUCCESS' },
+        },
       });
     case actionTypes.USER_LOGIN_FAILURE:
       return update(state, {

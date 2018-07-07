@@ -3,6 +3,8 @@ import { NotFound } from '../../components';
 
 export default function NotFoundPage() {
   return (
-    <NotFound />
+    <NotFound>
+      Couldn't find this page...
+    </NotFound>
   );
 }
