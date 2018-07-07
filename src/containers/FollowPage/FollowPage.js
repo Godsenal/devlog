@@ -10,18 +10,17 @@ class FollowPage extends Component {
     dispatchFollowing: PropTypes.func.isRequired,
     follower: PropTypes.object.isRequired,
     following: PropTypes.object.isRequired,
-    match: PropTypes.object.isRequired,
     nickname: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
   }
   componentDidMount() {
-    const { nickname, match } = this.props;
-    const { type } = match.params;
+    const { nickname, type } = this.props;
     this.handleListFollow(type, nickname)({ skip: 0 });
   }
   componentDidUpdate(prevProps) {
-    const { type: prevType } = prevProps.match.params;
-    const { type } = this.props.match.params;
-    if (prevType !== type || prevProps.nickname !== this.props.nickname) {
+    const { type: prevType, nickname: prevNickname } = prevProps;
+    const { type, nickname } = this.props;
+    if (prevType !== type || prevNickname !== nickname) {
       this.handleListFollow(type, this.props.nickname)({ skip: 0 });
     }
   }
@@ -63,8 +62,7 @@ class FollowPage extends Component {
     }
   }
   render() {
-    const { match, nickname } = this.props;
-    const { type } = match.params;
+    const { type, nickname } = this.props;
     const data = this.getCurrentData(type);
     if (!data) {
       return null;

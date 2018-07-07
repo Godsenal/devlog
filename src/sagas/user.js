@@ -20,6 +20,10 @@ function* login(id, pw) {
       ...userdata,
     });
     yield put({
+      type: actions.USER_VERIFY_SUCCESS,
+      ...userdata,
+    });
+    yield put({
       type: actions.TOAST_ADD,
       toastProps: {
         message: `Welcome ${userdata.nickname}!`,

@@ -62,7 +62,6 @@ class ProfileContent extends Component {
       <div>
         <Tabs
           selected={tab}
-          centered
           handleTabChange={this.handleTabChange}
         >
           <span>Latest</span>

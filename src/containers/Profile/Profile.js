@@ -112,11 +112,13 @@ class Profile extends Component {
               path={`${match.url}/following`}
               component={FollowPage}
               nickname={nickname}
+              type="following"
             />
             <PropsRoute
               path={`${match.url}/follower`}
               component={FollowPage}
               nickname={nickname}
+              type="follower"
             />
             <PropsRoute
               component={NotFoundPage}
