@@ -1,5 +1,6 @@
 import { all, call, put, fork, cancel, cancelled, takeLatest, take } from 'redux-saga/effects';
 import * as authApi from '../api/auth';
+import { uploadImage } from '../api/cloudinary';
 import * as userApi from '../api/user';
 import * as actions from '../constants/actionTypes';
 import { jwt } from '../utils';
@@ -233,6 +234,28 @@ function* follow(action) {
     });
   }
 }
+function* uploadProfileImage(action) {
+  const { file } = action;
+  try {
+    const { data } = yield call(uploadImage, file);
+    /* Crop Profile Image */
+    const url = data.secure_url;
+    const tokens = url.split('/');
+    tokens.splice(-2, 0, 'w_300,c_scale');
+    const croppedUrl = tokens.join('/');
+    yield put({
+      type: actions.USER_IMAGE_SUCCESS,
+      imageUrl: croppedUrl,
+    });
+  }
+  catch (err) {
+    const { error } = err.response.data;
+    yield put({
+      type: actions.USER_IMAGE_FAILURE,
+      error,
+    });
+  }
+}
 function* watchSignup() {
   yield takeLatest(actions.USER_SIGNUP_REQUEST, signup);
 }
@@ -248,6 +271,9 @@ function* watchBookmark() {
 function* watchFollow() {
   yield takeLatest(actions.USER_FOLLOW_REQUEST, follow);
 }
+function* watchImage() {
+  yield takeLatest(actions.USER_IMAGE_REQUEST, uploadProfileImage);
+}
 /**
  * User Sagas
  */
@@ -259,5 +285,6 @@ export default function* root() {
     fork(watchGet),
     fork(watchBookmark),
     fork(watchFollow),
+    fork(watchImage),
   ]);
 }

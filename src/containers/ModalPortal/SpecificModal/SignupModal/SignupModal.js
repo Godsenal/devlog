@@ -36,11 +36,17 @@ class SignupModal extends Component {
     },
   }
   static propTypes = {
+    imageState: PropTypes.object.isRequired,
+    init: PropTypes.func.isRequired,
     nicknameState: PropTypes.object.isRequired,
     signup: PropTypes.func.isRequired,
     signupStatus: PropTypes.string.isRequired,
+    upload: PropTypes.func.isRequired,
     usernameState: PropTypes.object.isRequired,
     validate: PropTypes.func.isRequired,
+  }
+  componentWillUnmount() {
+    this.props.init();
   }
   handleChange = name => e => {
     const { value } = e.target;
@@ -51,6 +57,12 @@ class SignupModal extends Component {
       },
     });
     this.setState(newState, () => this.handleValidation(name, value));
+  }
+  handleFileChange = e => {
+    const { files } = e.target;
+    if (files && files.length > 0) {
+      this.props.upload(files[0]);
+    }
   }
   handleValidation = debounce((name, value) => {
     const trimmed = value.trim();
@@ -112,10 +124,12 @@ class SignupModal extends Component {
       usernameState,
       nicknameState,
       signupStatus,
+      imageState,
     } = this.props;
     const isValid = valid.password && usernameState.isValid && nicknameState.isValid;
     return (
       <div>
+        { imageState.status === 'SUCCESS' && <img src={imageState.imageUrl} alt="haha" /> }
         {
           signupStatus === 'WAITING' ?
             <DimmedLoader /> : null
@@ -125,6 +139,7 @@ class SignupModal extends Component {
             Join DEVLOG
           </HeaderText>
         </Centered>
+        <input type="file" onChange={this.handleFileChange} />
         <form>
           <Field
             name="username"
@@ -173,9 +188,12 @@ class SignupModal extends Component {
 const mapStateToProps = (state) => ({
   usernameState: state.user.validate.username,
   nicknameState: state.user.validate.nickname,
+  imageState: state.user.image,
   signupStatus: state.user.signup.status,
 });
 const mapDispatchToProps = (dispatch) => ({
+  init: () => dispatch(userActions.initSignup()),
+  upload: file => dispatch(userActions.uploadImage(file)),
   validate: (payload) => dispatch(userActions.validate(payload)),
   signup: (username, password, nickname) => dispatch(userActions.signup(username, password, nickname)),
 });

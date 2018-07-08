@@ -1,11 +1,8 @@
-import { all, fork, put, takeLatest, take } from 'redux-saga/effects';
-import { MODAL_SHOW, USER_VALIDATE_INITIALIZE, MODAL_CLOSE } from '../constants/actionTypes';
+import { all, fork, takeLatest, take } from 'redux-saga/effects';
+import { MODAL_SHOW, MODAL_CLOSE } from '../constants/actionTypes';
 
-function* showModal(action) {
+function showModal() {
   document.body.style.overflowY = 'hidden'; // disable background scrolling
-  if (action.modalType === 'SIGNUP_MODAL') {
-    yield put({ type: USER_VALIDATE_INITIALIZE });
-  }
 }
 function* watchShow() {
   yield takeLatest(MODAL_SHOW, showModal);

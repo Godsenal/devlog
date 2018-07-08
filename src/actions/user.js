@@ -7,6 +7,8 @@ import {
   USER_GET_REQUEST,
   USER_BOOKMARK_REQUEST,
   USER_FOLLOW_REQUEST,
+  USER_IMAGE_REQUEST,
+  USER_SIGNUP_INITIALIZE,
 } from '../constants/actionTypes';
 import { history } from '../utils';
 
@@ -66,5 +68,18 @@ export function follow({ userId, followingId, isFollowed = false }) {
     userId,
     followingId,
     isFollowed,
+  };
+}
+
+export function uploadImage(file) {
+  return {
+    type: USER_IMAGE_REQUEST,
+    file,
+  };
+}
+
+export function initSignup() {
+  return {
+    type: USER_SIGNUP_INITIALIZE,
   };
 }

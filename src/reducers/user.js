@@ -53,6 +53,11 @@ const initialState = {
     followingId: '',
     error: 'Error',
   },
+  image: {
+    status: 'INIT',
+    imageUrl: '',
+    error: '',
+  },
 };
 
 export default function user(state = initialState, action) {
@@ -178,9 +183,11 @@ export default function user(state = initialState, action) {
           },
         },
       });
-    case actionTypes.USER_VALIDATE_INITIALIZE:
+    case actionTypes.USER_SIGNUP_INITIALIZE:
       return update(state, {
         validate: { $set: initialState.validate },
+        image: { $set: initialState.image },
+        signup: { $set: initialState.signup },
       });
     case actionTypes.USER_GET_REQUEST:
       return update(state, {
@@ -267,6 +274,30 @@ export default function user(state = initialState, action) {
           error: { $set: action.error },
         },
       });
+    case actionTypes.USER_IMAGE_REQUEST: {
+      return update(state, {
+        image: {
+          status: { $set: 'WAITING' },
+          imageUrl: { $set: '' },
+        },
+      });
+    }
+    case actionTypes.USER_IMAGE_SUCCESS: {
+      return update(state, {
+        image: {
+          status: { $set: 'SUCCESS' },
+          imageUrl: { $set: action.imageUrl },
+        },
+      });
+    }
+    case actionTypes.USER_IMAGE_FAILURE: {
+      return update(state, {
+        image: {
+          status: { $set: 'FAILURE' },
+          error: { $set: action.error },
+        },
+      });
+    }
     default:
       return state;
   }
