@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { listFollower, listFollowing } from '../../actions/profile';
 import { UserList, HeaderText } from '../../components';
 
-class FollowPage extends Component {
+class FollowList extends Component {
   static propTypes = {
     dispatchFollower: PropTypes.func.isRequired,
     dispatchFollowing: PropTypes.func.isRequired,
@@ -67,6 +67,7 @@ class FollowPage extends Component {
     if (!data) {
       return null;
     }
+    // TODO: Show latest/stars Tab
     return (
       <div>
         <HeaderText>
@@ -87,4 +88,4 @@ const mapDispatchToProps = dispatch => ({
   dispatchFollowing: (payload) => dispatch(listFollowing(payload)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(FollowPage);
+export default connect(mapStateToProps, mapDispatchToProps)(FollowList);

@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Switch } from 'react-router-dom';
 import { PropsRoute } from '../../routes/RouterUtil';
 import { getUser } from '../../actions/user';
 import { mainContainer, linkText } from '../../styles/util';
-import { FollowPage, NotFoundPage } from '../';
-import { Avatar, DimmedLoader, FollowButton, ProfileContent, NotFound, BrowserLink } from '../../components';
+import { ProfileSwitch } from '../';
+import { Avatar, DimmedLoader, FollowButton, NotFound, BrowserLink } from '../../components';
 
 const IMAGE_SIZE = 120;
 const Container = styled.div`
@@ -42,7 +41,6 @@ const FollowLink = styled.a`
 class Profile extends Component {
   static propTypes = {
     dispatchGetUser: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired,
     match: PropTypes.object.isRequired,
     userGetState: PropTypes.object.isRequired,
   }
@@ -68,6 +66,8 @@ class Profile extends Component {
     if (status === 'FAILURE') {
       return <NotFound><Message>Couldn't find anyone with name '{nickname}'</Message></NotFound>;
     }
+    const hasFollowing = user.followings && user.followings.length > 0;
+    const hasFollower = user.followers && user.followers.length > 0;
     return (
       status === 'SUCCESS' &&
         <Container>
@@ -81,17 +81,25 @@ class Profile extends Component {
               </RightItem>
               <RightItem>
                 <Follow>
-                  <FollowLink>
-                    <BrowserLink type="push" location={`${match.url}/following`}>
-                      {user.followings && user.followings.length} Followings
-                    </BrowserLink>
-                  </FollowLink>
+                  {
+                    hasFollowing && (
+                      <FollowLink>
+                        <BrowserLink type="push" location={`${match.url}/following`}>
+                          {user.followings.length} Followings
+                        </BrowserLink>
+                      </FollowLink>
+                    )
+                  }
                   {' '}
-                  <FollowLink>
-                    <BrowserLink type="push" location={`${match.url}/follower`}>
-                      {user.followers && user.followers.length} Followers
-                    </BrowserLink>
-                  </FollowLink>
+                  {
+                    hasFollower && (
+                      <FollowLink>
+                        <BrowserLink type="push" location={`${match.url}/follower`}>
+                          {user.followers.length} Followers
+                        </BrowserLink>
+                      </FollowLink>
+                    )
+                  }
                 </Follow>
               </RightItem>
               <RightItem>
@@ -101,29 +109,12 @@ class Profile extends Component {
               </RightItem>
             </FlexRight>
           </Top>
-          <Switch>
-            <PropsRoute
-              exact
-              path={match.url}
-              component={ProfileContent}
-              {...user}
-            />
-            <PropsRoute
-              path={`${match.url}/following`}
-              component={FollowPage}
-              nickname={nickname}
-              type="following"
-            />
-            <PropsRoute
-              path={`${match.url}/follower`}
-              component={FollowPage}
-              nickname={nickname}
-              type="follower"
-            />
-            <PropsRoute
-              component={NotFoundPage}
-            />
-          </Switch>
+          <PropsRoute
+            path={`${match.url}/:type?`}
+            component={ProfileSwitch}
+            _id={user._id}
+            nickname={nickname}
+          />
         </Container>
     );
   }

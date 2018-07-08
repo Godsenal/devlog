@@ -8,6 +8,7 @@ import IconButton from './IconButton';
 import Input from './Input';
 import ButtonWithAuth from './ButtonWithAuth';
 import FollowButton from './FollowButton';
+import FollowList from './FollowList';
 import CodeEditorBox from './CodeEditorBox';
 import CodeFrameBox from './CodeFrameBox';
 import CodeBox from './CodeBox';
@@ -50,6 +51,7 @@ export {
   Input,
   ButtonWithAuth,
   FollowButton,
+  FollowList,
   CodeEditorBox,
   CodeFrameBox,
   CodeBox,

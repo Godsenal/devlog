@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { LogList, Tabs } from '../';
+import { LogList, NotFound } from '../';
 import { listLatest, listStars } from '../../actions/profile';
 
-const TABS = ['latest', 'stars'];
 class ProfileContent extends Component {
-  state = {
-    tab: 0,
-  }
   static propTypes = {
     _id: PropTypes.string.isRequired,
     dispatchListLatest: PropTypes.func.isRequired,
@@ -16,35 +12,35 @@ class ProfileContent extends Component {
     latestState: PropTypes.object.isRequired,
     nickname: PropTypes.string.isRequired,
     starsState: PropTypes.object.isRequired,
+    type: PropTypes.string.isRequired,
   }
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     if (this.props.latestState !== nextProps.latestState) {
       return true;
     }
     if (this.props.starsState !== nextProps.starsState) {
       return true;
     }
-    if (this.state.tab !== nextState.tab) {
+    if (this.props.type !== nextProps.type) {
       return true;
     }
     return false;
   }
   componentDidMount() {
-    this.handleListLog(TABS[0])({ skip: 0 });
-    if (this.isInit) {
-      this.isInit[0] = false;
+    const { type } = this.props;
+    this._hasLoaded[type] = true;
+    this.handleListLog(type)({ skip: 0 });
+  }
+  componentDidUpdate(prevProps) {
+    const { type } = this.props;
+    if (prevProps.type !== type) {
+      if (!this._hasLoaded[type]) {
+        this._hasLoaded[type] = true;
+        this.handleListLog(type)({ skip: 0 });
+      }
     }
   }
-  isInit = TABS.map(() => true); // condition for tab's initial render
-  handleTabChange = (_, tab) => {
-    if (this.isInit[tab]) {
-      this.isInit[tab] = false;
-      this.handleListLog(TABS[tab])({ skip: 0 });
-    }
-    this.setState({
-      tab,
-    });
-  }
+  _hasLoaded = {}; // condition for tab's initial render
   handleListLog = (type) => ({ skip, limit }) => {
     if (type === 'latest') {
       const { dispatchListLatest, nickname } = this.props;
@@ -56,30 +52,22 @@ class ProfileContent extends Component {
     }
   }
   render() {
-    const { tab } = this.state;
-    const { latestState, starsState } = this.props;
+    const { latestState, starsState, type } = this.props;
     return (
       <div>
-        <Tabs
-          selected={tab}
-          handleTabChange={this.handleTabChange}
-        >
-          <span>Latest</span>
-          <span>Star</span>
-        </Tabs>
-        { tab === 0 && (
+        { type === 'latest' && (
           latestState.logs.length > 0 ?
             <LogList
               {...latestState}
               handleListLog={this.handleListLog('latest')}
-            /> : null
+            /> : starsState.status === 'SUCCESS' && <NotFound>Couldn't find latest log</NotFound>
         )}
-        { tab === 1 && (
+        { type === 'stars' && (
           starsState.logs.length > 0 ?
             <LogList
               {...starsState}
               handleListLog={this.handleListLog('stars')}
-            /> : null
+            /> : starsState.status === 'SUCCESS' && <NotFound>Couldn't find stars log</NotFound>
         )}
       </div>
     );
