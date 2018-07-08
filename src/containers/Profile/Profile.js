@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { PropsRoute } from '../../routes/RouterUtil';
 import { getUser } from '../../actions/user';
 import { mainContainer, linkText } from '../../styles/util';
-import { ProfileSwitch } from '../';
+import { ProfileSwitch, NotFoundPage } from '../';
 import { Avatar, DimmedLoader, FollowButton, NotFound, BrowserLink } from '../../components';
 
 const IMAGE_SIZE = 120;
@@ -46,20 +46,36 @@ class Profile extends Component {
   }
   componentDidMount() {
     const { nickname } = this.props.match.params;
-    this.props.dispatchGetUser(nickname);
+    const parsed = this.checkNickname(nickname);
+    if (parsed) {
+      this.props.dispatchGetUser(parsed);
+    }
   }
   componentDidUpdate(prevProps) {
     const { nickname: prevNickname } = prevProps.match.params;
     const { nickname } = this.props.match.params;
-    if (prevNickname !== nickname) {
+    const parsed = this.checkNickname(nickname);
+    if (parsed && (prevNickname !== nickname)) {
       window.scrollTo(0, 0);
-      this.props.dispatchGetUser(nickname);
+      this.props.dispatchGetUser(parsed);
     }
+  }
+  checkNickname = (str) => {
+    if (!str) {
+      return false;
+    }
+    if (str.charAt(0) !== '@') {
+      return false;
+    }
+    return str.replace('@', '');
   }
   render() {
     const { userGetState, match } = this.props;
     const { nickname } = match.params;
     const { status, user } = userGetState;
+    if (!this.checkNickname(nickname)) {
+      return <NotFoundPage />;
+    }
     if (status === 'WAITING') {
       return <DimmedLoader />;
     }
@@ -113,7 +129,7 @@ class Profile extends Component {
             path={`${match.url}/:type?`}
             component={ProfileSwitch}
             _id={user._id}
-            nickname={nickname}
+            nickname={this.checkNickname(nickname)}
           />
         </Container>
     );

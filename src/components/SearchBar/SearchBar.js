@@ -221,7 +221,7 @@ class SearchBar extends PureComponent {
     this.pushToTag(tagname);
   }
   pushToProfile = (nickname) => {
-    this.clearSearch(() => history.push(`/${nickname}`));
+    this.clearSearch(() => history.push(`/@${nickname}`));
   }
   pushToSearch = (searchWord) => {
     this.clearSearch(() => history.push(`/search/?q=${searchWord}`));

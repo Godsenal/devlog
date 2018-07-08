@@ -31,7 +31,7 @@ export default class ProfileSwitch extends Component {
   getCurrentTab = (type = 'latest') => findIndex(TABS, (tab) => tab.type === type)
   handleTabChange = (_, tab) => {
     const { nickname, history } = this.props;
-    history.push(`/${nickname}${TABS[tab].path}`);
+    history.push(`/@${nickname}${TABS[tab].path}`);
   }
   render() {
     const { match, _id, nickname } = this.props;

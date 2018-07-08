@@ -39,7 +39,7 @@ export default class UserListItem extends Component {
         <FlexLeft>
           <Avatar size={avatarSize} />
           <AvatarText>
-            <BrowserLink location={`/${nickname}`}>
+            <BrowserLink location={`/@${nickname}`}>
               {nickname}
             </BrowserLink>
           </AvatarText>

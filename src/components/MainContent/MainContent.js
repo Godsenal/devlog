@@ -59,7 +59,7 @@ export default class MainContent extends Component {
   }
   navigateTo = (nickname) => (e) => {
     e.preventDefault();
-    history.push({ pathname: `/${nickname}` });
+    history.push({ pathname: `/@${nickname}` });
   }
   render() {
     const { author_id, author_nickname, created, text, children, isModal } = this.props;
