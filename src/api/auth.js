@@ -14,6 +14,6 @@ export function verify() {
 }
 
 // validate uesr form.
-export function validate(username) {
-  return axios.post(`${path}/validate`, { username });
+export function validate({ field, value }) {
+  return axios.post(`${path}/validate`, { field, value });
 }

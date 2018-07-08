@@ -86,13 +86,14 @@ exports.verify_get = (req, res) => {
 };
 
 exports.validate_post = (req, res) => {
-  const { username } = req.body;
+  const { field, value } = req.body;
 
-  const success = (message) => res.json({
+  const success = ({ isValid, message }) => res.json({
+    isValid,
     message,
   });
   const error = (message) => res.status(403).json({ message });
-  User.validateUsername(username)
+  User.validateField(field, value)
     .then(success)
     .catch(error);
 };

@@ -13,7 +13,11 @@ const VALID_REG = {
  * pins: oid of pinned posts
  */
 const userSchema = new Schema({
-  nickname: String,
+  nickname: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   username: {
     type: String,
     required: true,
@@ -71,23 +75,32 @@ userSchema.methods.comparePassword = function(password) {
   return bcrypt.compareSync(password, this.password);
 };
 
-// validate requested username.
-userSchema.statics.validateUsername = function(username) {
+// validate requested field.
+userSchema.statics.validateField = function(field, value) {
   return new Promise((resolve, reject) => {
-    if (!username.match(VALID_REG.username)) {
-      reject('Username must be 6-15 length without any special character.');
+    if (!value.match(VALID_REG[field])) {
+      resolve({
+        isValid: false,
+        message: `${field} must be 6-15 length without any special character.`,
+      });
       return;
     }
-    this.findOne({ username }, (err, result) => {
+    this.findOne({ [field]: value }, (err, result) => {
       if (err) {
-        reject('Fail to validate username. Try again.');
+        reject(`Fail to validate ${field}. Try again.`);
         return;
       }
       if (result) {
-        reject('Someone already use this name.');
+        resolve({
+          isValid: false,
+          message: `Someone already use this ${field}.`,
+        });
         return;
       }
-      resolve('Good username!');
+      resolve({
+        isValid: true,
+        message: '',
+      });
     });
   });
 };

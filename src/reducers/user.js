@@ -25,10 +25,18 @@ const initialState = {
     error: 'Error',
   },
   validate: {
-    status: 'INIT',
-    isValid: false,
-    message: '',
-    error: 'Error',
+    username: {
+      status: 'INIT',
+      isValid: false,
+      message: '',
+      error: 'Error',
+    },
+    nickname: {
+      status: 'INIT',
+      isValid: false,
+      message: '',
+      error: 'Error',
+    },
   },
   get: {
     status: 'INIT',
@@ -144,24 +152,30 @@ export default function user(state = initialState, action) {
     case actionTypes.USER_VALIDATE_REQUEST:
       return update(state, {
         validate: {
-          status: { $set: 'WAITING' },
-          message: { $set: '' },
+          [action.field]: {
+            status: { $set: 'WAITING' },
+          },
         },
       });
     case actionTypes.USER_VALIDATE_SUCCESS:
       return update(state, {
         validate: {
-          status: { $set: 'SUCCESS' },
-          isValid: { $set: true },
-          message: { $set: action.message },
+          [action.field]: {
+            status: { $set: 'SUCCESS' },
+            isValid: { $set: action.isValid },
+            message: { $set: action.message },
+          },
         },
       });
     case actionTypes.USER_VALIDATE_FAILURE:
       return update(state, {
         validate: {
-          status: { $set: 'FAILURE' },
-          isValid: { $set: false },
-          message: { $set: action.message },
+          [action.field]: {
+            status: { $set: 'FAILURE' },
+            isValid: { $set: false },
+            message: { $set: action.message },
+            error: { $set: action.error },
+          },
         },
       });
     case actionTypes.USER_VALIDATE_INITIALIZE:

@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import Field from '../Field';
 import { DimmedLoader } from '../../../../components';
 import * as userActions from '../../../../actions/user';
 
+const Centered = styled.div`
+  text-align: center;
+`;
+const HeaderText = styled.h1`
+  font-weight: 800;
+`;
 class LoginModal extends Component {
   state = {
     username: '',
@@ -13,7 +20,6 @@ class LoginModal extends Component {
   }
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
-    loginError: PropTypes.string.isRequired,
     loginStatus: PropTypes.string.isRequired,
   }
   _login = false;
@@ -30,17 +36,16 @@ class LoginModal extends Component {
   }
   render() {
     const { username, password } = this.state;
-    const { loginStatus, loginError } = this.props;
+    const { loginStatus } = this.props;
     return (
       <form>
+        <Centered>
+          <HeaderText>
+            Login to DEVLOG
+          </HeaderText>
+        </Centered>
         {
           loginStatus === 'WAITING' ? <DimmedLoader /> : null
-        }
-        {
-          loginStatus === 'FAILURE' && this._login ?
-            <div>
-              <p>{loginError}</p>
-            </div> : null
         }
         <Field
           name="username"
@@ -57,14 +62,15 @@ class LoginModal extends Component {
           value={password}
           fullWidth
         />
-        <Button variant="outlined" onClick={this.handleLogin} >Log in</Button>
+        <Centered>
+          <Button variant="contained" size="large" color="primary" onClick={this.handleLogin} >Log in</Button>
+        </Centered>
       </form>
     );
   }
 }
 const mapStateToProps = state => ({
   loginStatus: state.user.login.status,
-  loginError: state.user.login.error,
 });
 
 export default connect(mapStateToProps)(LoginModal);

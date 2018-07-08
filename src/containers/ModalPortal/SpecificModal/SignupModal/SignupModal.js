@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import debounce from 'lodash/debounce';
 import update from 'immutability-helper';
 import Button from '@material-ui/core/Button';
@@ -8,38 +9,38 @@ import Field from '../Field';
 import * as userActions from '../../../../actions/user';
 import { DimmedLoader } from '../../../../components';
 
+const Centered = styled.div`
+  text-align: center;
+`;
+const HeaderText = styled.h1`
+  font-weight: 800;
+`;
 const VALID_REG = {
   password: '^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
-  nickname: '^[a-zA-Z0-9_]{6,15}$',
 };
 const FAILURE_MESSAGE = {
   password: 'Must contain at least 8 characters, at least one number and special characters',
-  'confirm password': 'Must be same with the password',
-  nickname: 'Must contain 6-12 characters, without any special characters',
 };
 class SignupModal extends Component {
   state = {
     username: '',
     password: '',
-    confirm_password: '',
     nickname: '',
     valid: {
       password: false,
-      confirm_password: false,
-      nickname: false,
     },
     init: {
       username: true,
       password: true,
-      confirm_password: true,
       nickname: true,
     },
   }
   static propTypes = {
+    nicknameState: PropTypes.object.isRequired,
     signup: PropTypes.func.isRequired,
     signupStatus: PropTypes.string.isRequired,
+    usernameState: PropTypes.object.isRequired,
     validate: PropTypes.func.isRequired,
-    validateState: PropTypes.object.isRequired,
   }
   handleChange = name => e => {
     const { value } = e.target;
@@ -55,26 +56,21 @@ class SignupModal extends Component {
     const trimmed = value.trim();
     switch (name) {
       case 'username':
-        this.props.validate(trimmed);
+        this.props.validate({ field: 'username', value: trimmed });
         break;
       case 'nickname':
+        this.props.validate({ field: 'nickname', value: trimmed });
+        break;
       case 'password': {
         const isValid = this.validateReg(name, trimmed);
         const updated = update(this.state, {
           valid: {
-            [name]: { $set: isValid },
+            password: { $set: isValid },
           },
         });
         this.setState(updated);
         break;
       }
-      case 'confirm_password':
-        this.setState(update(this.state, {
-          valid: {
-            [name]: { $set: this.state.password === trimmed },
-          },
-        }));
-        break;
       default:
     }
   }, 300)
@@ -89,9 +85,9 @@ class SignupModal extends Component {
     const { username, password, nickname } = this.state;
     const { validate, signup } = this.props;
     if (!isValid) {
-      validate(username);
+      validate({ field: 'username', value: username });
+      validate({ field: 'nickname', nickname });
       this.validateReg('password', password);
-      this.validateReg('nickname', nickname);
     }
     else {
       signup(username, password, nickname);
@@ -100,7 +96,7 @@ class SignupModal extends Component {
   // value : selected tag _id.
   getMessage = (name, isValid) => {
     if (isValid) {
-      return `Good ${name}!`;
+      return '';
     }
     return FAILURE_MESSAGE[name];
   }
@@ -108,32 +104,35 @@ class SignupModal extends Component {
     const {
       username,
       password,
-      confirm_password,
       nickname,
       valid,
       init,
     } = this.state;
     const {
-      validateState,
+      usernameState,
+      nicknameState,
       signupStatus,
     } = this.props;
-    const isValid = valid.password && valid.confirm_password && valid.nickname && validateState.isValid;
+    const isValid = valid.password && usernameState.isValid && nicknameState.isValid;
     return (
       <div>
         {
           signupStatus === 'WAITING' ?
             <DimmedLoader /> : null
         }
-        <form noValidate>
+        <Centered>
+          <HeaderText>
+            Join DEVLOG
+          </HeaderText>
+        </Centered>
+        <form>
           <Field
             name="username"
             label="Username"
             value={username}
             onChange={this.handleChange('username')}
-            isValid={validateState.isValid}
-            hasMessage={validateState.status !== 'INIT'}
-            message={validateState.message}
-            margin="normal"
+            isValid={init.username || usernameState.isValid}
+            message={usernameState.message}
             fullWidth
           />
           <Field
@@ -142,20 +141,8 @@ class SignupModal extends Component {
             type="password"
             value={password}
             onChange={this.handleChange('password')}
-            isValid={valid.password}
-            hasMessage={!init.password}
+            isValid={init.password || valid.password}
             message={this.getMessage('password', valid.password)}
-            fullWidth
-          />
-          <Field
-            name="confirm_password"
-            label="Confirm Password"
-            type="password"
-            value={confirm_password}
-            onChange={this.handleChange('confirm_password')}
-            isValid={valid.confirm_password}
-            hasMessage={!init.confirm_password}
-            message={this.getMessage('confirm password', valid.confirm_password)}
             fullWidth
           />
           <Field
@@ -163,30 +150,33 @@ class SignupModal extends Component {
             label="Nickname"
             value={nickname}
             onChange={this.handleChange('nickname')}
-            isValid={valid.nickname}
-            hasMessage={!init.nickname}
-            message={this.getMessage('nickname', valid.nickname)}
+            isValid={init.nickname || nicknameState.isValid}
+            message={nicknameState.message}
             fullWidth
           />
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={!isValid || signupStatus === 'WAITING'}
-            onClick={() => this.handleSignup(isValid)}
-          >
-            Signup
-          </Button>
+          <Centered>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              disabled={!isValid || signupStatus === 'WAITING'}
+              onClick={() => this.handleSignup(isValid)}
+            >
+              Signup
+            </Button>
+          </Centered>
         </form>
       </div>
     );
   }
 }
 const mapStateToProps = (state) => ({
-  validateState: state.user.validate,
+  usernameState: state.user.validate.username,
+  nicknameState: state.user.validate.nickname,
   signupStatus: state.user.signup.status,
 });
 const mapDispatchToProps = (dispatch) => ({
-  validate: (username) => dispatch(userActions.validate(username)),
+  validate: (payload) => dispatch(userActions.validate(payload)),
   signup: (username, password, nickname) => dispatch(userActions.signup(username, password, nickname)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(SignupModal);

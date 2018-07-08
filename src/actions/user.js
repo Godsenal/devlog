@@ -39,10 +39,11 @@ export function signup(username, password, nickname) {
     nickname,
   };
 }
-export function validate(username) {
+export function validate({ field = 'username', value = '' }) {
   return {
     type: USER_VALIDATE_REQUEST,
-    username,
+    field,
+    value,
   };
 }
 export function getUser(nickname) {

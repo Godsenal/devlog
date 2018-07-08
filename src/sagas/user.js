@@ -1,4 +1,3 @@
-import { delay } from 'redux-saga';
 import { all, call, put, fork, cancel, cancelled, takeLatest, take } from 'redux-saga/effects';
 import * as authApi from '../api/auth';
 import * as userApi from '../api/user';
@@ -36,6 +35,13 @@ function* login(id, pw) {
     yield put({
       type: actions.USER_LOGIN_FAILURE,
       error,
+    });
+    yield put({
+      type: actions.TOAST_ADD,
+      toastProps: {
+        type: 'error',
+        message: 'Incorrect Username or Password',
+      },
     });
   }
   finally {
@@ -125,14 +131,15 @@ function* verify() {
   }
 }
 function* validate(action) {
-  yield call(delay, 300);
+  const { field, value } = action;
   try {
-    const { username } = action;
-    const response = yield call(authApi.validate, username);
-    const { message } = response.data;
+    const { data } = yield call(authApi.validate, { field, value });
+    const { isValid, message } = data;
     yield put({
       type: actions.USER_VALIDATE_SUCCESS,
+      isValid,
       message,
+      field,
     });
   }
   catch (error) {
@@ -140,6 +147,7 @@ function* validate(action) {
     yield put({
       type: actions.USER_VALIDATE_FAILURE,
       message,
+      field,
     });
   }
 }
