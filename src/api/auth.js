@@ -5,8 +5,8 @@ export function login(username, password) {
   return axios.post(`${path}/login`, { username, password });
 }
 
-export function signup(username, password, nickname) {
-  return axios.post(`${path}/signup`, { username, password, nickname });
+export function signup({ username, password, nickname, imageUrl }) {
+  return axios.post(`${path}/signup`, { username, password, nickname, imageUrl });
 }
 
 export function verify() {

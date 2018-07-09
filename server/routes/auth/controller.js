@@ -28,6 +28,7 @@ exports.login_post = (req, res) => {
       _id: userdata._id,
       username: userdata.username,
       nickname: userdata.nickname,
+      imageUrl: userdata.imageUrl,
       tags: userdata.tags,
       followings: userdata.followings,
       bookmarks: userdata.bookmarks,
@@ -43,11 +44,12 @@ exports.login_post = (req, res) => {
 };
 
 exports.signup_post = (req, res) => {
-  const { username, password, nickname } = req.body;
+  const { username, password, nickname, imageUrl } = req.body;
   const user = new User({
     username,
     password,
     nickname,
+    imageUrl,
   });
   user.save((err, userdata) => {
     if (err) {
@@ -74,6 +76,7 @@ exports.verify_get = (req, res) => {
     _id: user._id,
     username: user.username,
     nickname: user.nickname,
+    imageUrl: user.imageUrl,
     tags: user.tags,
     followings: user.followings,
     bookmarks: user.bookmarks,

@@ -8,6 +8,7 @@ const initialState = {
     _id: '',
     username: '',
     nickname: '',
+    imageUrl: '',
     tags: [],
     bookmarks: [],
     followings: [],
@@ -75,6 +76,7 @@ export default function user(state = initialState, action) {
           _id: { $set: action._id },
           username: { $set: action.username },
           nickname: { $set: action.nickname },
+          imageUrl: { $set: action.imageUrl },
           tags: { $set: action.tags },
           followings: { $set: action.followings },
           bookmarks: { $set: action.bookmarks },
@@ -90,6 +92,7 @@ export default function user(state = initialState, action) {
           status: { $set: 'FAILURE' },
           username: { $set: '' },
           nickname: { $set: '' },
+          imageUrl: { $set: '' },
           tags: { $set: [] },
           followings: { $set: [] },
           bookmarks: { $set: [] },
@@ -138,6 +141,7 @@ export default function user(state = initialState, action) {
           _id: { $set: action._id },
           username: { $set: action.username },
           nickname: { $set: action.nickname },
+          imageUrl: { $set: action.imageUrl },
           tags: { $set: action.tags },
           followings: { $set: action.followings },
           bookmarks: { $set: action.bookmarks },
@@ -294,6 +298,7 @@ export default function user(state = initialState, action) {
       return update(state, {
         image: {
           status: { $set: 'FAILURE' },
+          imageUrl: { $set: '' },
           error: { $set: action.error },
         },
       });

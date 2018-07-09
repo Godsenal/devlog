@@ -28,6 +28,7 @@ exports.user_get = (req, res) => {
       $project: {
         _id: 1,
         nickname: 1,
+        imageUrl: 1,
       },
     };
     return new Promise((resolve) => {
@@ -119,6 +120,10 @@ exports.bookmark_list_get = (req, res) => {
       limit,
       skip,
     },
+    populate: {
+      path: 'author',
+      select: '_id nickname imageUrl',
+    },
   };
   const query = User.findOne({ _id }).populate(populateOption).lean();
   const check = (user, err) => {
@@ -172,7 +177,7 @@ exports.following_get = (req, res) => {
     skip,
     limit,
   };
-  const query = User.findOne(match, projection, option).populate('followings', 'nickname');
+  const query = User.findOne(match, projection, option).populate('followings', '_id nickname imageUrl');
   const check = (user, err) => {
     if (err) {
       throw new Error('Database Error');
@@ -226,6 +231,7 @@ exports.follower_get = (req, res) => {
       $project: {
         _id: 1,
         nickname: 1,
+        imageUrl: 1,
       },
     };
     return User.aggregate([

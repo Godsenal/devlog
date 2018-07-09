@@ -16,8 +16,7 @@ const { Schema } = mongoose;
  * star: number of star
  */
 const commentSchema = new Schema({
-  author_id: Schema.Types.ObjectId,
-  author_nickname: String,
+  author: { type: Schema.Types.ObjectId, ref: 'User' },
   created: { type: Date, default: Date.now },
   text: String,
   thread_id: Schema.Types.ObjectId,
@@ -32,8 +31,7 @@ const logSchema = new Schema({
   code_language: String,
   frame_src: String,
   frame_type: String,
-  author_id: { type: Schema.Types.ObjectId, ref: 'users' },
-  author_nickname: String,
+  author: { type: Schema.Types.ObjectId, ref: 'User' },
   created: { type: Date, default: Date.now },
   comments: [commentSchema],
   tags: { type: Array, default: [] },

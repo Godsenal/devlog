@@ -5,15 +5,60 @@ import styled from 'styled-components';
 import debounce from 'lodash/debounce';
 import update from 'immutability-helper';
 import Button from '@material-ui/core/Button';
+import CameraIcon from 'react-icons/lib/fa/camera';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Field from '../Field';
 import * as userActions from '../../../../actions/user';
-import { DimmedLoader } from '../../../../components';
+import { Avatar, DimmedLoader } from '../../../../components';
+
+const IMAGE_SIZE = 128;
 
 const Centered = styled.div`
   text-align: center;
 `;
-const HeaderText = styled.h1`
+const FormHeader = styled.h1`
   font-weight: 800;
+`;
+const FileSelector = styled.input`
+  display: none;
+`;
+const ProfileBlock = styled.div`
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 10px;
+`;
+const FieldWrapper = styled.div`
+  flex: 1 1 auto;
+  margin-right: 10px;
+`;
+const AvatarWrapper = styled.div`
+  flex: 0 0;
+  cursor: pointer;
+  position: relative;
+  width: ${IMAGE_SIZE}px;
+  height ${IMAGE_SIZE}px;
+`;
+const IconWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  
+  background-color: rgba(0, 0, 0, 0.4);
+
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.2s;
+  &:hover {
+    color: white;
+  }
 `;
 const VALID_REG = {
   password: '^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
@@ -48,6 +93,9 @@ class SignupModal extends Component {
   componentWillUnmount() {
     this.props.init();
   }
+  setSelectorRef = ref => {
+    this._selector = ref;
+  }
   handleChange = name => e => {
     const { value } = e.target;
     const newState = update(this.state, {
@@ -57,6 +105,11 @@ class SignupModal extends Component {
       },
     });
     this.setState(newState, () => this.handleValidation(name, value));
+  }
+  handleImageClick = () => {
+    if (this._selector) {
+      this._selector.click();
+    }
   }
   handleFileChange = e => {
     const { files } = e.target;
@@ -95,14 +148,20 @@ class SignupModal extends Component {
   }
   handleSignup = (isValid) => {
     const { username, password, nickname } = this.state;
-    const { validate, signup } = this.props;
+    const { imageState, validate, signup } = this.props;
     if (!isValid) {
       validate({ field: 'username', value: username });
       validate({ field: 'nickname', nickname });
       this.validateReg('password', password);
     }
     else {
-      signup(username, password, nickname);
+      const userData = {
+        username,
+        password,
+        nickname,
+        imageUrl: imageState.imageUrl,
+      };
+      signup(userData);
     }
   }
   // value : selected tag _id.
@@ -126,24 +185,28 @@ class SignupModal extends Component {
       signupStatus,
       imageState,
     } = this.props;
-    const isValid = valid.password && usernameState.isValid && nicknameState.isValid;
+    const activateButton = (
+      valid.password &&
+      usernameState.isValid &&
+      nicknameState.isValid &&
+      imageState.status !== 'WAITING'
+    );
     return (
       <div>
-        { imageState.status === 'SUCCESS' && <img src={imageState.imageUrl} alt="haha" /> }
         {
           signupStatus === 'WAITING' ?
             <DimmedLoader /> : null
         }
         <Centered>
-          <HeaderText>
+          <FormHeader>
             Join DEVLOG
-          </HeaderText>
+          </FormHeader>
         </Centered>
-        <input type="file" onChange={this.handleFileChange} />
+        <FileSelector type="file" innerRef={this.setSelectorRef} onChange={this.handleFileChange} />
         <form>
           <Field
             name="username"
-            label="Username"
+            label="ID"
             value={username}
             onChange={this.handleChange('username')}
             isValid={init.username || usernameState.isValid}
@@ -160,22 +223,38 @@ class SignupModal extends Component {
             message={this.getMessage('password', valid.password)}
             fullWidth
           />
-          <Field
-            name="nickname"
-            label="Nickname"
-            value={nickname}
-            onChange={this.handleChange('nickname')}
-            isValid={init.nickname || nicknameState.isValid}
-            message={nicknameState.message}
-            fullWidth
-          />
+          <ProfileBlock>
+            <FieldWrapper>
+              <Field
+                name="nickname"
+                label="Nickname"
+                value={nickname}
+                onChange={this.handleChange('nickname')}
+                isValid={init.nickname || nicknameState.isValid}
+                message={nicknameState.message}
+                fullWidth
+              />
+            </FieldWrapper>
+            <AvatarWrapper>
+              <Avatar src={imageState.imageUrl || undefined} size={IMAGE_SIZE} />
+              { imageState.status === 'WAITING' ? (
+                <IconWrapper>
+                  <CircularProgress color="inherit" />
+                </IconWrapper>
+              ) : (
+                <IconWrapper onClick={this.handleImageClick}>
+                  <CameraIcon />
+                </IconWrapper>
+              )}
+            </AvatarWrapper>
+          </ProfileBlock>
           <Centered>
             <Button
               variant="contained"
               color="primary"
               size="large"
-              disabled={!isValid || signupStatus === 'WAITING'}
-              onClick={() => this.handleSignup(isValid)}
+              disabled={!activateButton || signupStatus === 'WAITING'}
+              onClick={() => this.handleSignup(activateButton)}
             >
               Signup
             </Button>
@@ -195,7 +274,7 @@ const mapDispatchToProps = (dispatch) => ({
   init: () => dispatch(userActions.initSignup()),
   upload: file => dispatch(userActions.uploadImage(file)),
   validate: (payload) => dispatch(userActions.validate(payload)),
-  signup: (username, password, nickname) => dispatch(userActions.signup(username, password, nickname)),
+  signup: (userData) => dispatch(userActions.signup(userData)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(SignupModal);
 

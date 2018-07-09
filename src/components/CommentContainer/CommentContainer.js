@@ -35,10 +35,9 @@ export default class CommentContainer extends Component {
     parent_id: Schema.Types.ObjectId,
   */
   handleSubmit = (text) => {
-    const { userId, userNickname, logId, handlePostComment } = this.props;
+    const { userId, logId, handlePostComment } = this.props;
     const comment = {
-      author_id: userId,
-      author_nickname: userNickname,
+      author: userId,
       text,
       thread_id: logId,
     };

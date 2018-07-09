@@ -8,7 +8,7 @@ exports.search_get = function search_get(req, res) {
   const userQuery = { nickname: query };
   const tagQuery = { name: query };
 
-  const userProjection = { nickname: 1 };
+  const userProjection = { nickname: 1, imageUrl: 1 };
   const tagProjection = { name: 1 };
   const findUser = () => (
     new Promise((resolve, reject) => {
@@ -45,7 +45,7 @@ exports.search_get = function search_get(req, res) {
 exports.users_get = function users_get(req, res) {
   const { skip, limit, q } = req.query;
   const query = { nickname: { $regex: q, $options: 'i' } };
-  const projection = { nickname: 1 };
+  const projection = { nickname: 1, imageUrl: 1 };
   const parsedSkip = skip ? parseInt(skip, 10) : 0;
   const parsedLimit = limit ? parseInt(limit, 10) : 10;
   const check = (users, err) => {
@@ -71,12 +71,29 @@ exports.logs_get = function logs_get(req, res) {
     _id: 1,
     text: 1,
     has_code: 1,
-    author_id: 1,
-    author_nickname: 1,
+    author: 1,
     created: 1,
     comment_count: { $size: '$comments' },
     stars: 1,
   };
+  const author_lookup = {
+    from: 'users',
+    let: { author_id: '$author' },
+    pipeline: [
+      {
+        $match: {
+          $expr: {
+            $eq: ['$_id', '$$author_id'],
+          },
+        },
+      },
+      {
+        $project: { _id: 1, nickname: 1, imageUrl: 1 },
+      },
+    ],
+    as: 'author',
+  };
+  const author_unwind = '$author';
   const sort = { _id: -1 };
   const parsedSkip = skip ? parseInt(skip, 10) : 0;
   const parsedLimit = limit ? parseInt(limit, 10) : 10;
@@ -103,6 +120,8 @@ exports.logs_get = function logs_get(req, res) {
     { $sort: sort },
     { $skip: parsedSkip },
     { $limit: parsedLimit },
+    { $lookup: author_lookup },
+    { $unwind: author_unwind },
   ]).exec()
     .then(check)
     .then(success)

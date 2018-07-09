@@ -33,12 +33,13 @@ export function verify() {
     type: USER_VERIFY_REQUEST,
   };
 }
-export function signup(username, password, nickname) {
+export function signup({ username, nickname, password, imageUrl }) {
   return {
     type: USER_SIGNUP_REQUEST,
     username,
     password,
     nickname,
+    imageUrl,
   };
 }
 export function validate({ field = 'username', value = '' }) {

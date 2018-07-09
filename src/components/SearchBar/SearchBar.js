@@ -276,7 +276,7 @@ class SearchBar extends PureComponent {
                       onClick={this.handleUserClick(user.nickname)}
                       tabIndex="-1"
                     >
-                      <Avatar size={32} />
+                      <Avatar size={32} src={user.imageUrl || undefined} />
                       <MarginText>{user.nickname}</MarginText>
                     </ListItem>
                   </li>

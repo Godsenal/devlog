@@ -41,8 +41,7 @@ const CodePreview = styled.div`
 export default class LogListItem extends Component {
   static propTypes = {
     _id: PropTypes.string.isRequired,
-    author_id: PropTypes.string.isRequired,
-    author_nickname: PropTypes.string.isRequired,
+    author: PropTypes.object.isRequired,
     comment_count: PropTypes.number.isRequired,
     created: PropTypes.string.isRequired,
     has_code: PropTypes.bool.isRequired,
@@ -53,18 +52,16 @@ export default class LogListItem extends Component {
     const {
       _id,
       text,
-      author_id,
-      author_nickname,
+      author,
       comment_count,
       has_code,
       created,
       stars,
     } = this.props;
     return (
-      <Item to={{ pathname: `/@${author_nickname}/log/${_id}`, state: { modal: true } }}>
+      <Item to={{ pathname: `/@${author.nickname}/log/${_id}`, state: { modal: true } }}>
         <MainContent
-          author_id={author_id}
-          author_nickname={author_nickname}
+          author={author}
           text={text}
           created={created}
         >

@@ -28,6 +28,7 @@ const userSchema = new Schema({
     required: true,
     unique: true,
   },
+  imageUrl: String,
   followings: [{ type: Schema.Types.ObjectId, ref: 'User' }], // mongoose populate api
   tags: [{ type: Schema.Types.ObjectId, ref: 'tags' }],
   bookmarks: [{ type: Schema.Types.ObjectId, ref: 'Log' }],
@@ -40,16 +41,13 @@ userSchema.pre('save', function(next) {
   if (!user.password.match(VALID_REG.password)) {
     return next('Invalid Password');
   }
-
-  if (!user.nickname.match(VALID_REG.nickname)) {
-    return next('Invalid Nickname');
-  }
   // only hash the password if it has been modfiied or new
   if (!user.isModified('password')) {
     return next('Invalid Password');
   }
   /* use constructor to call static function inside model */
-  user.constructor.validateUsername(user.username)
+  user.constructor.validateField('username', user.username)
+    .then(() => user.constructor.validateField('nickname', user.nickname))
     .then(() => {
       bcrypt.genSalt(SALT_ROUND, (err, salt) => {
         if (err) return next(err);

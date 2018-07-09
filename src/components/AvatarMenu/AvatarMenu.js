@@ -38,6 +38,7 @@ export default class AvatarMenu extends Component {
   }
   static propTypes = {
     handleLogout: PropTypes.func.isRequired,
+    imageUrl: PropTypes.string.isRequired,
     nickname: PropTypes.string.isRequired,
   }
   setContainerRef = (ref) => {
@@ -67,9 +68,10 @@ export default class AvatarMenu extends Component {
   }
   render() {
     const { anchorEl } = this.state;
+    const { imageUrl } = this.props;
     return (
       <div ref={this.setContainerRef}>
-        <Pointer><Avatar onClick={this.handleOpen} /></Pointer>
+        <Pointer><Avatar src={imageUrl || undefined} onClick={this.handleOpen} /></Pointer>
         <Popover
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}

@@ -27,17 +27,18 @@ export default class UserListItem extends Component {
   static propTypes = {
     _id: PropTypes.string.isRequired,
     avatarSize: PropTypes.number,
+    imageUrl: PropTypes.string.isRequired,
     nickname: PropTypes.string.isRequired,
   }
   static defaultProps = {
     avatarSize: 60,
   }
   render() {
-    const { avatarSize, nickname, _id } = this.props;
+    const { avatarSize, nickname, imageUrl, _id } = this.props;
     return (
       <ListItem>
         <FlexLeft>
-          <Avatar size={avatarSize} />
+          <Avatar size={avatarSize} src={imageUrl || undefined} alt="profile_image" />
           <AvatarText>
             <BrowserLink location={`/@${nickname}`}>
               {nickname}

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
-import default_profile from '../../images/default_profile.png';
 import { FollowButton } from '../';
 
 const ProfileImage = styled.img`
@@ -50,8 +49,7 @@ const Text = styled.div`
 
 export default class FullMainContent extends Component {
   static propTypes = {
-    author_id: PropTypes.string.isRequired,
-    author_nickname: PropTypes.string.isRequired,
+    author: PropTypes.object.isRequired,
     children: PropTypes.any,
     created: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
@@ -60,16 +58,16 @@ export default class FullMainContent extends Component {
     children: null,
   }
   render() {
-    const { author_id, author_nickname, created, text, children } = this.props;
+    const { author, created, text, children } = this.props;
     return (
       <div>
-        <ProfileImage src={default_profile} />
+        <ProfileImage src={author.imageUrl || undefined} />
         <Header>
           <AuthorInfo>
-            <Author>{author_nickname}</Author>
+            <Author>{author.nickname}</Author>
             <Date>{`${distanceInWordsToNow(created)} ago`}</Date>
           </AuthorInfo>
-          <FollowButton followingId={author_id} />
+          <FollowButton followingId={author.id} />
         </Header>
         <Content>
           <Text>{text}</Text>

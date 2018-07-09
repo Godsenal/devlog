@@ -12,12 +12,12 @@ import EditorDraftBlock from './EditorDraftBlock';
 import EditorToolBox from './EditorToolBox';
 import EditorTagBlock from './EditorTagBlock';
 
+import { Avatar } from '../';
 import { showModal, closeModal } from '../../actions/modal';
 import { addToast } from '../../actions/toast';
 import { postLog } from '../../actions/log';
 // Creates an Instance. At this step, a configuration object can be passed in
 // as an argument.
-import default_profile from '../../images/default_profile.png';
 
 const Container = styled.div`
   position: relative;
@@ -35,7 +35,7 @@ const EditorBlock = styled.div`
   margin-left: 50px;
 `;
 
-const ProfileImage = styled.img`
+const ProfileImage = styled.span`
   width: 32px;
   height: 32px;
 
@@ -54,7 +54,7 @@ class LogEditor extends Component {
   static propTypes = {
     addToast: PropTypes.func.isRequired,
     dispatchShowModal: PropTypes.func.isRequired,
-    nickname: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string.isRequired,
     postNewLog: PropTypes.func.isRequired,
     user_id: PropTypes.string.isRequired,
   }
@@ -183,10 +183,9 @@ class LogEditor extends Component {
       return;
     }
     /* TODO: Validate USER & editorState */
-    const { user_id, nickname } = this.props;
+    const { user_id } = this.props;
     let logContent = {
-      author_id: user_id,
-      author_nickname: nickname,
+      author: user_id,
     };
     if (hasCodeBlock) {
       logContent = {
@@ -222,9 +221,14 @@ class LogEditor extends Component {
       frameType,
       tags,
     } = this.state;
+    const {
+      imageUrl,
+    } = this.props;
     return (
       <Container innerRef={this.setContainerRef}>
-        <ProfileImage src={default_profile} alt="default profile" />
+        <ProfileImage>
+          <Avatar size={32} src={imageUrl || undefined} alt="default profile" />
+        </ProfileImage>
         <EditorBlock>
           <EditorDraftBlock
             onFocus={this.onFocus}
@@ -265,7 +269,7 @@ class LogEditor extends Component {
 const mapStateToProps = state => ({
   postLog: state.log.post,
   user_id: state.user.login._id,
-  nickname: state.user.login.nickname,
+  imageUrl: state.user.login.imageUrl,
 });
 const mapDispatchToProps = dispatch => ({
   dispatchShowModal: (type, modalProps) => dispatch(showModal(type, modalProps)),

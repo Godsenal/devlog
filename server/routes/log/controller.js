@@ -10,18 +10,19 @@ exports.log_post = async function log_post(req, res) {
     }
     return savedLog;
   };
+  const populateAuthor = (savedLog) => savedLog.populate('author', '_id nickname imageUrl').execPopulate();
+  // population itselt doesn't excute query( without some method like find, findbyid...)
+  // execPopulate makes it possible.
   const success = (savedLog) => (
     res.json({
       log: {
         _id: savedLog._id,
         text: savedLog.text,
+        author: savedLog.author,
         has_code: savedLog.has_code,
-        author_id: savedLog.author_id,
-        author_nickname: savedLog.author_nickname,
         created: savedLog.created,
-        comment_count: 0,
         stars: savedLog.stars,
-        tags: savedLog.tags,
+        comment_count: 0,
       },
     })
   );
@@ -35,6 +36,7 @@ exports.log_post = async function log_post(req, res) {
   Tag.insertMany(documents, option, () => {
     newLog.save()
       .then(check)
+      .then(populateAuthor)
       .then(success)
       .catch(error);
   });
@@ -49,8 +51,7 @@ exports.list_get = function list_get(req, res) {
     _id: 1,
     text: 1,
     has_code: 1,
-    author_id: 1,
-    author_nickname: 1,
+    author: 1,
     created: 1,
     comment_count: { $size: '$comments' },
     stars: 1,
@@ -62,9 +63,6 @@ exports.list_get = function list_get(req, res) {
   if (min_id) {
     query._id = { $lte: min_id };
   }
-  if (author_nickname) {
-    query.author_nickname = author_nickname;
-  }
   if (star_user_id) {
     query.stars = star_user_id;
   }
@@ -73,6 +71,32 @@ exports.list_get = function list_get(req, res) {
   }
   skip = skip ? parseInt(skip, 10) : 0;
   limit = limit ? parseInt(limit, 10) : 10;
+  // lookup user database by author_id
+  // query for author_nickname
+  const author_lookup = {
+    from: 'users',
+    let: { author_id: '$author' },
+    pipeline: [
+      {
+        $match: {
+          $and: [
+            author_nickname ? { nickname: author_nickname } : {},
+            {
+              $expr: {
+                $eq: ['$_id', '$$author_id'],
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: { _id: 1, nickname: 1, imageUrl: 1 },
+      },
+    ],
+    as: 'author',
+  };
+  // return result as first object ( not array )
+  const author_unwind = '$author';
   // NOTE: Empty result is NOT Error
   const check = (logs, err) => {
     if (err) {
@@ -96,6 +120,8 @@ exports.list_get = function list_get(req, res) {
     { $sort: sort },
     { $skip: skip },
     { $limit: limit },
+    { $lookup: author_lookup },
+    { $unwind: author_unwind },
   ]).exec()
     .then(check)
     .then(success)
@@ -105,16 +131,30 @@ exports.list_get = function list_get(req, res) {
 exports.log_get = function log_get(req, res) {
   const { logId } = req.params;
   // use 'slice' to get reversed comments
-  Log.findById(logId, (err, log) => {
+  const author_projection = '_id nickname imageUrl';
+  const check = (log, err) => {
     if (err) {
-      return res.status(503).json({
-        error: 'Database Error',
-      });
+      throw new Error('Database Error');
     }
-    return res.json({
+    return log;
+  };
+  const success = (log) => (
+    res.json({
       log,
-    });
-  });
+    })
+  );
+  const error = (err) => (
+    res.status(503).json({
+      error: err.message,
+    })
+  );
+  Log.findById(logId)
+    .populate('author', author_projection)
+    .populate('comments.author', author_projection)
+    .lean()
+    .then(check)
+    .then(success)
+    .catch(error);
 };
 
 exports.log_put = function log_put(req, res) {
@@ -161,8 +201,9 @@ exports.comment_post = (req, res) => {
       },
     },
   };
+  const author_projection = '_id nickname imageUrl';
   const option = { new: true, select: 'comments' };
-  const findLogAndSave = Log.findByIdAndUpdate(thread_id, update, option);
+  const findLogAndSave = Log.findByIdAndUpdate(thread_id, update, option).populate('comments.author', author_projection);
   const check = (log, err) => {
     if (err) {
       throw new Error('Fail to save comment.');

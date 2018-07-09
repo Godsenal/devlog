@@ -46,8 +46,7 @@ const Text = styled.div`
 
 export default class MainContent extends Component {
   static propTypes = {
-    author_id: PropTypes.string.isRequired,
-    author_nickname: PropTypes.string.isRequired,
+    author: PropTypes.object.isRequired,
     children: PropTypes.any,
     created: PropTypes.string.isRequired,
     isModal: PropTypes.bool,
@@ -62,16 +61,16 @@ export default class MainContent extends Component {
     history.push({ pathname: `/@${nickname}` });
   }
   render() {
-    const { author_id, author_nickname, created, text, children, isModal } = this.props;
+    const { author, created, text, children, isModal } = this.props;
     return (
       <div>
         <Header>
-          <Avatar size={isModal ? 48 : 36} />
+          <Avatar size={isModal ? 48 : 36} src={author.imageUrl || undefined} />
           <AuthorInfo>
-            <Author onClick={this.navigateTo(author_nickname)}>{author_nickname}</Author>
+            <Author onClick={this.navigateTo(author.nickname)}>{author.nickname}</Author>
             <Date>{`${distanceInWordsToNow(created)} ago`}</Date>
           </AuthorInfo>
-          { isModal && <FollowButton followingId={author_id} /> }
+          { isModal && <FollowButton followingId={author._id} /> }
         </Header>
         <Content isModal={isModal}>
           <Text isModal={isModal}>{text}</Text>

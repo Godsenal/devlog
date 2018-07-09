@@ -89,7 +89,7 @@ class Profile extends Component {
         <Container>
           <Top>
             <FlexLeft>
-              <Avatar size={IMAGE_SIZE} />
+              <Avatar size={IMAGE_SIZE} src={user.imageUrl || undefined} />
             </FlexLeft>
             <FlexRight>
               <RightItem>

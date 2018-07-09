@@ -67,9 +67,8 @@ function* logout() {
 }
 
 function* signup(action) {
-  const { username, password, nickname } = action;
   try {
-    const response = yield call(authApi.signup, username, password, nickname);
+    const response = yield call(authApi.signup, action);
     const userdata = response.data;
     yield put({
       type: actions.MODAL_CLOSE,
@@ -234,14 +233,13 @@ function* follow(action) {
     });
   }
 }
-function* uploadProfileImage(action) {
-  const { file } = action;
+function* uploadProfileImage(file) {
   try {
     const { data } = yield call(uploadImage, file);
     /* Crop Profile Image */
     const url = data.secure_url;
     const tokens = url.split('/');
-    tokens.splice(-2, 0, 'w_300,c_scale');
+    tokens.splice(-2, 0, 'w_128,h_128,c_thumb,r_max');
     const croppedUrl = tokens.join('/');
     yield put({
       type: actions.USER_IMAGE_SUCCESS,
@@ -254,6 +252,14 @@ function* uploadProfileImage(action) {
       type: actions.USER_IMAGE_FAILURE,
       error,
     });
+  }
+  finally {
+    if (yield cancelled()) {
+      yield put({
+        type: actions.USER_IMAGE_FAILURE,
+        error: 'Close before upload',
+      });
+    }
   }
 }
 function* watchSignup() {
@@ -272,7 +278,14 @@ function* watchFollow() {
   yield takeLatest(actions.USER_FOLLOW_REQUEST, follow);
 }
 function* watchImage() {
-  yield takeLatest(actions.USER_IMAGE_REQUEST, uploadProfileImage);
+  let task;
+  while (true) {
+    const imageAction = yield take(actions.USER_IMAGE_REQUEST);
+    /* Check if modal closed before upload */
+    task = yield fork(uploadProfileImage, imageAction.file);
+    yield take(actions.MODAL_CLOSE);
+    yield cancel(task);
+  }
 }
 /**
  * User Sagas

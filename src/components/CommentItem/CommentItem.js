@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { MainContent } from '../';
 
@@ -7,14 +6,6 @@ const Container = styled.div`
   margin: 20px 0;
 `;
 export default class CommentItem extends Component {
-  static propTypes = {
-    _id: PropTypes.string.isRequired,
-    author_id: PropTypes.string.isRequired,
-    author_nickname: PropTypes.string.isRequired,
-    created: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
-  }
-
   render() {
     return (
       <Container>

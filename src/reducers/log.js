@@ -77,12 +77,19 @@ export default function log(state = initialState, action) {
           error: { $set: action.error },
         },
       });
-    case LOG_LIST_REQUEST:
+    case LOG_LIST_REQUEST: {
+      const listUpdate = {
+        status: { $set: 'WAITING' },
+      };
+      if (action.skip === 0) {
+        listUpdate.logs = { $set: [] };
+      }
+      // skip == 0 means this is first time request.
+      // so clear exist logs
       return update(state, {
-        list: {
-          status: { $set: 'WAITING' },
-        },
+        list: listUpdate,
       });
+    }
     case LOG_LIST_SUCCESS: {
       const { logs, limit, isInit, isLast } = action;
       return update(state, {
