@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import queryString from 'query-string';
+import { parse } from 'qs';
 import { listLog } from '../../actions/log';
 import { searchTag } from '../../actions/search';
 import { mainContainer } from '../../styles/util';
@@ -60,7 +60,7 @@ class TagPage extends Component {
     if (!search) {
       return false;
     }
-    const { tags } = queryString.parse(search);
+    const { tags } = parse(search, { ignoreQueryPrefix: true });
     return tags;
   }
   getNotInArray = (arr, standard) => arr.filter(item => standard.indexOf(item.name) === -1)

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import queryString from 'query-string';
+import { parse } from 'qs';
 import findIndex from 'lodash/findIndex';
 import { Tabs, SearchSwitch, Input } from '../../components';
 import { mainContainer } from '../../styles/util';
@@ -33,7 +33,7 @@ const Container = styled.div`
 `;
 class Search extends Component {
   state = {
-    searchWord: queryString.parse(this.props.location.search).q || '',
+    searchWord: parse(this.props.location.search, { ignoreQueryPrefix: true }).q || '',
     selected: findIndex(TABS, tab => tab.text === checkType(this.props.match.params.type)),
   }
   static propTypes = {
@@ -44,7 +44,7 @@ class Search extends Component {
   componentDidUpdate = (prevProps) => {
     if (this.props.location.search !== prevProps.location.search) {
       this.setState({
-        searchWord: queryString.parse(this.props.location.search).q,
+        searchWord: parse(this.props.location.search, { ignoreQueryPrefix: true }).q,
       });
     }
   }
@@ -77,7 +77,7 @@ class Search extends Component {
   render() {
     const { selected, searchWord } = this.state;
     const { match, location } = this.props;
-    const { q } = queryString.parse(location.search);
+    const { q } = parse(location.search, { ignoreQueryPrefix: true });
     return (
       <Container>
         <Input

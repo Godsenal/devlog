@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
 
 const GLOBALS = {
@@ -42,7 +43,10 @@ module.exports = ({
       inject: true,
       // custom
     }),
-    new webpack.optimize.UglifyJsPlugin({ sourceMap: true }),
+    new UglifyJsPlugin({
+      sourceMap: true,
+      exclude: /node_modules\/query-string\/index.js/,
+    }),
   ],
   module: {
     rules: [
