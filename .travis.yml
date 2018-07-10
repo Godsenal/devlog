@@ -10,9 +10,11 @@ before_install:
 - cp .travis/deploy_rsa ~/.ssh/deploy_rsa
 - chmod 600 ~/.ssh/deploy_rsa
 - ssh-add ~/.ssh/deploy_rsa
+script:
+- npm run build
 deploy:
 - provider: script
   skip_cleanup: true
-  script: "<shell script/command that runs on deploy>"
+  script: ".travis/deploy.sh"
   on:
     branch: master
