@@ -12,6 +12,9 @@ before_install:
 - ssh-add ~/.ssh/deploy_rsa
 script:
 - npm run build
+addons:
+  ssh_known_hosts:
+  - 45.76.98.255
 deploy:
 - provider: script
   skip_cleanup: true
