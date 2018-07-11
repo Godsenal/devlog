@@ -33,10 +33,6 @@ module.exports = ({
     minimizer: [
       new UglifyJsPlugin({
         sourceMap: true,
-        uglifyOptions: {
-          compress: false,
-          mangle: false,
-        },
       }),
     ],
   },
