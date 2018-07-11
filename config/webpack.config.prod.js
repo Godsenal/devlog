@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
 
 const GLOBALS = {
@@ -25,11 +26,19 @@ module.exports = ({
   },
   optimization: {
     minimize: true,
-    nodeEnv: 'production',
     sideEffects: true,
     concatenateModules: true,
     splitChunks: { chunks: 'all' },
     runtimeChunk: true,
+    minimizer: [
+      new UglifyJsPlugin({
+        sourceMap: true,
+        uglifyOptions: {
+          compress: false,
+          mangle: false,
+        },
+      }),
+    ],
   },
   plugins: [
     new webpack.DefinePlugin(GLOBALS),
