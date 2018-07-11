@@ -1,7 +1,6 @@
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
 const GLOBALS = {
@@ -10,10 +9,11 @@ const GLOBALS = {
 };
 
 module.exports = ({
+  mode: 'production',
+  devtool: 'source-map',
   resolve: {
     extensions: ['*', '.js', '.jsx', '.json'],
   },
-  devtool: 'source-map',
   entry: [
     path.resolve(process.cwd(), 'src/index.js'),
   ],
@@ -23,12 +23,22 @@ module.exports = ({
     publicPath: '/',
     filename: '[name].[chunkhash].js',
   },
+  optimization: {
+    minimize: true,
+    nodeEnv: 'production',
+    sideEffects: true,
+    concatenateModules: true,
+    splitChunks: { chunks: 'all' },
+    runtimeChunk: true,
+  },
   plugins: [
-    new UglifyJsPlugin({
-      sourceMap: true,
-    }),
     new webpack.DefinePlugin(GLOBALS),
-    new ExtractTextPlugin('[name].[contenthash].css'), // Extract text from a bundle, or bundles, into a separate file.
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: '[name].[contenthash].css',
+      chunkFilename: '[id].[contenthash].css',
+    }), // Extract text from a bundle, or bundles, into a separate file.
     new HtmlWebpackPlugin({
       template: 'src/index.html',
       minify: {
@@ -117,32 +127,31 @@ module.exports = ({
       },
       {
         test: /(\.css|\.scss|\.sass)$/,
-        use: ExtractTextPlugin.extract({
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-                minimize: true,
-                sourceMap: true,
-              },
-            }, {
-              loader: 'postcss-loader',
-              options: {
-                plugins: () => [
-                  require('autoprefixer'),
-                ],
-                sourceMap: true,
-              },
-            }, {
-              loader: 'sass-loader',
-              options: {
-                includePaths: [path.resolve(__dirname, 'src', 'scss')],
-                sourceMap: true,
-              },
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              minimize: true,
+              sourceMap: true,
             },
-          ],
-        }),
+          }, {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => [
+                require('autoprefixer'),
+              ],
+              sourceMap: true,
+            },
+          }, {
+            loader: 'sass-loader',
+            options: {
+              includePaths: [path.resolve(__dirname, 'src', 'scss')],
+              sourceMap: true,
+            },
+          },
+        ],
       },
     ],
   },

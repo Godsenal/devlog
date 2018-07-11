@@ -12,9 +12,14 @@ const AvatarImg = styled.img`
   border-radius: 50%;
   
   flex: 0 0;
+
+  opacity: ${props => (props.loaded ? 1 : 0)};
 `;
 
 export default class Avatar extends PureComponent {
+  state = {
+    loaded: false,
+  }
   static propTypes = {
     size: PropTypes.number,
     src: PropTypes.string,
@@ -23,18 +28,25 @@ export default class Avatar extends PureComponent {
     size: 36,
     src: default_profile,
   }
+  handleImageLoad = () => {
+    this.setState({
+      loaded: true,
+    });
+  }
   setImageRef = ref => {
     this._image = ref;
   }
   render() {
+    const { loaded } = this.state;
     const { size, src } = this.props;
     return (
       <AvatarImg
+        loaded={loaded}
         innerRef={this.setImageRef}
         src={src}
         imgSize={size}
         alt="avatar_image"
-        onError={() => (this.src = default_profile)}
+        onLoad={this.handleImageLoad}
         {...this.props}
       />
     );

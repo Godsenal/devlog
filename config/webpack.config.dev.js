@@ -3,6 +3,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = ({
+  mode: 'development',
   resolve: {
     extensions: ['*', '.js', '.jsx', '.json'],
   },
@@ -12,7 +13,6 @@ module.exports = ({
     'react-hot-loader/patch',
     'webpack-hot-middleware/client?reload=true',
   ],
-  target: 'web',
   output: {
     path: path.resolve(process.cwd(), 'dist'),
     publicPath: '/',
