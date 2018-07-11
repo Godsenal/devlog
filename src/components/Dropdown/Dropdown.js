@@ -31,6 +31,8 @@ const DropdownButton = styled.button`
   padding: 10px 5px;
   border: none;
   outline: none;
+
+  cursor: pointer;
 `;
 
 export default class Dropdown extends PureComponent {

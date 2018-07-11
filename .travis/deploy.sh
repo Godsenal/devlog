@@ -6,7 +6,7 @@ git config --global push.default simple # we only want to push one branch — ma
 git remote add deploy ssh://tmqps78@$IP$DEPLOY_DIR # travis environment varialbe
 git push deploy master # push our updates
 
-ssh apps@$IP <<EOF
+ssh tmqps78@$IP <<EOF
   cd $DEPLOY_DIR
   npm i --save
   npm run build
