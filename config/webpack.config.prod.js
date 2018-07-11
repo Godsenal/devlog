@@ -24,6 +24,9 @@ module.exports = ({
     filename: '[name].[chunkhash].js',
   },
   plugins: [
+    new UglifyJsPlugin({
+      sourceMap: true,
+    }),
     new webpack.DefinePlugin(GLOBALS),
     new ExtractTextPlugin('[name].[contenthash].css'), // Extract text from a bundle, or bundles, into a separate file.
     new HtmlWebpackPlugin({
@@ -42,10 +45,6 @@ module.exports = ({
       },
       inject: true,
       // custom
-    }),
-    new UglifyJsPlugin({
-      sourceMap: true,
-      exclude: /node_modules\/query-string\/index.js/,
     }),
   ],
   module: {
