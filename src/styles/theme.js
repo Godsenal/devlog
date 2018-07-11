@@ -1,11 +1,23 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
+  overrides: {
+    // Name of the component ⚛️ / style sheet
+    MuiButton: {
+      // Name of the rule
+      root: {
+        // Some CSS
+        fontFamily: 'Ubuntu',
+        borderRadius: 100,
+        border: 0,
+      },
+    },
+  },
   palette: {
     primary: {
       light: '#757ce8',
       main: '#159afb',
-      dark: '#0944ac',
+      dark: '#036bb7',
       contrastText: '#fff',
     },
     secondary: {

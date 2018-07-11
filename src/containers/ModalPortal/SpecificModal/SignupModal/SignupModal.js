@@ -17,7 +17,9 @@ const Centered = styled.div`
   text-align: center;
 `;
 const FormHeader = styled.h1`
-  font-weight: 800;
+  font-weight: 400;
+
+  margin: 50px 0;
 `;
 const FileSelector = styled.input`
   display: none;
@@ -26,7 +28,7 @@ const ProfileBlock = styled.div`
   display: flex;
   align-items: center;
 
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `;
 const FieldWrapper = styled.div`
   flex: 1 1 auto;
@@ -253,6 +255,7 @@ class SignupModal extends Component {
               variant="contained"
               color="primary"
               size="large"
+              fullWidth
               disabled={!activateButton || signupStatus === 'WAITING'}
               onClick={() => this.handleSignup(activateButton)}
             >

@@ -27,17 +27,17 @@ const MainContent = styled.div`
 
   margin: 10px auto;
 `;
+/*
 const Sidebar = styled.div`
   flex: 0 0 auto;
 
   max-width: 400px;
 `;
+*/
 
 class Timeline extends Component {
-  state = {}
   static propTypes = {
     handleListLog: PropTypes.func.isRequired,
-    isMobile: PropTypes.bool.isRequired,
     logList: PropTypes.object.isRequired,
   }
   componentDidMount() {
@@ -45,7 +45,6 @@ class Timeline extends Component {
   }
   render() {
     const {
-      isMobile,
       logList,
       handleListLog,
     } = this.props;
@@ -59,13 +58,6 @@ class Timeline extends Component {
               handleListLog={handleListLog}
             />
           </MainContent>
-          {
-            isMobile ?
-              null :
-              <Sidebar>
-                side
-              </Sidebar>
-          }
         </Container>
       </Background>
     );

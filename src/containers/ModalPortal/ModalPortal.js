@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import CloseIcon from 'react-icons/lib/fa/close';
 
 import Modal from './Modal';
+import { IconButton } from '../../components';
 import * as modalActions from '../../actions/modal';
 
 
@@ -25,6 +27,15 @@ const Container = styled.div`
   background-color: rgba(255,255,255,.65);
 `;
 
+const Header = styled.div`
+  position: fixed;
+  top: 8px;
+  right: 10px;
+
+  font-size: 25px;
+
+  float: right;
+`;
 const MODAL_ROOT = document.getElementById('modal-root');
 
 class ModalPortal extends Component {
@@ -67,6 +78,11 @@ class ModalPortal extends Component {
     return (
       ReactDOM.createPortal(
         <Container>
+          <Header>
+            <IconButton onClick={this.handleClose}>
+              <CloseIcon />
+            </IconButton>
+          </Header>
           <Modal
             modalProps={modalState.modalProps}
             modalType={modalState.modalType}

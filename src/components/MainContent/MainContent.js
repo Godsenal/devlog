@@ -37,11 +37,9 @@ const Date = styled.div`
   color: #ccc;
   font-size: 0.9em;
 `;
-const Text = styled.div`
-  white-space: pre-wrap;
-  word-wrap: break-word;
+const Text = styled.p`
   line-height: 1.3em;
-  font-size: ${props => (props.isModal ? '20px' : '14px')};
+  font-size: ${props => (props.isModal ? '25px' : '14px')};
 `;
 
 export default class MainContent extends Component {

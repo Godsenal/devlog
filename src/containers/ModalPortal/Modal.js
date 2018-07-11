@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import CloseIcon from 'react-icons/lib/fa/close';
 import { LoginModal, SignupModal, CodeModal, LogModal, TagModal } from './SpecificModal';
-import { IconButton } from '../../components';
 import { media } from '../../styles/util';
 
 const Container = styled.div`
-  width: ${props => (props.isMobile ? '90%' : '600px')};
+  width: 95%;
+  max-width: 600px;
   min-height: 300px;
 
   margin: auto;
+  margin-top: 60px;
 
   opacity: ${props => (props.mounted ? '1' : '0')};
   transform: ${props => (props.mounted ? 'scale(1)' : 'scale(0.1)')};
@@ -20,10 +20,6 @@ const Container = styled.div`
   background-color: white;
 
   border-radius: 10px;
-`;
-const Header = styled.div`
-  margin: 5px;
-  float: right;
 `;
 const Body = styled.div`
   margin: 30px;
@@ -83,11 +79,6 @@ export default class Modal extends Component {
     const SpecificModal = MODAL_COMPONENTS[modalType];
     return (
       <Container innerRef={ref => { this.container = ref; }} mounted={mounted} isMobile={isMobile}>
-        <Header>
-          <IconButton onClick={this.handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </Header>
         <Body>
           <SpecificModal {...modalProps} handleClose={this.handleClose} />
         </Body>

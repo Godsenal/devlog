@@ -29,14 +29,17 @@ const CodePreview = styled.div`
   margin-top: 10px;
   padding: 10px;
 
-  color: #F8F8F2;
-  background-color: #272822;
-  
+  color: white;
+  background-color: black;
+
   border-radius: 5px;
 
   display: flex;
-  align-items: center;
   justify-content: center;
+
+  span {
+    margin-left: 10px;
+  }
 `;
 export default class LogListItem extends Component {
   static propTypes = {
@@ -67,7 +70,7 @@ export default class LogListItem extends Component {
         >
           { has_code && (
             <CodePreview>
-              <CodeIcon /><span> Click to see code</span>
+              <CodeIcon /> <span>Click to see code</span>
             </CodePreview>
           )}
         </MainContent>

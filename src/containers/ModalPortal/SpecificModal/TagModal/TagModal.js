@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import debounce from 'lodash/debounce';
 import findIndex from 'lodash/findIndex';
 import AngleDownIcon from 'react-icons/lib/fa/angle-down';
+import Button from '@material-ui/core/Button';
 import ActionTag from './ActionTag';
 import { Input, NoneStyleList, IconButton } from '../../../../components';
 import { searchTag } from '../../../../actions/search';
@@ -18,6 +19,15 @@ const IconWrapper = styled.div`
   display: flex;
   justify-content: center;
 `;
+const ButtonBox = styled.div`
+  width: 100%;
+  margin: 1rem 0;
+  
+  text-align: center;
+`;
+const MarginRight = styled.span`
+  margin-right: 10px;
+`;
 class TagModal extends PureComponent {
   state = {
     searchWord: '',
@@ -26,14 +36,21 @@ class TagModal extends PureComponent {
   static propTypes = {
     dispatchAddToast: PropTypes.func.isRequired,
     dispatchSearchTag: PropTypes.func.isRequired,
+    handleClose: PropTypes.func.isRequired,
     handleTagChange: PropTypes.func.isRequired,
     searchState: PropTypes.object.isRequired,
     selectedTags: PropTypes.array.isRequired,
   }
+  /* update immediatly
   componentDidUpdate(prevState) {
     if (prevState.selectedTags !== this.state.selectedTags) {
       this.props.handleTagChange(this.state.selectedTags);
     }
+  }
+  */
+  handleTagchange = () => {
+    this.props.handleTagChange(this.state.selectedTags);
+    this.props.handleClose();
   }
   validateTag = (tag) => {
     const tagReg = /^[a-zA-Z0-9]{2,10}$/g;
@@ -93,7 +110,8 @@ class TagModal extends PureComponent {
   }, 1000);
   render() {
     const { searchWord, selectedTags } = this.state;
-    const { searchState } = this.props;
+    const { searchState, handleClose } = this.props;
+    const validToSave = selectedTags.length > 0;
     return (
       <div>
         {
@@ -148,6 +166,14 @@ class TagModal extends PureComponent {
             </NoneStyleList>
           )
         }
+        <ButtonBox>
+          <MarginRight>
+            <Button variant="outlined" onClick={this.handleTagchange} color="primary" disabled={!validToSave}>Save</Button>
+          </MarginRight>
+          <MarginRight>
+            <Button variant="outlined" onClick={handleClose}>Close</Button>
+          </MarginRight>
+        </ButtonBox>
       </div>
     );
   }

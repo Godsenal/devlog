@@ -23,7 +23,12 @@ const IconWrapper = styled.span`
   cursor: pointer;
 `;
 const Input = styled.input`
-  width: ${props => (props.isFocused ? '200px' : '1px')};
+  width: 1px;
+  opacity: 0;
+  ${props => props.isFocused && (`
+    opacity: 1;
+    width: 200px;
+  `)}
   height: 20px;
   border: none;
   outline: none;

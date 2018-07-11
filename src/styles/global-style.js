@@ -13,6 +13,12 @@ injectGlobal`
     font-weight: 400;
     color: rgba(0, 0, 0, 0.75);
   }
+  p {
+    font-family: 'Roboto', 'Nanum Gothic';
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+  }
   button {
     font-family: 'Ubuntu';
     font-weight: 600;

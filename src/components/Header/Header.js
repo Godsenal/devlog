@@ -34,9 +34,10 @@ const Menubar = styled.div`
   display: flex;
   align-items: center;
 `;
-const Title = styled.div`
+const Title = styled.h3`
   color: rgba(0, 0, 0, 0.7);
-
+  margin: 0;
+  
   font-size: 32px;
 
   flex: 1 1 auto;

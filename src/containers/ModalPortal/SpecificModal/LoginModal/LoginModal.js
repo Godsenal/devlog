@@ -11,7 +11,9 @@ const Centered = styled.div`
   text-align: center;
 `;
 const HeaderText = styled.h1`
-  font-weight: 800;
+  font-weight: 400;
+
+  margin: 50px 0;
 `;
 class LoginModal extends Component {
   state = {
@@ -33,6 +35,11 @@ class LoginModal extends Component {
     this._login = true;
     const { username, password } = this.state;
     this.props.dispatch(userActions.login(username, password));
+  }
+  handleEnter = e => {
+    if (e.key === 'Enter') {
+      this.handleLogin();
+    }
   }
   render() {
     const { username, password } = this.state;
@@ -59,11 +66,20 @@ class LoginModal extends Component {
           label="Password"
           type="password"
           onChange={this.handleChange}
+          onKeyPress={this.handleEnter}
           value={password}
           fullWidth
         />
         <Centered>
-          <Button variant="contained" size="large" color="primary" onClick={this.handleLogin} >Log in</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            fullWidth
+            onClick={this.handleLogin}
+          >
+            Log in
+          </Button>
         </Centered>
       </form>
     );

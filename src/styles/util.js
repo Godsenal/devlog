@@ -30,8 +30,8 @@ export const linkText = () => (`
 `);
 
 export const mainContainer = () => (`
-  width: 80%;
-  ${media.tablet`width: 90%;`}
+  width: 95%;
+  ${media.tablet`width: 80%;`}
   min-height: 800px;
 
   max-width: 1200px;

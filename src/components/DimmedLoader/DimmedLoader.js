@@ -5,13 +5,14 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 const Dimmer = styled.div`
   position: absolute;
   left: 0;
-  top: 2rem;
+  top: 0;
   right: 0;
   bottom: 0;
 
   width: 100%;
   height: 100%;
-
+  min-height: 300px;
+  
   background-color: rgba(255, 255, 255, .6);
 
   z-index: 1;
