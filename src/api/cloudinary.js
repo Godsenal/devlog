@@ -12,6 +12,9 @@ export function uploadImage(file) {
   formData.append('upload_preset', UPLOAD_PRESET);
   // Replace the preset name with your own
   formData.append('api_key', API_KEY); // Replace API key with your own Cloudinary key
-  const headers = { 'X-Requested-With': 'XMLHttpRequest' };
+  const headers = {
+    'X-Requested-With': 'XMLHttpRequest',
+    'Content-Type': 'multipart/form-data',
+  };
   return axios.post(DEFAULT_PATH, formData, { headers });
 }

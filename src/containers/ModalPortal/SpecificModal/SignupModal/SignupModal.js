@@ -110,6 +110,7 @@ class SignupModal extends Component {
   }
   handleImageClick = () => {
     if (this._selector) {
+      this._selector.value = null;
       this._selector.click();
     }
   }

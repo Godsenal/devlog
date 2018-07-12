@@ -4,12 +4,13 @@ import styled from 'styled-components';
 import TransitionGroup from 'react-transition-group/TransitionGroup';
 
 import Toast from './Toast';
+import { media } from '../../styles/util';
 
 const List = styled.div`
   position: fixed;
   
-  max-width: 300px;
-  
+  max-width: 80%;
+  ${media.desktop`max-width: 95%;`}
   top: 0;
   left: 0;
   right: 0;

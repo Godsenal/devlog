@@ -1,4 +1,5 @@
-import { all, call, put, fork, cancel, cancelled, takeLatest, take } from 'redux-saga/effects';
+import { all, call, put, fork, cancel, cancelled, takeLatest, take, race } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import * as authApi from '../api/auth';
 import { uploadImage } from '../api/cloudinary';
 import * as userApi from '../api/user';
@@ -234,8 +235,41 @@ function* follow(action) {
   }
 }
 function* uploadProfileImage(file) {
+  const imageReg = /[/.](gif|jpg|jpeg|tiff|png)$/i;
+  if (!imageReg.test(file.type)) {
+    yield put({
+      type: actions.USER_IMAGE_FAILURE,
+      error: 'An error occurred. Maybe it is not valid image file?',
+    });
+    yield put({
+      type: actions.TOAST_ADD,
+      toastProps: {
+        message: 'An error occurred.Maybe it is not an image file?',
+        type: 'error',
+      },
+    });
+    return;
+  }
   try {
-    const { data } = yield call(uploadImage, file);
+    const { response, timeout } = yield race({
+      response: yield call(uploadImage, file),
+      timeout: delay(5000),
+    });
+    if (timeout) {
+      yield put({
+        type: actions.USER_IMAGE_FAILURE,
+        error: 'An error occured. Request timeout.',
+      });
+      yield put({
+        type: actions.TOAST_ADD,
+        toastProps: {
+          message: 'An error occurred. Please try again.',
+          type: 'error',
+        },
+      });
+      return;
+    }
+    const { data } = response;
     /* Crop Profile Image */
     const url = data.secure_url;
     const tokens = url.split('/');
@@ -247,10 +281,16 @@ function* uploadProfileImage(file) {
     });
   }
   catch (err) {
-    const { error } = err.response.data;
     yield put({
       type: actions.USER_IMAGE_FAILURE,
-      error,
+      error: 'Error has been occured. Please try again',
+    });
+    yield put({
+      type: actions.TOAST_ADD,
+      toastProps: {
+        message: 'An error occured. Please try again',
+        type: 'error',
+      },
     });
   }
   finally {
@@ -281,10 +321,13 @@ function* watchImage() {
   let task;
   while (true) {
     const imageAction = yield take(actions.USER_IMAGE_REQUEST);
+
     /* Check if modal closed before upload */
     task = yield fork(uploadProfileImage, imageAction.file);
-    yield take(actions.MODAL_CLOSE);
-    yield cancel(task);
+    const sideEffect = yield take([actions.USER_IMAGE_SUCCESS, actions.USER_IMAGE_FAILURE, actions.MODAL_CLOSE]);
+    if (sideEffect.type === actions.MODAL_CLOSE) {
+      yield cancel(task);
+    }
   }
 }
 /**
