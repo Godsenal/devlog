@@ -1,4 +1,6 @@
-import { all, call, put, fork, take, takeLatest, cancel } from 'redux-saga/effects';
+import { all, apply, call, put, fork, take, takeLatest, cancel } from 'redux-saga/effects';
+import { eventChannel, delay } from 'redux-saga';
+import { createSocket } from '../utils';
 
 import {
   LOG_POST_REQUEST,
@@ -16,6 +18,9 @@ import {
   LOG_POST_COMMENT_REQUEST,
   LOG_POST_COMMENT_SUCCESS,
   LOG_POST_COMMENT_FAILURE,
+  LOG_SOCKET_CONNECT,
+  LOG_SOCKET_DISCONNECT,
+  LOG_NEW_COUNT_UPDATE,
   PROFILE_LIST_RAW_UPDATE,
   SEARCH_LOG_RAW_UPDATE,
 } from '../constants/actionTypes';
@@ -28,6 +33,10 @@ function* post(action) {
     yield put({
       type: LOG_POST_SUCCESS,
       ...data,
+    });
+    /* Socket action */
+    yield put({
+      type: 'emit new log',
     });
   }
   catch (err) {
@@ -148,6 +157,38 @@ function* postComment(action) {
     });
   }
 }
+function createSocketChannel(socket) {
+  return eventChannel(emit => {
+    const newLogHandler = (event) => emit(event);
+    socket.on('receive new log', newLogHandler);
+
+    const unsubscribe = () => {
+      socket.off('receive new log', newLogHandler);
+    };
+    return unsubscribe;
+  });
+}
+function* receiveNewLog(socket) {
+  const channel = yield call(createSocketChannel, socket);
+  while (true) {
+    const payload = yield take(channel);
+    yield put({
+      type: LOG_NEW_COUNT_UPDATE,
+      payload,
+    });
+  }
+}
+function* emitNewLog(socket) {
+  while (true) {
+    const { payload } = yield take('emit new log');
+    yield delay(5000);
+    yield apply(socket, socket.emit, ['post new log', payload]);
+  }
+}
+function* handleSocket(socket) {
+  yield fork(receiveNewLog, socket);
+  yield fork(emitNewLog, socket);
+}
 function* watchPost() {
   yield takeLatest(LOG_POST_REQUEST, post);
 }
@@ -170,6 +211,16 @@ function* watchStar() {
 function* watchPostComment() {
   yield takeLatest(LOG_POST_COMMENT_REQUEST, postComment);
 }
+function* watchLogSocket() {
+  while (true) {
+    yield take(LOG_SOCKET_CONNECT);
+    const socket = yield call(createSocket);
+    const socketAction = yield fork(handleSocket, socket);
+
+    yield take(LOG_SOCKET_DISCONNECT);
+    yield cancel(socketAction);
+  }
+}
 /**
  * Log Sagas
  */
@@ -180,5 +231,6 @@ export default function* root() {
     fork(watchGet),
     fork(watchStar),
     fork(watchPostComment),
+    fork(watchLogSocket),
   ]);
 }

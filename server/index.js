@@ -2,9 +2,9 @@ const express = require('express');
 const chalk = require('chalk');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-
+const socketio = require('socket.io');
 const config = require('./config');
-
+const socket = require('./socket');
 
 const setup = config.isDev ? require('./setup/setupDev') : require('./setup/setupProd');
 const routes = require('./routes');
@@ -19,7 +19,6 @@ const routes = require('./routes');
 mongoose.connect('mongodb://localhost:27017/devlogDB'); // should change
 
 const app = express();
-
 // body parser setting
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -34,7 +33,7 @@ app.use('/api', routes);
 setup(app);
 // get the intended host and port number, use localhost and port 3000 if not provided
 
-app.listen(config.port, config.host, (err) => {
+const server = app.listen(config.port, config.host, (err) => {
   if (err) {
     console.error(chalk.red(err));
   }
@@ -51,3 +50,7 @@ app.listen(config.port, config.host, (err) => {
       ${chalk.blue(`Press ${chalk.italic('CTRL-C')} to stop`)}
     `);
 });
+
+const io = socketio(server);
+socket(io);
+

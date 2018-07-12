@@ -5,6 +5,8 @@ import {
   LOG_STAR_REQUEST,
   LOG_POST_COMMENT_REQUEST,
   LOG_LIST_COMMENT_REQUEST,
+  LOG_SOCKET_CONNECT,
+  LOG_SOCKET_DISCONNECT,
   LOG_RAW_UPDATE,
 } from '../constants/actionTypes';
 
@@ -53,6 +55,17 @@ export function listCommentLog(logId) {
   return {
     type: LOG_LIST_COMMENT_REQUEST,
     logId,
+  };
+}
+
+export function connectSocket() {
+  return {
+    type: LOG_SOCKET_CONNECT,
+  };
+}
+export function disconnectSocket() {
+  return {
+    type: LOG_SOCKET_DISCONNECT,
   };
 }
 

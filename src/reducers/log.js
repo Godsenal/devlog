@@ -17,6 +17,7 @@ import {
   LOG_POST_COMMENT_REQUEST,
   LOG_POST_COMMENT_SUCCESS,
   LOG_POST_COMMENT_FAILURE,
+  LOG_NEW_COUNT_UPDATE,
   LOG_RAW_UPDATE,
 } from '../constants/actionTypes';
 
@@ -50,6 +51,9 @@ const initialState = {
     comments: [],
     error: 'Error',
   },
+  new: {
+    count: 0,
+  },
 };
 
 export default function log(state = initialState, action) {
@@ -79,16 +83,21 @@ export default function log(state = initialState, action) {
       });
     case LOG_LIST_REQUEST: {
       const listUpdate = {
-        status: { $set: 'WAITING' },
+        list: {
+          status: { $set: 'WAITING' },
+        },
       };
       if (action.skip === 0) {
-        listUpdate.logs = { $set: [] };
+        listUpdate.list = {
+          logs: { $set: [] },
+        };
+        listUpdate.new = {
+          count: { $set: 0 },
+        };
       }
       // skip == 0 means this is first time request.
       // so clear exist logs
-      return update(state, {
-        list: listUpdate,
-      });
+      return update(state, listUpdate);
     }
     case LOG_LIST_SUCCESS: {
       const { logs, limit, isInit, isLast } = action;
@@ -211,6 +220,12 @@ export default function log(state = initialState, action) {
           comments: { $set: [] },
           comment: { $set: {} },
           error: { $set: action.error },
+        },
+      });
+    case LOG_NEW_COUNT_UPDATE:
+      return update(state, {
+        new: {
+          count: { $set: state.new.count + 1 },
         },
       });
     case LOG_RAW_UPDATE: { // reducer for make raw updating for log when fetched new data.
