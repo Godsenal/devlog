@@ -71,7 +71,7 @@ class EditorDraftBlock extends Component {
         onClick={this.focusOnEditor}
       >
         <Editor
-          placeholder="Write your today's log"
+          placeholder={`Write your today's log ${String.fromCodePoint(0x1F600)}`}
           editorState={editorState}
           onFocus={this.onDraftFocus}
           onBlur={this.onDraftBlur}
