@@ -13,6 +13,7 @@
     "start:nodemon": "cross-env NODE_ENV=development nodemon server",
     "start:production": "npm run build && npm run start:prod",
     "start:prod": "cross-env NODE_ENV=production node server",
+    "start:forever": "cross-env NODE_ENV=production forever start server",
     "clean:all": "npm run test:clean && npm run build:clean"
   },
   "keywords": [],
