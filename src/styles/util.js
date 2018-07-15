@@ -30,7 +30,7 @@ export const linkText = () => (`
 `);
 
 export const mainContainer = () => (`
-  width: 95%;
+  width: 98%;
   ${media.tablet`width: 80%;`}
   min-height: 800px;
 
@@ -46,8 +46,8 @@ export const emptyContainer = () => (`
 `);
 
 export const listItem = () => (`
+  
   margin: 10px 1px;
-
   border-radius: 5px;
   border: 1px solid #e0e0e0;
 `);

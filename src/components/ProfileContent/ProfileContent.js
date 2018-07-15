@@ -60,7 +60,7 @@ class ProfileContent extends Component {
             <LogList
               {...latestState}
               handleListLog={this.handleListLog('latest')}
-            /> : starsState.status === 'SUCCESS' && <NotFound>Couldn't find latest log</NotFound>
+            /> : latestState.status === 'SUCCESS' && <NotFound>Couldn't find latest log</NotFound>
         )}
         { type === 'stars' && (
           starsState.logs.length > 0 ?

@@ -7,7 +7,7 @@ const theme = createMuiTheme({
       // Name of the rule
       root: {
         // Some CSS
-        fontFamily: 'Ubuntu',
+        fontFamily: 'Rubik',
         borderRadius: 100,
         border: 0,
       },

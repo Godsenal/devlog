@@ -5,12 +5,21 @@ import { LoginModal, SignupModal, CodeModal, LogModal, TagModal } from './Specif
 import { media } from '../../styles/util';
 
 const Container = styled.div`
-  width: 95%;
-  max-width: 600px;
+  position: absolute;
+  top: 60px;
+  left: 50%;
+
+  width: 640px;
   min-height: 300px;
 
-  margin: auto;
-  margin-top: 60px;
+  margin-left: -320px;
+  margin-bottom: 30px;
+
+  ${media.tablet`
+    width: 95%;
+    left: 2.5%;
+    margin-left: 0px;
+  `}
 
   opacity: ${props => (props.mounted ? '1' : '0')};
   transform: ${props => (props.mounted ? 'scale(1)' : 'scale(0.1)')};

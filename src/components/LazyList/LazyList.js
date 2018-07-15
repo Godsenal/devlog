@@ -36,13 +36,17 @@ export default class LazyList extends Component {
   }
   handleLazyLoad = throttle(() => {
     this.props.lazyLoad();
-  }, 3000);
+  }, 1000);
   render() {
     const { children, isLoading } = this.props;
     return (
       <div style={{ position: 'relative' }}>
         { children }
-        { isLoading && <DimmedLoader /> }
+        { isLoading && 
+          <div style={{ height: 200, position: 'relative'}}>
+            <DimmedLoader />
+          </div>
+        }
       </div>
     );
   }

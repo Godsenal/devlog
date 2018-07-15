@@ -2,6 +2,7 @@ function fallbackCopyTextToClipboard(text) {
   return new Promise((resolve, reject) => {
     const textArea = document.createElement('textarea');
     textArea.value = text;
+    textArea.display = 'none';
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();

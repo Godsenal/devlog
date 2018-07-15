@@ -52,12 +52,18 @@ class CodeEditor extends PureComponent {
           <AceEditor
             width="100%"
             height={`${EDITOR_HEIGHT}px`}
+            minLines={20}
+            maxLines={50}
             mode={language}
             theme="monokai"
             onChange={handleCodeChange}
             value={code}
             name="editor_code_block"
             editorProps={{ $blockScrolling: true }}
+            setOptions={{
+              fontFamily: "Ubuntu Mono",
+              fontSize: "16px"
+            }}
           />
         </Editor>
         <DropdownBox>

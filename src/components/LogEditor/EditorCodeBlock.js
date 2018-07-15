@@ -15,7 +15,7 @@ const FloatingBox = styled.div`
 
   position: absolute;
   top: 5px;
-  right: 5px;
+  right: 20px;
 
   z-index: 2;
 

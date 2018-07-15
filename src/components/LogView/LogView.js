@@ -16,7 +16,7 @@ const TagContent = styled.div`
 const Clipboard = styled.a`
   position: absolute;
   bottom: 0px;
-  right: 0px;
+  right: 15px;
   
   padding: 5px 10px;
 
@@ -45,11 +45,13 @@ class LogView extends Component {
       .then(() => {
         handleAddToast({
           message: 'Copied!',
+          type: 'success',
         });
       })
       .catch(() => {
         handleAddToast({
           message: 'Fail to copy...',
+          type: 'error',
         });
       });
   }

@@ -4,9 +4,14 @@ import { injectGlobal } from 'styled-components';
 injectGlobal`
   html,
   body {
+    font-family: 'Noto Sans','Nanum Gothic';
+    position: relative;
     height: 100%;
     width: 100%;
     background: #fff;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   h1, h2, h3 {
     font-family: 'Rubik';
@@ -19,11 +24,19 @@ injectGlobal`
     word-wrap: break-word;
     margin: 0;
   }
+  textarea {
+    font-family: 'Roboto', 'Nanum Gothic';
+  }
   button {
-    font-family: 'Ubuntu';
+    background-color: transparent;
+    font-family: 'Ubuntu Mono';
     font-weight: 600;
   }
   input {
     background: inherit;
+  }
+  .ace_editor {
+    font-family: 'Ubuntu Mono',
+    font-size: 16px;
   }
 `;

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import { AvatarMenu, BrowserLink, SearchBar } from '../';
-import { linkText } from '../../styles/util';
+import { linkText, media } from '../../styles/util';
 
 const HEADER_HEIGHT = 80;
 const Container = styled.div`
@@ -29,6 +29,7 @@ const Container = styled.div`
 const Menubar = styled.div`
 
   width: 80%;
+  ${media.tablet`width: 95%;`}
   margin: auto;
 
   display: flex;

@@ -30,6 +30,10 @@ const EditorContainer = styled.div`
   cursor: text;
   
 `;
+const PLACE_HOLDER = [
+  `Write your today's log!`,
+  `Press ':' to insert emoji ${String.fromCodePoint(0x1F600)}!`,
+];
 class EditorDraftBlock extends Component {
   state = {
     isDraftFocused: false,
@@ -71,7 +75,7 @@ class EditorDraftBlock extends Component {
         onClick={this.focusOnEditor}
       >
         <Editor
-          placeholder={`Write your today's log ${String.fromCodePoint(0x1F600)}`}
+          placeholder={PLACE_HOLDER[Math.round(Math.random())]}
           editorState={editorState}
           onFocus={this.onDraftFocus}
           onBlur={this.onDraftBlur}

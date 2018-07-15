@@ -9,7 +9,7 @@ const BoxWrapper = styled.div`
   border-radius: 10px;
   ${props => `
     width: ${typeof props.width === 'string' ? props.width : `${props.width}px`};
-    height: ${typeof props.height === 'string' ? props.height : `${props.height}px`};
+    min-height: ${typeof props.height === 'string' ? props.height : `${props.height}px`};
   `}
 `;
 class CodeEditorBox extends Component {
@@ -55,6 +55,8 @@ class CodeEditorBox extends Component {
         <AceEditor
           width="100%"
           height="100%"
+          minLines={20}
+          maxLines={50}
           value={code}
           mode={languageLoaded ? language : 'javascript'}
           theme="monokai"
@@ -64,6 +66,10 @@ class CodeEditorBox extends Component {
           showPrintMargin={false}
           showGutter={false}
           readOnly
+          setOptions={{
+            fontFamily: "Ubuntu Mono",
+            fontSize: "16px"
+          }}
         />
       </BoxWrapper>
     );

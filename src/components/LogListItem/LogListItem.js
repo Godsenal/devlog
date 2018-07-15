@@ -35,6 +35,7 @@ const CodePreview = styled.div`
   border-radius: 5px;
 
   display: flex;
+  align-items: center;
   justify-content: center;
 
   span {
