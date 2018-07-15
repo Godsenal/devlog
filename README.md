@@ -4,7 +4,7 @@
 
 이 프로젝트는 개인 공부를 위한 토이 프로젝트입니다.
 
-This is a toy project for personal studying.
+This is a toy project for personal study.
 
 ## Website
 [devlog](http://45.76.98.255)

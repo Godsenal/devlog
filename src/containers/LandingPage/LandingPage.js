@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import lottie from 'lottie-web';
 import Button from '@material-ui/core/Button';
+import GithubIcon from 'react-icons/lib/fa/github';
 import geek from '../../data/spirit_geek.json';
 
 const Container = styled.div`
@@ -35,6 +36,27 @@ const SubHero = styled.h2`
 `;
 const MarginRight = styled.span`
   margin-right: 10px;
+`;
+const Footer = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  align-items: center;
+
+  color: #aab8c2;
+  border-top: 1px solid #e6ecf0;
+
+  padding: 10px 0;
+`;
+const FooterItem = styled.span`
+  display: flex;
+  flex: ${props => props.flex};
+  align-items: center;
+
+  margin: 0 10px;
 `;
 export default class LandingPage extends Component {
   state = {
@@ -101,6 +123,19 @@ export default class LandingPage extends Component {
             <Button onClick={this.handleModal('SIGNUP_MODAL')} variant="outlined" size="large">Signup</Button>
           </div>
         </MainContent>
+        <Footer>
+          <FooterItem flex={1}>
+            This site is toy project for personal study.
+          </FooterItem>
+          <FooterItem>
+            Made by Godsenal
+          </FooterItem>
+          <a href="https://github.com/Godsenal/devlog">
+            <FooterItem>
+              GitHub <GithubIcon />
+            </FooterItem>
+          </a>
+        </Footer>
       </Container>
     );
   }
